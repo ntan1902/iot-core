@@ -33,6 +33,8 @@ public class UserEntity extends BaseEntity<UserDto> {
     public UserEntity(UserDto userDto) {
         super(userDto);
 
+        this.email = userDto.getEmail();
+        this.authority = userDto.getAuthority();
         this.firstName = userDto.getFirstName();
         this.lastName = userDto.getLastName();
     }

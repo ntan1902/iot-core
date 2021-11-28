@@ -1,5 +1,6 @@
 package com.iot.server.dao.entity;
 
+import com.iot.server.common.dto.BaseDto;
 import com.iot.server.common.dto.UserCredentialsDto;
 import lombok.*;
 
@@ -33,6 +34,15 @@ public class UserCredentialsEntity extends BaseEntity<UserCredentialsDto> {
 
     @Column(name = EntityConstants.USER_CREDENTIALS_RESET_TOKEN_PROPERTY, unique = true)
     private String resetToken;
+
+    public UserCredentialsEntity(UserCredentialsDto userCredentialsDto) {
+        super(userCredentialsDto);
+        this.userId = userCredentialsDto.getUserId();
+        this.password = userCredentialsDto.getPassword();
+        this.enabled = userCredentialsDto.isEnabled();
+        this.activateToken = userCredentialsDto.getActivateToken();
+        this.resetToken = userCredentialsDto.getResetToken();
+    }
 
     @Override
     public UserCredentialsDto toDto() {

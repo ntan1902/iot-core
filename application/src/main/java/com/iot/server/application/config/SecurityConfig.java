@@ -1,8 +1,8 @@
 package com.iot.server.application.config;
 
 import com.iot.server.application.exception.IoTExceptionHandler;
-import com.iot.server.application.security.filter.LoginAuthenticationFilter;
 import com.iot.server.application.security.filter.JwtAuthorizationFilter;
+import com.iot.server.application.security.filter.LoginAuthenticationFilter;
 import com.iot.server.application.security.provider.JwtAuthorizationProvider;
 import com.iot.server.application.security.provider.LoginAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +15,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.Arrays;
@@ -42,11 +40,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         // Get AuthenticationManager Bean
         return super.authenticationManagerBean();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean

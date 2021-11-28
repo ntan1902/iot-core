@@ -1,12 +1,16 @@
 package com.iot.server.application.security.model;
 
 import com.iot.server.common.dto.UserDto;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
 import java.util.Collections;
 
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class SecurityUser extends UserDto {
     private Collection<GrantedAuthority> authorities;
     private boolean enabled;
@@ -16,6 +20,7 @@ public class SecurityUser extends UserDto {
         this.setEmail(userDto.getEmail());
         this.setFirstName(userDto.getFirstName());
         this.setLastName(userDto.getLastName());
+        this.setAuthority(userDto.getAuthority());
         this.setCreatedAt(userDto.getCreatedAt());
         this.setUpdatedAt(userDto.getUpdatedAt());
         this.enabled = enabled;

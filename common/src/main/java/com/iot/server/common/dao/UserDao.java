@@ -6,4 +6,6 @@ import java.util.UUID;
 
 public interface UserDao extends Dao<UserDto, UUID> {
 
+    UserDto findByEmail(String email);
+
 }
