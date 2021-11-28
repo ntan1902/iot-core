@@ -14,7 +14,8 @@ public enum ReasonEnum {
    INVALID_PARAMS(1, "Params is invalid"),
    AUTHENTICATION_FAILED(2, "Authentication failed"),
    AUTHORIZATION_FAILED(3, "Authorization failed"),
-   PERMISSION_DENIED(4, "Permission denied");
+   PERMISSION_DENIED(4, "Permission denied"),
+   EXPIRED_TOKEN(5, "Expired token");
 
    private static final Map<Integer, ReasonEnum> MAP =
        Arrays.stream(ReasonEnum.values())

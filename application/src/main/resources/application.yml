@@ -20,7 +20,7 @@ spring:
 
 security:
   jwt:
-    access-token-exp-ms: "${JWT_ACCESS_TOKEN_EXP_MS:9000}" # Number of seconds (2.5 hours)
-    refresh-token-exp-ms: "${JWT_REFRESH_TOKEN_EXP_MS:604800}" # Number of seconds (1 week)
-    issuer: "${JWT_ISSUER}:com.iot.issuer"
-    signing-key: "${JWT_SIGNING_KEY}: com.iot.signingkey"
+    access-token-exp: "${JWT_ACCESS_TOKEN_EXP_MS:9000}" # Number of seconds (2.5 hours)
+    refresh-token-exp: "${JWT_REFRESH_TOKEN_EXP_MS:604800}" # Number of seconds (1 week)
+    issuer: "${JWT_ISSUER:com.iot.issuer}"
+    signing-key: "${JWT_SIGNING_KEY:com.iot.signingkey}"
