@@ -3,7 +3,7 @@ package com.iot.server.dao;
 import com.iot.server.common.dao.Dao;
 import com.iot.server.common.dto.BaseDto;
 import com.iot.server.dao.entity.BaseEntity;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.transaction.Transactional;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Log4j2
+@Slf4j
 public abstract class JpaAbstractDao<E extends BaseEntity<D>, D extends BaseDto, ID>
         implements Dao<D, ID> {
 
@@ -21,14 +21,14 @@ public abstract class JpaAbstractDao<E extends BaseEntity<D>, D extends BaseDto,
 
     @Override
     public List<D> findAll() {
-        log.debug("Executing findAll");
+        log.debug("Executing");
         List<E> entities = getJpaRepository().findAll();
         return DaoUtil.getDtos(entities);
     }
 
     @Override
     public D findById(ID id) {
-        log.debug("Executing findById [{}]", id);
+        log.debug("Executing [{}]", id);
         Optional<E> entity = getJpaRepository().findById(id);
         return DaoUtil.getDto(entity);
     }
@@ -36,7 +36,7 @@ public abstract class JpaAbstractDao<E extends BaseEntity<D>, D extends BaseDto,
     @Override
     @Transactional
     public D save(D dto) {
-        log.debug("Executing save [{}]", dto);
+        log.debug("Executing [{}]", dto);
 
         E entity;
         try {
@@ -59,7 +59,7 @@ public abstract class JpaAbstractDao<E extends BaseEntity<D>, D extends BaseDto,
     @Override
     @Transactional
     public boolean removeById(ID id) {
-        log.debug("Executing removeById [{}]", id);
+        log.debug("Executing [{}]", id);
         getJpaRepository().deleteById(id);
         return !getJpaRepository().existsById(id);
     }

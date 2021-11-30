@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,7 +24,7 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-@Log4j2
+@Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class IoTExceptionHandler extends ResponseEntityExceptionHandler implements AccessDeniedHandler {
@@ -62,7 +61,7 @@ public class IoTExceptionHandler extends ResponseEntityExceptionHandler implemen
     @ExceptionHandler(AccessDeniedException.class)
     public void handle(HttpServletRequest request,
                        HttpServletResponse response,
-                       AccessDeniedException accessDeniedException) throws IOException, ServletException {
+                       AccessDeniedException accessDeniedException) throws IOException {
         if (!response.isCommitted()) {
             log.error("Forbidden [{}]", accessDeniedException.getMessage());
 
@@ -75,7 +74,7 @@ public class IoTExceptionHandler extends ResponseEntityExceptionHandler implemen
 
     @ExceptionHandler(Exception.class)
     public void handle(HttpServletResponse response, Exception exception) {
-        log.info("Processing exception [{}] [{}]", exception.getMessage(), exception);
+        log.info("Processing exception [{}]", exception.getMessage());
         if (!response.isCommitted()) {
             try {
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);

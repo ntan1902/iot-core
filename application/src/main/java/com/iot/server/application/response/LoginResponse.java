@@ -1,4 +1,4 @@
-package com.iot.server.application.security.model;
+package com.iot.server.application.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

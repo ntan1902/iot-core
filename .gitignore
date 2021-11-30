@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+application/src/main/resources/private_key.pem
+application/src/main/resources/private_key_pkcs8.pem
+application/src/main/resources/public_key.pem

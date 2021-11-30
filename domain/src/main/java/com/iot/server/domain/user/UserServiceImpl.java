@@ -3,16 +3,16 @@ package com.iot.server.domain.user;
 import com.iot.server.common.dao.UserCredentialsDao;
 import com.iot.server.common.dao.UserDao;
 import com.iot.server.common.dto.UserCredentialsDto;
-import com.iot.server.common.service.UserService;
 import com.iot.server.common.dto.UserDto;
+import com.iot.server.common.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
-@Log4j2
+@Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto saveUser(UserDto userDto, String password) {
-        log.info("Executing save [{}]", userDto);
+        log.info("Executing [{}]", userDto);
         UserDto savedUser = userDao.save(userDto);
 
         if (savedUser != null && savedUser.getId() != null) {
@@ -39,13 +39,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findUserByEmail(String email) {
-        log.info("Executing findUserByEmail [{}]", email);
+        log.info("Executing [{}]", email);
         return userDao.findByEmail(email);
     }
 
     @Override
     public UserCredentialsDto findUserCredentialsByUserId(UUID userId) {
-        log.info("Executing findUserCredentialsByUserId [{}]", userId);
+        log.info("Executing [{}]", userId);
         return userCredentialsDao.findByUserId(userId);
     }
 }

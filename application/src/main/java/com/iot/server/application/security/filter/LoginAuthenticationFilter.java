@@ -2,12 +2,12 @@ package com.iot.server.application.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iot.server.application.exception.IoTExceptionHandler;
+import com.iot.server.application.request.LoginRequest;
+import com.iot.server.application.response.LoginResponse;
 import com.iot.server.application.security.jwt.JwtFactory;
-import com.iot.server.application.security.model.LoginRequest;
-import com.iot.server.application.security.model.LoginResponse;
 import com.iot.server.application.security.model.SecurityUser;
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@Log4j2
+@Slf4j
 public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Autowired

@@ -23,4 +23,5 @@ security:
     access-token-exp: "${JWT_ACCESS_TOKEN_EXP_MS:9000}" # Number of seconds (2.5 hours)
     refresh-token-exp: "${JWT_REFRESH_TOKEN_EXP_MS:604800}" # Number of seconds (1 week)
     issuer: "${JWT_ISSUER:com.iot.issuer}"
-    signing-key: "${JWT_SIGNING_KEY:com.iot.signingkey}"
+    private-key-file: "${JWT_PRIVATE_KEY_FILE:private_key_pkcs8.pem}"
+    public-key-file: "${JWT_PUBLIC_KEY_FILE:public_key.pem}"

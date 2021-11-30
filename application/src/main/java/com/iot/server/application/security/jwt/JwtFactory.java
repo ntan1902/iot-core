@@ -7,7 +7,7 @@ import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Log4j2
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtFactory {
@@ -55,7 +55,7 @@ public class JwtFactory {
                 .setIssuer(jwtConfig.getIssuer())
                 .setIssuedAt(Date.from(currentTime.toInstant()))
                 .setExpiration(Date.from(currentTime.plusSeconds(jwtConfig.getAccessTokenExp()).toInstant()))
-                .signWith(SignatureAlgorithm.HS512, jwtConfig.getSigningKey())
+                .signWith(SignatureAlgorithm.RS256, jwtConfig.getPrivateKey())
                 .compact();
     }
 
@@ -96,7 +96,7 @@ public class JwtFactory {
                 .setId(UUID.randomUUID().toString())
                 .setIssuedAt(Date.from(currentTime.toInstant()))
                 .setExpiration(Date.from(currentTime.plusSeconds(jwtConfig.getRefreshTokenExp()).toInstant()))
-                .signWith(SignatureAlgorithm.HS512, jwtConfig.getSigningKey())
+                .signWith(SignatureAlgorithm.RS256, jwtConfig.getPrivateKey())
                 .compact();
     }
 
@@ -113,7 +113,7 @@ public class JwtFactory {
     public Jws<Claims> parseTokenClaims(String token) {
         try {
             return Jwts.parser()
-                    .setSigningKey(jwtConfig.getSigningKey())
+                    .setSigningKey(jwtConfig.getPublicKey())
                     .parseClaimsJws(token);
         } catch (UnsupportedJwtException | MalformedJwtException | IllegalArgumentException | SignatureException ex) {
             log.debug("Invalid JWT Token", ex);

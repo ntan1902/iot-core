@@ -1,4 +1,4 @@
-package com.iot.server.application.security.model;
+package com.iot.server.application.request;
 
 import lombok.Data;
 

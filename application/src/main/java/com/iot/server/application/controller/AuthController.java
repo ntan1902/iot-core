@@ -1,6 +1,6 @@
 package com.iot.server.application.controller;
 
-import com.iot.server.application.security.model.RegisterRequest;
+import com.iot.server.application.request.RegisterRequest;
 import com.iot.server.common.dto.UserDto;
 import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.service.UserService;
