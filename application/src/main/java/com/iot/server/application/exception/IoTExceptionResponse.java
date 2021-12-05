@@ -5,12 +5,14 @@ import org.springframework.http.HttpStatus;
 
 public class IoTExceptionResponse {
    private final String message;
-   private final HttpStatus httpStatus;
+   private final HttpStatus status;
+   private final int statusValue;
    private final ZonedDateTime timestamp;
 
-   public IoTExceptionResponse(String message, HttpStatus httpStatus, ZonedDateTime timestamp) {
+   public IoTExceptionResponse(String message, HttpStatus status, ZonedDateTime timestamp) {
       this.message = message;
-      this.httpStatus = httpStatus;
+      this.status = status;
+      this.statusValue = status.value();
       this.timestamp = timestamp;
    }
 
@@ -18,12 +20,25 @@ public class IoTExceptionResponse {
       return message;
    }
 
-   public HttpStatus getHttpStatus() {
-      return httpStatus;
+   public HttpStatus getStatus() {
+      return status;
    }
 
    public ZonedDateTime getTimestamp() {
       return timestamp;
    }
 
+   public int getStatusValue() {
+      return statusValue;
+   }
+
+   @Override
+   public String toString() {
+      return "IoTExceptionResponse{" +
+              "message='" + message + '\'' +
+              ", status=" + status +
+              ", statusValue=" + statusValue +
+              ", timestamp=" + timestamp +
+              '}';
+   }
 }

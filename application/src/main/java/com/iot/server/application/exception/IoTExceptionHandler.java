@@ -45,16 +45,12 @@ public class IoTExceptionHandler extends ResponseEntityExceptionHandler implemen
         return reasonToStatusMap.getOrDefault(reasonEnum, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private ResponseEntity<Object> getResponse(HttpStatus httpStatus, String message) {
-        // 1. Create payload containing exception details.
-        IoTExceptionResponse iotExceptionResponse = new IoTExceptionResponse(
+    private IoTExceptionResponse getResponse(HttpStatus httpStatus, String message) {
+        return new IoTExceptionResponse(
                 message,
                 httpStatus,
                 ZonedDateTime.now(ZoneId.of("Z"))
         );
-
-        // 2. Return response entity
-        return new ResponseEntity<>(iotExceptionResponse, httpStatus);
     }
 
     @Override
@@ -67,7 +63,7 @@ public class IoTExceptionHandler extends ResponseEntityExceptionHandler implemen
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(HttpStatus.FORBIDDEN.value());
-            objectMapper.writeValue(response.getWriter(),
+            objectMapper.writeValue(response.getOutputStream(),
                     getResponse(HttpStatus.FORBIDDEN, "You don't have permission to perform this operation!"));
         }
     }
@@ -101,24 +97,28 @@ public class IoTExceptionHandler extends ResponseEntityExceptionHandler implemen
         }
         log.error("Request is not valid [{}]", errMessage);
 
-        objectMapper.writeValue(response.getWriter(), getResponse(HttpStatus.BAD_REQUEST, errMessage));
+        objectMapper.writeValue(response.getOutputStream(),
+                getResponse(HttpStatus.BAD_REQUEST, errMessage));
     }
 
     private void handleIoTException(IoTException exception, HttpServletResponse response) throws IOException {
         HttpStatus status = reasonToStatus(exception.getReason());
         response.setStatus(status.value());
 
-        objectMapper.writeValue(response.getWriter(), getResponse(status, exception.getMessage()));
+        objectMapper.writeValue(response.getOutputStream(),
+                getResponse(status, exception.getMessage()));
     }
 
     private void handleAuthenticationException(AuthenticationException exception, HttpServletResponse response) throws IOException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        objectMapper.writeValue(response.getWriter(), getResponse(HttpStatus.UNAUTHORIZED, exception.getMessage()));
+        objectMapper.writeValue(response.getOutputStream(),
+                getResponse(HttpStatus.UNAUTHORIZED, exception.getMessage()));
     }
 
     private void handleInternalServerError(Exception exception, HttpServletResponse response) throws IOException {
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        objectMapper.writeValue(response.getWriter(),
+
+        objectMapper.writeValue(response.getOutputStream(),
                 getResponse(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage()));
     }
 

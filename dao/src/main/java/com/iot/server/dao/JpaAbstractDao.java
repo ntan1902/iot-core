@@ -52,7 +52,7 @@ public abstract class JpaAbstractDao<E extends BaseEntity<D>, D extends BaseDto,
 
 
         return DaoUtil.getDto(
-                getJpaRepository().save(entity)
+                getJpaRepository().saveAndFlush(entity)
         );
     }
 
