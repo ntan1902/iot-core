@@ -1,6 +1,8 @@
 package com.iot.server.dao;
 
 import com.iot.server.common.dto.BaseDto;
+import com.iot.server.common.entity.ToDto;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;

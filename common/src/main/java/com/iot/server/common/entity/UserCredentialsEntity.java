@@ -1,6 +1,5 @@
-package com.iot.server.dao.entity;
+package com.iot.server.common.entity;
 
-import com.iot.server.common.dto.BaseDto;
 import com.iot.server.common.dto.UserCredentialsDto;
 import lombok.*;
 
@@ -9,10 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.UUID;
 
-
-@Getter
-@Setter
-@ToString
+@EqualsAndHashCode(callSuper = true)
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

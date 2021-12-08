@@ -1,16 +1,14 @@
-package com.iot.server.dao.entity;
+package com.iot.server.common.entity;
 
 import com.iot.server.common.dto.UserDto;
-import com.iot.server.common.enums.AuthorityEnum;
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-@Getter
-@Setter
-@ToString
+@EqualsAndHashCode(callSuper = true)
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -26,34 +24,25 @@ public class UserEntity extends BaseEntity<UserDto> {
     @Column(name = EntityConstants.USER_LAST_NAME_PROPERTY)
     private String lastName;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = EntityConstants.USER_AUTHORITY_PROPERTY)
-    private AuthorityEnum authority;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = EntityConstants.USER_ROLE_TABLE_NAME,
+            joinColumns = @JoinColumn(name = EntityConstants.USER_ROLE_USER_ID_PROPERTY),
+            inverseJoinColumns = @JoinColumn(name = EntityConstants.USER_ROLE_ROLE_ID_PROPERTY),
+            foreignKey = @ForeignKey(name = "none"),
+            inverseForeignKey = @ForeignKey(name = "none")
+    )
+    private Set<RoleEntity> roles;
 
     public UserEntity(UserDto userDto) {
         super(userDto);
-
         this.email = userDto.getEmail();
-        this.authority = userDto.getAuthority();
         this.firstName = userDto.getFirstName();
         this.lastName = userDto.getLastName();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
-            return false;
-        }
-        UserEntity that = (UserEntity) o;
-        return id != null && Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
+        this.roles = userDto.getRoles()
+                .stream()
+                .map(RoleEntity::new)
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -62,7 +51,10 @@ public class UserEntity extends BaseEntity<UserDto> {
                 .email(email)
                 .firstName(firstName)
                 .lastName(lastName)
-                .authority(authority)
+                .roles(this.getRoles()
+                        .stream()
+                        .map(RoleEntity::toDto)
+                        .collect(Collectors.toSet()))
                 .build();
 
         super.toDto(userDto);

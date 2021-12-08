@@ -4,7 +4,7 @@ import com.iot.server.common.dao.UserCredentialsDao;
 import com.iot.server.common.dto.UserCredentialsDto;
 import com.iot.server.dao.DaoUtil;
 import com.iot.server.dao.JpaAbstractDao;
-import com.iot.server.dao.entity.UserCredentialsEntity;
+import com.iot.server.common.entity.UserCredentialsEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;

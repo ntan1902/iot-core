@@ -1,4 +1,4 @@
-package com.iot.server.application.request;
+package com.iot.server.common.request;
 
 import lombok.Data;
 

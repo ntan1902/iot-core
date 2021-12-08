@@ -1,7 +1,7 @@
 package com.iot.server.application.security.jwt;
 
 import com.iot.server.application.config.JwtConfig;
-import com.iot.server.application.security.model.SecurityUser;
+import com.iot.server.application.model.SecurityUser;
 import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
@@ -34,15 +34,14 @@ public class JwtFactory {
         if (!StringUtils.hasText(securityUser.getEmail()))
             throw new IllegalArgumentException("Cannot create access token without email");
 
-        if (securityUser.getAuthority() == null)
+        if (securityUser.getAuthorities() == null || securityUser.getAuthorities().isEmpty())
             throw new IllegalArgumentException("User doesn't have any privileges");
 
         Claims claims = Jwts.claims()
                 .setSubject(securityUser.getId().toString());
-        claims.put(AUTHORITIES,
-                securityUser.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toList()));
+        claims.put(AUTHORITIES, securityUser.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
         claims.put(FIRST_NAME, securityUser.getFirstName());
         claims.put(LAST_NAME, securityUser.getLastName());
         claims.put(EMAIL, securityUser.getEmail());
@@ -72,7 +71,7 @@ public class JwtFactory {
 
         SecurityUser securityUser = new SecurityUser();
         securityUser.setId(UUID.fromString(subject));
-        securityUser.setAuthority(AuthorityEnum.getAuthority(scopes.get(0)));
+        securityUser.setAuthorities(AuthorityEnum.getAuthorities(scopes));
         securityUser.setFirstName(claims.get(FIRST_NAME, String.class));
         securityUser.setLastName(claims.get(LAST_NAME, String.class));
         securityUser.setEmail(claims.get(EMAIL, String.class));

@@ -1,4 +1,4 @@
-package com.iot.server.application.request;
+package com.iot.server.common.request;
 
 import lombok.Data;
 
@@ -15,9 +15,6 @@ public class RegisterRequest {
 
     @NotEmpty(message = "Last name must be not empty")
     private String lastName;
-
-    @NotEmpty(message = "Authority must be not empty")
-    private String authority;
 
     @NotEmpty(message = "Password must be not empty")
     private String password;
