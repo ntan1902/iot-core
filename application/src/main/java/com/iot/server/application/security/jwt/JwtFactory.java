@@ -51,6 +51,7 @@ public class JwtFactory {
 
         return Jwts.builder()
                 .setClaims(claims)
+                .setId(UUID.randomUUID().toString())
                 .setIssuer(jwtConfig.getIssuer())
                 .setIssuedAt(Date.from(currentTime.toInstant()))
                 .setExpiration(Date.from(currentTime.plusSeconds(jwtConfig.getAccessTokenExp()).toInstant()))

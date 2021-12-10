@@ -1,6 +1,13 @@
 package com.iot.server.application.security.filter;
 
+import com.iot.server.application.model.TokenAuthentication;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -10,27 +17,48 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-    private final List<String> pathsToSkip;
+    public static final String HEADER_PREFIX = "Bearer ";
 
-    public JwtAuthorizationFilter(List<String> pathsToSkip) {
+    private final List<String> pathsToSkip;
+    private final AuthenticationManager authenticationManager;
+
+    public JwtAuthorizationFilter(List<String> pathsToSkip, AuthenticationManager authenticationManager) {
         this.pathsToSkip = pathsToSkip;
+        this.authenticationManager = authenticationManager;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        log.info("{}", request.getServletPath());
+        String token = getTokenFromRequest(request);
 
+        Authentication authentication = new TokenAuthentication(token, null);
+
+        SecurityContextHolder.getContext().setAuthentication(
+                authenticationManager.authenticate(authentication));
+
+        filterChain.doFilter(request, response);
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         return pathsToSkip
                 .stream()
                 .anyMatch(path -> new AntPathMatcher().match(path, request.getServletPath()));
     }
 
+    private String getTokenFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(HEADER_PREFIX)) {
+            return bearerToken.substring(HEADER_PREFIX.length());
+        }
+        return null;
+    }
 
 }

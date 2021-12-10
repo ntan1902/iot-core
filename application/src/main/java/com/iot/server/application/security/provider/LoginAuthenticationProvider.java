@@ -5,7 +5,6 @@ import com.iot.server.application.service.SecurityService;
 import com.iot.server.common.dto.RoleDto;
 import com.iot.server.common.dto.UserCredentialsDto;
 import com.iot.server.common.dto.UserDto;
-import com.iot.server.common.service.RoleService;
 import com.iot.server.common.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -24,7 +23,6 @@ public class LoginAuthenticationProvider implements AuthenticationProvider {
 
     private final UserService userService;
     private final SecurityService securityService;
-    private final RoleService roleService;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -41,8 +39,9 @@ public class LoginAuthenticationProvider implements AuthenticationProvider {
         }
 
         Set<RoleDto> roles = user.getRoles();
-        if (user.getRoles() == null || user.getRoles().isEmpty())
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
             throw new InsufficientAuthenticationException("User has no authority assigned");
+        }
 
         UserCredentialsDto userCredentials = userService.findUserCredentialsByUserId(user.getId());
         if (userCredentials == null) {

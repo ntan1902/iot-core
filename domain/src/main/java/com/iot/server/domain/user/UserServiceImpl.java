@@ -75,7 +75,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto findUserByEmail(String email) {
         log.info("{}", email);
-        return new UserDto(userDao.findByEmail(email));
+        UserEntity user = userDao.findByEmail(email);
+        if (user == null) {
+            return null;
+        }
+        return new UserDto(user);
     }
 
     @Override

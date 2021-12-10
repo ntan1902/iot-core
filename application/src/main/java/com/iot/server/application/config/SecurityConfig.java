@@ -29,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String LOGIN_URL = "/api/auth/login";
     public static final String REGISTER_URL = "/api/auth/register";
     public static final String REFRESH_TOKEN_URL = "/api/auth/refresh-token";
+    public static final String JWK_SET_URL = "/api/auth/.well-known/jwks.json";
 
     private final IoTExceptionHandler ioTExceptionHandler;
 
@@ -51,13 +52,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public JwtAuthorizationFilter jwtAuthorizationFilter() {
+    public JwtAuthorizationFilter jwtAuthorizationFilter() throws Exception {
         List<String> pathsToSkip = Arrays.asList(
                 LOGIN_URL,
                 REGISTER_URL,
-                REFRESH_TOKEN_URL
+                REFRESH_TOKEN_URL,
+                JWK_SET_URL
         );
-        return new JwtAuthorizationFilter(pathsToSkip);
+        return new JwtAuthorizationFilter(pathsToSkip, this.authenticationManager());
     }
 
     @Override
@@ -76,6 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
                 .antMatchers(LOGIN_URL).permitAll()
                 .antMatchers(REGISTER_URL).permitAll()
+                .antMatchers(JWK_SET_URL).permitAll()
                 .anyRequest().authenticated().and()
                 .addFilter(loginAuthenticationFilter())
                 .addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

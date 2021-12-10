@@ -1,5 +1,6 @@
 package com.iot.server.application.utils;
 
+import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -48,8 +49,6 @@ public class RSAUtils {
                 .replaceAll("\\n*", EMPTY_STRING)
                 .replace(BEGIN_PUBLIC_KEY, EMPTY_STRING)
                 .replace(END_PUBLIC_KEY, EMPTY_STRING);
-        ;
-
 
         X509EncodedKeySpec spec = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeyContent));
 
@@ -79,7 +78,8 @@ public class RSAUtils {
         PrivateKey privateKey = getPrivateKey("private_key_pkcs8.pem");
         PublicKey publicKey = getPublicKey("public_key.pem");
 
-        RSAKey jwk = new RSAKey.Builder((RSAPublicKey) publicKey).privateKey(privateKey).build();
+        JWKSet jwk = new JWKSet(
+                new RSAKey.Builder((RSAPublicKey) publicKey).privateKey(privateKey).build());
 
         Claims claims = Jwts.claims()
                 .setSubject("UUID");
