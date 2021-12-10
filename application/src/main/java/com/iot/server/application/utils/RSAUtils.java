@@ -8,9 +8,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.core.io.ClassPathResource;
 
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -22,6 +23,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 public class RSAUtils {
 
@@ -34,19 +36,15 @@ public class RSAUtils {
     public static final String EMPTY_STRING = "";
 
     public static PublicKey getPublicKey(String filename) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
-        byte[] bytes = readFile(filename);
-        return getPublicKey(bytes);
+        return getPublicKeyString(readFile(filename));
     }
 
     public static PrivateKey getPrivateKey(String filename) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        byte[] bytes = readFile(filename);
-        return getPrivateKey(bytes);
+        return getPrivateKeyString(readFile(filename));
     }
 
-    private static PublicKey getPublicKey(byte[] bytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        String publicKeyContent = new String(bytes);
+    private static PublicKey getPublicKeyString(String publicKeyContent) throws NoSuchAlgorithmException, InvalidKeySpecException {
         publicKeyContent = publicKeyContent
-                .replaceAll("\\n*", EMPTY_STRING)
                 .replace(BEGIN_PUBLIC_KEY, EMPTY_STRING)
                 .replace(END_PUBLIC_KEY, EMPTY_STRING);
 
@@ -56,10 +54,8 @@ public class RSAUtils {
         return factory.generatePublic(spec);
     }
 
-    private static PrivateKey getPrivateKey(byte[] bytes) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        String privateKeyContent = new String(bytes);
+    private static PrivateKey getPrivateKeyString(String privateKeyContent) throws NoSuchAlgorithmException, InvalidKeySpecException {
         privateKeyContent = privateKeyContent
-                .replaceAll("\\n*", EMPTY_STRING)
                 .replace(BEGIN_PRIVATE_KEY, EMPTY_STRING)
                 .replace(END_PRIVATE_KEY, EMPTY_STRING);
 
@@ -69,9 +65,12 @@ public class RSAUtils {
         return factory.generatePrivate(spec);
     }
 
-    private static byte[] readFile(String filename) throws IOException {
-        File file = new ClassPathResource(filename).getFile();
-        return Files.readAllBytes(file.toPath());
+    private static String readFile(String filename) throws IOException {
+
+        InputStream inputStream = new ClassPathResource(filename).getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        return reader.lines()
+                .collect(Collectors.joining());
     }
 
     public static void main(String[] args) throws Exception {
