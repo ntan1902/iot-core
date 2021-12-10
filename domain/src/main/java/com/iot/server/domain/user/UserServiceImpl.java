@@ -3,9 +3,11 @@ package com.iot.server.domain.user;
 import com.iot.server.common.dao.RoleDao;
 import com.iot.server.common.dao.UserCredentialsDao;
 import com.iot.server.common.dao.UserDao;
-import com.iot.server.common.dto.RoleDto;
 import com.iot.server.common.dto.UserCredentialsDto;
 import com.iot.server.common.dto.UserDto;
+import com.iot.server.common.entity.RoleEntity;
+import com.iot.server.common.entity.UserCredentialsEntity;
+import com.iot.server.common.entity.UserEntity;
 import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.request.RegisterRequest;
 import com.iot.server.common.service.UserService;
@@ -22,6 +24,7 @@ import java.util.stream.Stream;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
@@ -31,12 +34,10 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    @Transactional
     public UserDto registerUser(RegisterRequest registerRequest) {
         log.info("{}", registerRequest);
 
-
-        UserDto userDto = UserDto.builder()
+        UserEntity userEntity = UserEntity.builder()
                 .email(registerRequest.getEmail())
                 .firstName(registerRequest.getFirstName())
                 .lastName(registerRequest.getLastName())
@@ -44,13 +45,13 @@ public class UserServiceImpl implements UserService {
                         .map(authority -> createRoleIfNotFound(authority.name()))
                         .collect(Collectors.toSet()))
                 .build();
-        UserDto savedUser = userDao.save(userDto);
+        UserEntity savedUser = userDao.save(userEntity);
 
         if (savedUser != null && savedUser.getId() != null) {
             String encodedPassword = passwordEncoder.encode(registerRequest.getPassword());
 
-            UserCredentialsDto userCredentials = UserCredentialsDto.builder()
-                    .userId(savedUser.getId())
+            UserCredentialsEntity userCredentials = UserCredentialsEntity.builder()
+                    .user(savedUser)
                     .activateToken(UUID.randomUUID().toString())
                     .enabled(true)
                     .password(encodedPassword)
@@ -58,30 +59,28 @@ public class UserServiceImpl implements UserService {
             userCredentialsDao.save(userCredentials);
         }
 
-        return savedUser;
+        return new UserDto(savedUser);
     }
 
-    @Transactional
-    RoleDto createRoleIfNotFound(String name) {
-        RoleDto roleDto = roleDao.findByName(name);
-        if (roleDto == null) {
-            roleDto = roleDao.save(RoleDto.builder()
+    RoleEntity createRoleIfNotFound(String name) {
+        RoleEntity roleEntity = roleDao.findByName(name);
+        if (roleEntity == null) {
+            roleEntity = roleDao.save(RoleEntity.builder()
                     .name(name)
                     .build());
         }
-        return roleDto;
+        return roleEntity;
     }
 
     @Override
-    @Transactional
     public UserDto findUserByEmail(String email) {
         log.info("{}", email);
-        return userDao.findByEmail(email);
+        return new UserDto(userDao.findByEmail(email));
     }
 
     @Override
     public UserCredentialsDto findUserCredentialsByUserId(UUID userId) {
         log.info("{}", userId);
-        return userCredentialsDao.findByUserId(userId);
+        return new UserCredentialsDto(userCredentialsDao.findByUserId(userId));
     }
 }

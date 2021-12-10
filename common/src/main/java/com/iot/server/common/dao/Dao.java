@@ -1,17 +1,18 @@
 package com.iot.server.common.dao;
 
 
-import com.iot.server.common.dto.BaseDto;
+import com.iot.server.common.entity.BaseEntity;
+
 import java.util.List;
 
-public interface Dao<D extends BaseDto, ID> {
+public interface Dao<E extends BaseEntity, ID> {
 
-  List<D> findAll();
+    List<E> findAll();
 
-  D findById(ID id);
+    E findById(ID id);
 
-  D save(D dto);
+    E save(E entity);
 
-  boolean removeById(ID id);
+    boolean removeById(ID id);
 
 }

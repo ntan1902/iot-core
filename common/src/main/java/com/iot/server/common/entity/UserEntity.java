@@ -5,16 +5,17 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Table(name = EntityConstants.USER_TABLE_NAME)
-public class UserEntity extends BaseEntity<UserDto> {
+public class UserEntity extends BaseEntity<UUID> {
     @Column(name = EntityConstants.USER_EMAIL_PROPERTY)
     private String email;
 
@@ -32,6 +33,7 @@ public class UserEntity extends BaseEntity<UserDto> {
             foreignKey = @ForeignKey(name = "none"),
             inverseForeignKey = @ForeignKey(name = "none")
     )
+    @ToString.Exclude
     private Set<RoleEntity> roles;
 
     public UserEntity(UserDto userDto) {
@@ -43,21 +45,5 @@ public class UserEntity extends BaseEntity<UserDto> {
                 .stream()
                 .map(RoleEntity::new)
                 .collect(Collectors.toSet());
-    }
-
-    @Override
-    public UserDto toDto() {
-        final UserDto userDto = UserDto.builder()
-                .email(email)
-                .firstName(firstName)
-                .lastName(lastName)
-                .roles(this.getRoles()
-                        .stream()
-                        .map(RoleEntity::toDto)
-                        .collect(Collectors.toSet()))
-                .build();
-
-        super.toDto(userDto);
-        return userDto;
     }
 }

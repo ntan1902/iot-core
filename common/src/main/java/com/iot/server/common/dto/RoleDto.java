@@ -1,12 +1,25 @@
 package com.iot.server.common.dto;
 
-import lombok.*;
+import com.iot.server.common.entity.RoleEntity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-@EqualsAndHashCode(callSuper = true)
+import java.util.UUID;
+
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class RoleDto extends BaseDto {
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
+public class RoleDto extends BaseDto<UUID> {
     private String name;
+
+    public RoleDto(RoleEntity roleEntity) {
+        super(roleEntity);
+        this.name = roleEntity.getName();
+    }
+
 }

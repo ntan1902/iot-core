@@ -1,84 +1,43 @@
 package com.iot.server.dao;
 
 import com.iot.server.common.dao.Dao;
-import com.iot.server.common.dto.BaseDto;
 import com.iot.server.common.entity.BaseEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.transaction.Transactional;
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 @Slf4j
-public abstract class JpaAbstractDao<E extends BaseEntity<D>, D extends BaseDto, ID>
-        implements Dao<D, ID> {
-
-    protected abstract Class<E> getEntityClass();
+public abstract class JpaAbstractDao<E extends BaseEntity<ID>, ID extends Serializable> implements Dao<E, ID> {
 
     protected abstract JpaRepository<E, ID> getJpaRepository();
 
     @Override
-    public List<D> findAll() {
+    public List<E> findAll() {
         log.debug("Executing");
-        List<E> entities = getJpaRepository().findAll();
-        return DaoUtil.getDtos(entities);
+        return getJpaRepository().findAll();
     }
 
     @Override
-    public D findById(ID id) {
+    public E findById(ID id) {
         log.debug("{}", id);
-        Optional<E> entity = getJpaRepository().findById(id);
-        return DaoUtil.getDto(entity);
+        return getJpaRepository().findById(id).orElse(null);
     }
 
     @Override
     @Transactional
-    public D save(D dto) {
-        log.debug("{}", dto);
-
-        E entity;
-        try {
-            entity = getEntityClass().getConstructor(dto.getClass()).newInstance(dto);
-        } catch (Exception exception) {
-            log.error("Can't create entity from dto [{}]", dto, exception);
-            throw new IllegalArgumentException("Can't create entity from dto [" + dto + "]");
-        }
-
+    public E save(E entity) {
+        log.debug("{}", entity);
         if (entity.getId() == null) {
-            entity.setId(UUID.randomUUID());
             entity.setCreatedAt(LocalDateTime.now());
         }
 
         entity.setUpdatedAt(LocalDateTime.now());
-        return DaoUtil.getDto(
-                getJpaRepository().save(entity)
-        );
-    }
-
-    @Transactional
-    public List<D> saveAll(Collection<D> dtos) {
-        log.debug("{}", dtos);
-
-        List<D> result = new ArrayList<>();
-        dtos.forEach(dto -> {
-            E entity;
-            try {
-                entity = getEntityClass().getConstructor(dto.getClass()).newInstance(dto);
-            } catch (Exception exception) {
-                log.error("Can't create entity from dto [{}]", dto, exception);
-                throw new IllegalArgumentException("Can't create entity from dto [" + dto + "]");
-            }
-
-            if (entity.getId() == null) {
-                entity.setId(UUID.randomUUID());
-            }
-            result.add(
-                    DaoUtil.getDto(
-                            getJpaRepository().saveAndFlush(entity)
-                    ));
-        });
-        return result;
+        return getJpaRepository().save(entity);
     }
 
     @Override

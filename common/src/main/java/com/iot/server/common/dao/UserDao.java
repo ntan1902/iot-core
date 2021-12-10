@@ -1,11 +1,11 @@
 package com.iot.server.common.dao;
 
-import com.iot.server.common.dto.UserDto;
+import com.iot.server.common.entity.UserEntity;
 
 import java.util.UUID;
 
-public interface UserDao extends Dao<UserDto, UUID> {
+public interface UserDao extends Dao<UserEntity, UUID> {
 
-    UserDto findByEmail(String email);
+    UserEntity findByEmail(String email);
 
 }

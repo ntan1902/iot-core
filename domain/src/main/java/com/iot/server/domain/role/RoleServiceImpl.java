@@ -2,6 +2,7 @@ package com.iot.server.domain.role;
 
 import com.iot.server.common.dao.RoleDao;
 import com.iot.server.common.dto.RoleDto;
+import com.iot.server.common.entity.RoleEntity;
 import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.service.RoleService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void save(RoleDto roleDto) {
-        roleDao.save(roleDto);
+        roleDao.save(new RoleEntity(roleDto));
     }
 }

@@ -3,22 +3,23 @@ package com.iot.server.common.entity;
 import com.iot.server.common.dto.UserCredentialsDto;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Table(name = EntityConstants.USER_CREDENTIALS_TABLE_NAME)
-public class UserCredentialsEntity extends BaseEntity<UserCredentialsDto> {
-
-    @Column(name = EntityConstants.USER_CREDENTIALS_USER_ID_PROPERTY, unique = true)
-    private UUID userId;
+public class UserCredentialsEntity extends BaseEntity<UUID> {
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(
+            name = EntityConstants.USER_CREDENTIALS_USER_ID_PROPERTY,
+            referencedColumnName = EntityConstants.ID_PROPERTY,
+            foreignKey = @ForeignKey(name = "none"))
+    private UserEntity user;
 
     @Column(name = EntityConstants.USER_CREDENTIALS_PASSWORD_PROPERTY)
     private String password;
@@ -34,25 +35,10 @@ public class UserCredentialsEntity extends BaseEntity<UserCredentialsDto> {
 
     public UserCredentialsEntity(UserCredentialsDto userCredentialsDto) {
         super(userCredentialsDto);
-        this.userId = userCredentialsDto.getUserId();
+        this.user.setId(userCredentialsDto.getUserId());
         this.password = userCredentialsDto.getPassword();
         this.enabled = userCredentialsDto.isEnabled();
         this.activateToken = userCredentialsDto.getActivateToken();
         this.resetToken = userCredentialsDto.getResetToken();
-    }
-
-    @Override
-    public UserCredentialsDto toDto() {
-        final UserCredentialsDto dto = UserCredentialsDto
-                .builder()
-                .userId(userId)
-                .enabled(enabled)
-                .activateToken(activateToken)
-                .password(password)
-                .resetToken(resetToken)
-                .build();
-
-        super.toDto(dto);
-        return dto;
     }
 }

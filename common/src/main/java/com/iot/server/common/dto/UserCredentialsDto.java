@@ -1,18 +1,32 @@
 package com.iot.server.common.dto;
 
-import lombok.Builder;
+import com.iot.server.common.entity.UserCredentialsEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
-public class UserCredentialsDto extends BaseDto {
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
+public class UserCredentialsDto extends BaseDto<UUID> {
     private UUID userId;
     private boolean enabled;
     private String password;
     private String activateToken;
     private String resetToken;
+
+    public UserCredentialsDto(UserCredentialsEntity userCredentialsEntity) {
+        super(userCredentialsEntity);
+        this.userId = userCredentialsEntity.getUser().getId();
+        this.password = userCredentialsEntity.getPassword();
+        this.enabled = userCredentialsEntity.isEnabled();
+        this.activateToken = userCredentialsEntity.getActivateToken();
+        this.resetToken = userCredentialsEntity.getResetToken();
+    }
 }

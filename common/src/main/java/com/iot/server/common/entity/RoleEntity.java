@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -14,7 +15,7 @@ import javax.persistence.Table;
 @Builder
 @Entity
 @Table(name = EntityConstants.ROLE_TABLE_NAME)
-public class RoleEntity extends BaseEntity<RoleDto> {
+public class RoleEntity extends BaseEntity<UUID> {
 
     @Column(name = EntityConstants.ROLE_NAME_PROPERTY)
     private String name;
@@ -22,14 +23,5 @@ public class RoleEntity extends BaseEntity<RoleDto> {
     public RoleEntity(RoleDto roleDto) {
         super(roleDto);
         this.name = roleDto.getName();
-    }
-
-    @Override
-    public RoleDto toDto() {
-        final RoleDto roleDto = RoleDto.builder()
-                .name(name)
-                .build();
-        super.toDto(roleDto);
-        return roleDto;
     }
 }

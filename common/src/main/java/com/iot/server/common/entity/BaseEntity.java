@@ -2,24 +2,25 @@ package com.iot.server.common.entity;
 
 import com.iot.server.common.dto.BaseDto;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass
-public abstract class BaseEntity<D extends BaseDto> implements ToDto<D> {
+public abstract class BaseEntity<ID extends Serializable> {
     @Id
-    @Column(name = EntityConstants.ID_PROPERTY, columnDefinition = "uuid")
-    protected UUID id;
+    @Column(name = EntityConstants.ID_PROPERTY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    protected ID id;
 
     @Column(name = EntityConstants.CREATE_UID_PROPERTY, columnDefinition = "uuid")
     protected UUID createUid;
@@ -36,7 +37,7 @@ public abstract class BaseEntity<D extends BaseDto> implements ToDto<D> {
     @Column(name = EntityConstants.UPDATED_AT_PROPERTY)
     protected LocalDateTime updatedAt;
 
-    protected BaseEntity(BaseDto baseDto) {
+    protected BaseEntity(BaseDto<ID> baseDto) {
         if (baseDto.getId() != null) {
             this.id = baseDto.getId();
         }
@@ -52,23 +53,5 @@ public abstract class BaseEntity<D extends BaseDto> implements ToDto<D> {
         this.createdAt = baseDto.getCreatedAt();
         this.updatedAt = baseDto.getUpdatedAt();
         this.deleted = baseDto.isDeleted();
-    }
-
-    public final void toDto(final D dto) {
-        if (id != null) {
-            dto.setId(id);
-        }
-
-        if (createUid != null) {
-            dto.setCreateUid(createUid);
-        }
-
-        if (updateUid != null) {
-            dto.setUpdateUid(updateUid);
-        }
-
-        dto.setCreatedAt(createdAt);
-        dto.setUpdatedAt(updatedAt);
-        dto.setDeleted(deleted);
     }
 }
