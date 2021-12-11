@@ -27,4 +27,9 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> getJWKSet() {
         return ResponseEntity.ok(jwkSet.toJSONObject());
     }
+
+    @GetMapping("/hello")
+    public ResponseEntity<String> hello() {
+        return ResponseEntity.ok("Hello");
+    }
 }

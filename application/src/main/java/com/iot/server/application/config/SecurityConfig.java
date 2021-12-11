@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 REFRESH_TOKEN_URL,
                 JWK_SET_URL
         );
-        return new JwtAuthorizationFilter(pathsToSkip, this.authenticationManager());
+        return new JwtAuthorizationFilter(pathsToSkip, this.authenticationManager(), ioTExceptionHandler);
     }
 
     @Override

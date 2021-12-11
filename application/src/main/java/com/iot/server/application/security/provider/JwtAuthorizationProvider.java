@@ -19,7 +19,6 @@ public class JwtAuthorizationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String accessToken = authentication.getName();
         SecurityUser securityUser = jwtFactory.parseAccessJwtToken(accessToken);
-
         return new TokenAuthentication(securityUser, null, securityUser.getAuthorities());
     }
 

@@ -1,10 +1,12 @@
 package com.iot.server.application.security.filter;
 
+import com.iot.server.application.exception.IoTExceptionHandler;
 import com.iot.server.application.model.TokenAuthentication;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
@@ -24,10 +26,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final List<String> pathsToSkip;
     private final AuthenticationManager authenticationManager;
+    private final IoTExceptionHandler ioTExceptionHandler;
 
-    public JwtAuthorizationFilter(List<String> pathsToSkip, AuthenticationManager authenticationManager) {
+    public JwtAuthorizationFilter(List<String> pathsToSkip, AuthenticationManager authenticationManager, IoTExceptionHandler ioTExceptionHandler) {
         this.pathsToSkip = pathsToSkip;
         this.authenticationManager = authenticationManager;
+        this.ioTExceptionHandler = ioTExceptionHandler;
     }
 
     @Override
@@ -38,10 +42,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String token = getTokenFromRequest(request);
 
         Authentication authentication = new TokenAuthentication(token, null);
-
-        SecurityContextHolder.getContext().setAuthentication(
-                authenticationManager.authenticate(authentication));
-
+        Authentication authResult;
+        try {
+            authResult = authenticationManager.authenticate(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authResult);
+        } catch (AuthenticationException ex) {
+            ioTExceptionHandler.handle(response, ex);
+        }
         filterChain.doFilter(request, response);
     }
 
