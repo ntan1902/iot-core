@@ -24,4 +24,10 @@ public class UserDaoImpl extends JpaAbstractDao<UserEntity, UUID> implements Use
     public UserEntity findByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .isPresent();
+    }
 }

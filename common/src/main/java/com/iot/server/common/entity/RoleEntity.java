@@ -8,8 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

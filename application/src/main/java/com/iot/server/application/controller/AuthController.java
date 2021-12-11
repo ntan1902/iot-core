@@ -6,6 +6,7 @@ import com.iot.server.common.service.UserService;
 import com.nimbusds.jose.jwk.JWKSet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,6 +30,7 @@ public class AuthController {
     }
 
     @GetMapping("/hello")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> hello() {
         return ResponseEntity.ok("Hello");
     }

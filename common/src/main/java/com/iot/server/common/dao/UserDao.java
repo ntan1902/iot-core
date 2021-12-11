@@ -8,4 +8,5 @@ public interface UserDao extends Dao<UserEntity, UUID> {
 
     UserEntity findByEmail(String email);
 
+    boolean existsByEmail(String email);
 }

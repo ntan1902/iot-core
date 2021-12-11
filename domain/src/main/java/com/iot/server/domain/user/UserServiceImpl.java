@@ -9,6 +9,8 @@ import com.iot.server.common.entity.RoleEntity;
 import com.iot.server.common.entity.UserCredentialsEntity;
 import com.iot.server.common.entity.UserEntity;
 import com.iot.server.common.enums.AuthorityEnum;
+import com.iot.server.common.enums.ReasonEnum;
+import com.iot.server.common.exception.IoTException;
 import com.iot.server.common.request.RegisterRequest;
 import com.iot.server.common.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +39,34 @@ public class UserServiceImpl implements UserService {
     public UserDto registerUser(RegisterRequest registerRequest) {
         log.info("{}", registerRequest);
 
-        UserEntity userEntity = UserEntity.builder()
+        if (!userDao.existsByEmail(registerRequest.getEmail())) {
+            UserEntity userEntity = getUserEntity(registerRequest);
+            UserEntity savedUser = userDao.save(userEntity);
+
+            if (savedUser != null && savedUser.getId() != null) {
+                String encodedPassword = passwordEncoder.encode(registerRequest.getPassword());
+
+                UserCredentialsEntity userCredentials = getUserCredentialsEntity(savedUser, encodedPassword);
+                userCredentialsDao.save(userCredentials);
+            }
+
+            return new UserDto(savedUser);
+        } else {
+            throw new IoTException(ReasonEnum.INVALID_PARAMS, "Email is already existed");
+        }
+    }
+
+    private UserCredentialsEntity getUserCredentialsEntity(UserEntity savedUser, String encodedPassword) {
+        return UserCredentialsEntity.builder()
+                .user(savedUser)
+                .activateToken(UUID.randomUUID().toString())
+                .enabled(true)
+                .password(encodedPassword)
+                .build();
+    }
+
+    private UserEntity getUserEntity(RegisterRequest registerRequest) {
+        return UserEntity.builder()
                 .email(registerRequest.getEmail())
                 .firstName(registerRequest.getFirstName())
                 .lastName(registerRequest.getLastName())
@@ -45,21 +74,6 @@ public class UserServiceImpl implements UserService {
                         .map(authority -> createRoleIfNotFound(authority.name()))
                         .collect(Collectors.toSet()))
                 .build();
-        UserEntity savedUser = userDao.save(userEntity);
-
-        if (savedUser != null && savedUser.getId() != null) {
-            String encodedPassword = passwordEncoder.encode(registerRequest.getPassword());
-
-            UserCredentialsEntity userCredentials = UserCredentialsEntity.builder()
-                    .user(savedUser)
-                    .activateToken(UUID.randomUUID().toString())
-                    .enabled(true)
-                    .password(encodedPassword)
-                    .build();
-            userCredentialsDao.save(userCredentials);
-        }
-
-        return new UserDto(savedUser);
     }
 
     RoleEntity createRoleIfNotFound(String name) {
