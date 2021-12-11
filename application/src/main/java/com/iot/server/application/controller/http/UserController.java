@@ -1,4 +1,4 @@
-package com.iot.server.application.controller;
+package com.iot.server.application.controller.http;
 
 import com.iot.server.common.service.UserService;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,11 @@
-package com.iot.server.application.controller;
+package com.iot.server.application.controller.http;
 
+import com.iot.server.application.controller.handler.GetJwkSetHandler;
+import com.iot.server.application.controller.handler.RegisterHandler;
 import com.iot.server.common.dto.UserDto;
+import com.iot.server.common.request.EmptyRequest;
 import com.iot.server.common.request.RegisterRequest;
+import com.iot.server.common.response.RegisterResponse;
 import com.iot.server.common.service.UserService;
 import com.nimbusds.jose.jwk.JWKSet;
 import lombok.RequiredArgsConstructor;
@@ -16,17 +20,17 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final UserService userService;
-    private final JWKSet jwkSet;
+    private final RegisterHandler registerHandler;
+    private final GetJwkSetHandler getJwkSetHandler;
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
-        return ResponseEntity.ok(userService.registerUser(registerRequest));
+    public ResponseEntity<RegisterResponse> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
+        return ResponseEntity.ok(registerHandler.handleRequest(registerRequest));
     }
 
     @GetMapping("/.well-known/jwks.json")
     public ResponseEntity<Map<String, Object>> getJWKSet() {
-        return ResponseEntity.ok(jwkSet.toJSONObject());
+        return ResponseEntity.ok(getJwkSetHandler.handleRequest(new EmptyRequest()));
     }
 
     @GetMapping("/hello")
