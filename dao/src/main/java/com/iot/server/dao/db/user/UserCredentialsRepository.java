@@ -1,4 +1,4 @@
-package com.iot.server.dao.user;
+package com.iot.server.dao.db.user;
 
 import com.iot.server.common.entity.UserCredentialsEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

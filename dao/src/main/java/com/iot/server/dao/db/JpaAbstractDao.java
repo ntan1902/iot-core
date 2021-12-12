@@ -1,6 +1,6 @@
-package com.iot.server.dao;
+package com.iot.server.dao.db;
 
-import com.iot.server.common.dao.Dao;
+import com.iot.server.common.dao.db.Dao;
 import com.iot.server.common.entity.BaseEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;

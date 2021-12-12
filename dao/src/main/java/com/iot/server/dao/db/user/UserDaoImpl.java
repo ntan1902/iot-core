@@ -1,8 +1,8 @@
-package com.iot.server.dao.user;
+package com.iot.server.dao.db.user;
 
-import com.iot.server.common.dao.UserDao;
+import com.iot.server.common.dao.db.UserDao;
 import com.iot.server.common.entity.UserEntity;
-import com.iot.server.dao.JpaAbstractDao;
+import com.iot.server.dao.db.JpaAbstractDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;

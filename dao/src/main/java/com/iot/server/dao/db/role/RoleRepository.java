@@ -1,4 +1,4 @@
-package com.iot.server.dao.role;
+package com.iot.server.dao.db.role;
 
 import com.iot.server.common.entity.RoleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

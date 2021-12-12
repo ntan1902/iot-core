@@ -10,7 +10,7 @@ spring:
         format_sql: "${SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL:true}"
     open-in-view: false
     hibernate:
-      ddl-auto: "${SPRING_JPA_HIBERNATE_DDL_AUTO:update}"
+      ddl-auto: "${SPRING_JPA_HIBERNATE_DDL_AUTO:create}"
     database-platform: "${SPRING_JPA_DATABASE_PLATFORM:org.hibernate.dialect.PostgreSQLDialect}"
     show-sql: "${SPRING_JPA_SHOW_SQL:true}"
 
@@ -45,3 +45,8 @@ spring.mvc.cors:
 #      #Set whether credentials are supported. When not set, credentials are not supported.
 #      allow-credentials: "true"
       allowed-origin-pattern: "*"
+
+client.nodejs:
+  host: "${CLIENT_BASE_URL:http://localhost}"
+  port: "${CLIENT_PORT:8081}"
+  max-attempt: 3

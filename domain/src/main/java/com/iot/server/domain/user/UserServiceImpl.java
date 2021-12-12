@@ -1,8 +1,10 @@
 package com.iot.server.domain.user;
 
-import com.iot.server.common.dao.RoleDao;
-import com.iot.server.common.dao.UserCredentialsDao;
-import com.iot.server.common.dao.UserDao;
+import com.iot.server.common.dao.client.ClientDao;
+import com.iot.server.common.dao.client.entity.TenantEntity;
+import com.iot.server.common.dao.db.RoleDao;
+import com.iot.server.common.dao.db.UserCredentialsDao;
+import com.iot.server.common.dao.db.UserDao;
 import com.iot.server.common.dto.UserCredentialsDto;
 import com.iot.server.common.dto.UserDto;
 import com.iot.server.common.entity.RoleEntity;
@@ -37,6 +39,7 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final UserCredentialsDao userCredentialsDao;
     private final RoleDao roleDao;
+    private final ClientDao clientDao;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -53,12 +56,24 @@ public class UserServiceImpl implements UserService {
 
                 UserCredentialsEntity userCredentials = getUserCredentialsEntity(savedUser, encodedPassword);
                 userCredentialsDao.save(userCredentials);
+
             }
 
             return new UserDto(savedUser);
         } else {
             throw new IoTException(ReasonEnum.INVALID_PARAMS, "Email is already existed");
         }
+    }
+
+    private TenantEntity getTenantEntity(UserEntity userEntity) {
+        return TenantEntity.builder()
+                .id(userEntity.getId())
+                .userId(userEntity.getId())
+                .email(userEntity.getEmail())
+                .deleted(false)
+                .createUid(userEntity.getId())
+                .updateUid(null)
+                .build();
     }
 
     private UserCredentialsEntity getUserCredentialsEntity(UserEntity savedUser, String encodedPassword) {
@@ -75,7 +90,7 @@ public class UserServiceImpl implements UserService {
                 .email(registerRequest.getEmail())
                 .firstName(registerRequest.getFirstName())
                 .lastName(registerRequest.getLastName())
-                .roles(Stream.of(AuthorityEnum.CUSTOMER)
+                .roles(Stream.of(AuthorityEnum.TENANT)
                         .map(authority -> createRoleIfNotFound(authority.name()))
                         .collect(Collectors.toSet()))
                 .build();

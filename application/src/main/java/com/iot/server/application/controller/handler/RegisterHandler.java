@@ -26,7 +26,7 @@ public class RegisterHandler extends BaseHandler<RegisterRequest, RegisterRespon
         UserDto user = userService.registerUser(request);
 
         RegisterResponse response = new RegisterResponse();
-        response.setSuccess(user != null);
+        response.setUserId(user.getId());
         return response;
     }
 }

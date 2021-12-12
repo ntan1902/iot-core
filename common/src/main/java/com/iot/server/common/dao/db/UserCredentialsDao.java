@@ -1,4 +1,4 @@
-package com.iot.server.common.dao;
+package com.iot.server.common.dao.db;
 
 import com.iot.server.common.entity.UserCredentialsEntity;
 
