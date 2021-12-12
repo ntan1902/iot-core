@@ -9,7 +9,9 @@ import java.util.UUID;
 public interface UserService {
     UserDto registerUser(RegisterRequest registerRequest);
 
-    UserDto findUserByEmail(String email);
+    UserDto findUserWithRolesByEmail(String email);
 
     UserCredentialsDto findUserCredentialsByUserId(UUID userId);
+
+    UserDto findUserWithExtraInfoById(UUID userId);
 }

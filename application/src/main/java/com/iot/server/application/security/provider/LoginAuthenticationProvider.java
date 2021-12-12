@@ -2,7 +2,6 @@ package com.iot.server.application.security.provider;
 
 import com.iot.server.application.model.SecurityUser;
 import com.iot.server.application.service.SecurityService;
-import com.iot.server.common.dto.RoleDto;
 import com.iot.server.common.dto.UserCredentialsDto;
 import com.iot.server.common.dto.UserDto;
 import com.iot.server.common.service.UserService;
@@ -33,13 +32,14 @@ public class LoginAuthenticationProvider implements AuthenticationProvider {
     }
 
     private Authentication authenticateEmailAndPassword(String email, String password) {
-        UserDto user = userService.findUserByEmail(email);
+        UserDto user = userService.findUserWithRolesByEmail(email);
         if (user == null) {
             throw new UsernameNotFoundException("User is not found: " + email);
         }
 
-        Set<RoleDto> roles = user.getRoles();
-        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+        @SuppressWarnings("unchecked")
+        Set<String> roles = (Set<String>) user.getExtraInfo().get("roles");
+        if (roles == null || roles.isEmpty()) {
             throw new InsufficientAuthenticationException("User has no authority assigned");
         }
 

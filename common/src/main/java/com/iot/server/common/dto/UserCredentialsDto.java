@@ -23,10 +23,13 @@ public class UserCredentialsDto extends BaseDto<UUID> {
 
     public UserCredentialsDto(UserCredentialsEntity userCredentialsEntity) {
         super(userCredentialsEntity);
-        this.userId = userCredentialsEntity.getUser().getId();
         this.password = userCredentialsEntity.getPassword();
         this.enabled = userCredentialsEntity.isEnabled();
         this.activateToken = userCredentialsEntity.getActivateToken();
         this.resetToken = userCredentialsEntity.getResetToken();
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 }

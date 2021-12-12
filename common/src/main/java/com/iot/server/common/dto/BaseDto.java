@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 @Data
@@ -16,12 +17,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @SuperBuilder
 public abstract class BaseDto<ID extends Serializable> {
-    private ID id;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private UUID createUid;
-    private UUID updateUid;
-    private boolean deleted;
+    protected ID id;
+    protected LocalDateTime createdAt;
+    protected LocalDateTime updatedAt;
+    protected UUID createUid;
+    protected UUID updateUid;
+    protected boolean deleted;
+
+    protected Map<String, Object> extraInfo;
 
     protected BaseDto(BaseEntity<ID> baseEntity) {
         if (baseEntity.getId() != null) {
@@ -40,5 +43,7 @@ public abstract class BaseDto<ID extends Serializable> {
         this.updatedAt = baseEntity.getUpdatedAt();
         this.deleted = baseEntity.isDeleted();
     }
+
+
 }
 

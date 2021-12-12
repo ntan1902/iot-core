@@ -42,9 +42,5 @@ public class UserEntity extends BaseEntity<UUID> {
         this.email = userDto.getEmail();
         this.firstName = userDto.getFirstName();
         this.lastName = userDto.getLastName();
-        this.roles = userDto.getRoles()
-                .stream()
-                .map(RoleEntity::new)
-                .collect(Collectors.toSet());
     }
 }

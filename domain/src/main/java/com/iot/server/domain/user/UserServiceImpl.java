@@ -19,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,6 +30,9 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Transactional
 public class UserServiceImpl implements UserService {
+
+    public static final String ENABLED = "enabled";
+    public static final String ROLES = "roles";
 
     private final UserDao userDao;
     private final UserCredentialsDao userCredentialsDao;
@@ -87,18 +92,63 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto findUserByEmail(String email) {
+    public UserDto findUserWithRolesByEmail(String email) {
         log.info("{}", email);
-        UserEntity user = userDao.findByEmail(email);
-        if (user == null) {
+        UserEntity userEntity = userDao.findByEmail(email);
+        if (userEntity == null) {
             return null;
         }
-        return new UserDto(user);
+
+        UserDto userDto = new UserDto(userEntity);
+
+        Map<String, Object> extraInfo = new HashMap<>();
+        extraInfo.put(ROLES, userEntity.getRoles()
+                .stream()
+                .map(RoleEntity::getName)
+                .collect(Collectors.toSet()));
+
+        userDto.setExtraInfo(extraInfo);
+        return userDto;
     }
 
     @Override
     public UserCredentialsDto findUserCredentialsByUserId(UUID userId) {
         log.info("{}", userId);
-        return new UserCredentialsDto(userCredentialsDao.findByUserId(userId));
+        UserCredentialsEntity userCredentialsEntity = userCredentialsDao.findByUserId(userId);
+        if (userCredentialsEntity != null) {
+
+            UserCredentialsDto userCredentialsDto = new UserCredentialsDto(userCredentialsEntity);
+            userCredentialsDto.setUserId(userId);
+            return userCredentialsDto;
+        } else {
+            log.error("User credentials is not found [{}]", userId);
+            throw new IoTException(ReasonEnum.INVALID_PARAMS, "User credentials is not found");
+        }
+    }
+
+    @Override
+    public UserDto findUserWithExtraInfoById(UUID userId) {
+        log.info("{}", userId);
+
+        UserEntity userEntity = userDao.findById(userId);
+
+        if (userEntity != null) {
+            UserDto userDto = new UserDto(userEntity);
+
+            UserCredentialsDto userCredentialsDto = findUserCredentialsByUserId(userId);
+
+            Map<String, Object> extraInfo = new HashMap<>();
+            extraInfo.put(ENABLED, userCredentialsDto.isEnabled());
+            extraInfo.put(ROLES, userEntity.getRoles()
+                    .stream()
+                    .map(RoleEntity::getName)
+                    .collect(Collectors.toSet()));
+
+            userDto.setExtraInfo(extraInfo);
+            return userDto;
+        } else {
+            log.error("User is not found [{}]", userId);
+            throw new IoTException(ReasonEnum.INVALID_PARAMS, "User is not found");
+        }
     }
 }

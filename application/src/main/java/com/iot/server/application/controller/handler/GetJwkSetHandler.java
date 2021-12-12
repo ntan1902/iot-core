@@ -1,5 +1,6 @@
 package com.iot.server.application.controller.handler;
 
+import com.iot.server.common.exception.IoTException;
 import com.iot.server.common.request.EmptyRequest;
 import com.nimbusds.jose.jwk.JWKSet;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,12 @@ public class GetJwkSetHandler extends BaseHandler<EmptyRequest, Map<String, Obje
     private final JWKSet jwkSet;
 
     @Override
-    protected Map<String, Object> processRequest(EmptyRequest emptyRequest) {
+    protected void validate(EmptyRequest request) throws IoTException {
+
+    }
+
+    @Override
+    protected Map<String, Object> processRequest(EmptyRequest request) {
         return jwkSet.toJSONObject();
     }
 }
