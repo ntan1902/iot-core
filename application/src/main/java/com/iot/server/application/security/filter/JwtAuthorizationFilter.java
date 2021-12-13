@@ -1,7 +1,7 @@
 package com.iot.server.application.security.filter;
 
 import com.iot.server.application.exception.IoTExceptionHandler;
-import com.iot.server.application.model.TokenAuthentication;
+import com.iot.server.common.model.TokenAuthentication;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;

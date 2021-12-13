@@ -1,4 +1,4 @@
-package com.iot.server.application.model;
+package com.iot.server.common.model;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -6,7 +6,6 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 
 public class TokenAuthentication extends UsernamePasswordAuthenticationToken {
-
     public TokenAuthentication(Object principal, Object credentials) {
         super(principal, credentials);
     }

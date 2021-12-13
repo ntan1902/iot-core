@@ -2,6 +2,7 @@ package com.iot.server.dao.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.web.header.Header;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -29,11 +30,12 @@ public class ClientDaoTimed {
     }
 
 
-    String post(String path, Object body) {
+    String post(String path, Object body, String accessToken) {
         Mono<String> responseMono =
                 webClient
                         .post()
                         .uri(uriBuilder -> uriBuilder.path(path).build())
+                        .header(HttpHeaders.AUTHORIZATION, accessToken)
                         .bodyValue(body)
                         .retrieve()
                         .bodyToMono(String.class);

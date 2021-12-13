@@ -1,6 +1,6 @@
 package com.iot.server.application.security.provider;
 
-import com.iot.server.application.model.SecurityUser;
+import com.iot.server.common.model.SecurityUser;
 import com.iot.server.application.service.SecurityService;
 import com.iot.server.common.dto.UserCredentialsDto;
 import com.iot.server.common.dto.UserDto;

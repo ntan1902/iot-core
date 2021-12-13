@@ -13,9 +13,12 @@ import com.iot.server.common.entity.UserEntity;
 import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
+import com.iot.server.common.model.SecurityUser;
+import com.iot.server.common.model.TokenAuthentication;
 import com.iot.server.common.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,13 +58,17 @@ public class UserServiceImpl implements UserService {
 
                 UserCredentialsEntity userCredentials = getUserCredentialsEntity(savedUser, encodedPassword);
                 userCredentialsDao.save(userCredentials);
-
             }
 
             return new UserDto(savedUser);
         } else {
             throw new IoTException(ReasonEnum.INVALID_PARAMS, "Email is already existed");
         }
+    }
+
+    private String getAccessToken() {
+        SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return securityUser.getAccessToken();
     }
 
     private TenantEntity getTenantEntity(UserEntity userEntity) {

@@ -1,4 +1,4 @@
-package com.iot.server.application.model;
+package com.iot.server.common.model;
 
 import com.iot.server.common.dto.UserDto;
 import com.iot.server.common.enums.AuthorityEnum;
@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class SecurityUser extends UserDto {
     private boolean enabled;
     private Collection<GrantedAuthority> authorities;
+    private String accessToken;
 
     public SecurityUser(UserDto user, boolean enabled, Collection<String> roles) {
         this.setId(user.getId());

@@ -1,7 +1,7 @@
 package com.iot.server.application.security.jwt;
 
 import com.iot.server.application.config.JwtConfig;
-import com.iot.server.application.model.SecurityUser;
+import com.iot.server.common.model.SecurityUser;
 import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
@@ -77,6 +77,7 @@ public class JwtFactory {
         securityUser.setLastName(claims.get(LAST_NAME, String.class));
         securityUser.setEmail(claims.get(EMAIL, String.class));
         securityUser.setEnabled(claims.get(ENABLED, Boolean.class));
+        securityUser.setAccessToken(accessToken);
 
         return securityUser;
     }
