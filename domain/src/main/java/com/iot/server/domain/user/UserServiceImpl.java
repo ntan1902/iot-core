@@ -13,7 +13,6 @@ import com.iot.server.common.entity.UserEntity;
 import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
-import com.iot.server.common.request.RegisterRequest;
 import com.iot.server.common.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,15 +43,15 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDto registerUser(RegisterRequest registerRequest) {
-        log.info("{}", registerRequest);
+    public UserDto registerUser(UserDto userDto, String password) {
+        log.info("{}", userDto);
 
-        if (!userDao.existsByEmail(registerRequest.getEmail())) {
-            UserEntity userEntity = getUserEntity(registerRequest);
+        if (!userDao.existsByEmail(userDto.getEmail())) {
+            UserEntity userEntity = getUserEntity(userDto);
             UserEntity savedUser = userDao.save(userEntity);
 
             if (savedUser != null && savedUser.getId() != null) {
-                String encodedPassword = passwordEncoder.encode(registerRequest.getPassword());
+                String encodedPassword = passwordEncoder.encode(password);
 
                 UserCredentialsEntity userCredentials = getUserCredentialsEntity(savedUser, encodedPassword);
                 userCredentialsDao.save(userCredentials);
@@ -85,11 +84,11 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    private UserEntity getUserEntity(RegisterRequest registerRequest) {
+    private UserEntity getUserEntity(UserDto userDto) {
         return UserEntity.builder()
-                .email(registerRequest.getEmail())
-                .firstName(registerRequest.getFirstName())
-                .lastName(registerRequest.getLastName())
+                .email(userDto.getEmail())
+                .firstName(userDto.getFirstName())
+                .lastName(userDto.getLastName())
                 .roles(Stream.of(AuthorityEnum.TENANT)
                         .map(authority -> createRoleIfNotFound(authority.name()))
                         .collect(Collectors.toSet()))

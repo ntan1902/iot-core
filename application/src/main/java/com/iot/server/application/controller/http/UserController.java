@@ -1,8 +1,8 @@
 package com.iot.server.application.controller.http;
 
 import com.iot.server.application.controller.handler.GetUserByIdHandler;
-import com.iot.server.common.request.GetUserByIdRequest;
-import com.iot.server.common.response.GetUserByIdResponse;
+import com.iot.server.application.controller.request.GetUserByIdRequest;
+import com.iot.server.application.controller.response.GetUserByIdResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -1,4 +1,4 @@
-package com.iot.server.common.response;
+package com.iot.server.application.controller.response;
 
 import com.iot.server.common.dto.UserDto;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.iot.server.common.response;
+package com.iot.server.application.controller.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

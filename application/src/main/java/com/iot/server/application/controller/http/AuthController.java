@@ -2,9 +2,9 @@ package com.iot.server.application.controller.http;
 
 import com.iot.server.application.controller.handler.GetJwkSetHandler;
 import com.iot.server.application.controller.handler.RegisterHandler;
-import com.iot.server.common.request.EmptyRequest;
-import com.iot.server.common.request.RegisterRequest;
-import com.iot.server.common.response.RegisterResponse;
+import com.iot.server.application.controller.request.EmptyRequest;
+import com.iot.server.application.controller.request.RegisterRequest;
+import com.iot.server.application.controller.response.RegisterResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
