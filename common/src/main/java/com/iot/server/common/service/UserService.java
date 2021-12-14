@@ -13,4 +13,6 @@ public interface UserService {
     UserCredentialsDto findUserCredentialsByUserId(UUID userId);
 
     UserDto findUserWithExtraInfoById(UUID userId);
+
+    UserDto saveUser(UserDto userDto);
 }

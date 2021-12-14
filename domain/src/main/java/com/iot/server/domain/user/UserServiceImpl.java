@@ -14,7 +14,6 @@ import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
 import com.iot.server.common.model.SecurityUser;
-import com.iot.server.common.model.TokenAuthentication;
 import com.iot.server.common.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -170,6 +169,24 @@ public class UserServiceImpl implements UserService {
         } else {
             log.error("User is not found [{}]", userId);
             throw new IoTException(ReasonEnum.INVALID_PARAMS, "User is not found");
+        }
+    }
+
+    @Override
+    public UserDto saveUser(UserDto userDto) {
+        log.info("{}", userDto);
+
+        if (!userDao.existsByEmail(userDto.getEmail())) {
+            UserEntity userEntity = getUserEntity(userDto);
+            UserEntity savedUser = userDao.save(userEntity);
+
+            if (savedUser == null || savedUser.getId() == null) {
+                throw new IoTException(ReasonEnum.UNDEFINED, "Can not save user into database");
+            }
+
+            return new UserDto(savedUser);
+        } else {
+            throw new IoTException(ReasonEnum.INVALID_PARAMS, "Email is already existed");
         }
     }
 }
