@@ -2,6 +2,7 @@ package com.iot.server.common.entity;
 
 import com.iot.server.common.dto.UserCredentialsDto;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -11,7 +12,7 @@ import java.util.UUID;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Entity
 @Table(name = EntityConstants.USER_CREDENTIALS_TABLE_NAME)
 public class UserCredentialsEntity extends BaseEntity<UUID> {

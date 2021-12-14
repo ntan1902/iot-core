@@ -2,6 +2,7 @@ package com.iot.server.common.entity;
 
 import com.iot.server.common.dto.UserDto;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Entity
 @Table(name = EntityConstants.USER_TABLE_NAME)
 public class UserEntity extends BaseEntity<UUID> {

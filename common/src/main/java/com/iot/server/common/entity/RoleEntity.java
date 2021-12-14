@@ -2,6 +2,7 @@ package com.iot.server.common.entity;
 
 import com.iot.server.common.dto.RoleDto;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Entity
 @Table(name = EntityConstants.ROLE_TABLE_NAME)
 public class RoleEntity extends BaseEntity<UUID> {

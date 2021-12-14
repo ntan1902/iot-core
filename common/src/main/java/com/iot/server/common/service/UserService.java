@@ -3,6 +3,7 @@ package com.iot.server.common.service;
 import com.iot.server.common.dto.UserCredentialsDto;
 import com.iot.server.common.dto.UserDto;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
@@ -14,5 +15,5 @@ public interface UserService {
 
     UserDto findUserWithExtraInfoById(UUID userId);
 
-    UserDto saveUser(UserDto userDto);
+    UserDto saveUserWithAuthorities(UserDto userDto, List<String> authorities);
 }

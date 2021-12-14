@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -49,7 +50,11 @@ public class UserServiceImpl implements UserService {
         log.info("{}", userDto);
 
         if (!userDao.existsByEmail(userDto.getEmail())) {
-            UserEntity userEntity = getUserEntity(userDto);
+            UserEntity userEntity = new UserEntity(userDto);
+            userEntity.setRoles(Stream.of(AuthorityEnum.TENANT)
+                    .map(authority -> createRoleIfNotFound(authority.name()))
+                    .collect(Collectors.toSet()));
+
             UserEntity savedUser = userDao.save(userEntity);
 
             if (savedUser != null && savedUser.getId() != null) {
@@ -65,9 +70,8 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private String getAccessToken() {
-        SecurityUser securityUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return securityUser.getAccessToken();
+    private SecurityUser getCurrentUser() {
+        return (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     private TenantEntity getTenantEntity(UserEntity userEntity) {
@@ -98,6 +102,9 @@ public class UserServiceImpl implements UserService {
                 .roles(Stream.of(AuthorityEnum.TENANT)
                         .map(authority -> createRoleIfNotFound(authority.name()))
                         .collect(Collectors.toSet()))
+                .createUid(userDto.getCreateUid())
+                .updateUid(userDto.getUpdateUid())
+                .createdAt(userDto.getCreatedAt())
                 .build();
     }
 
@@ -173,11 +180,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto saveUser(UserDto userDto) {
+    public UserDto saveUserWithAuthorities(UserDto userDto, List<String> authorities) {
         log.info("{}", userDto);
 
         if (!userDao.existsByEmail(userDto.getEmail())) {
-            UserEntity userEntity = getUserEntity(userDto);
+            UserEntity userEntity = new UserEntity(userDto);
+            userEntity.setRoles(authorities.stream()
+                    .map(this::createRoleIfNotFound)
+                    .collect(Collectors.toSet()));
+
             UserEntity savedUser = userDao.save(userEntity);
 
             if (savedUser == null || savedUser.getId() == null) {

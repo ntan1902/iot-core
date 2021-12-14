@@ -1,10 +1,10 @@
 package com.iot.server.application.security.jwt;
 
 import com.iot.server.application.config.JwtConfig;
-import com.iot.server.common.model.SecurityUser;
 import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
+import com.iot.server.common.model.SecurityUser;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

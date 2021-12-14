@@ -5,14 +5,17 @@ import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -78,8 +81,6 @@ public class IoTExceptionHandler extends ResponseEntityExceptionHandler implemen
                     handleIoTException((IoTException) exception, response);
                 } else if (exception instanceof AuthenticationException) {
                     handleAuthenticationException((AuthenticationException) exception, response);
-                } else if (exception instanceof BindException) {
-                    handleBindException((BindException) exception, response);
                 } else {
                     handleInternalServerError(exception, response);
                 }
@@ -89,15 +90,18 @@ public class IoTExceptionHandler extends ResponseEntityExceptionHandler implemen
         }
     }
 
-    private void handleBindException(BindException exception, HttpServletResponse response) throws IOException {
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers,
+                                                                  HttpStatus status,
+                                                                  WebRequest request) {
         String errMessage = "";
-        if (exception.getBindingResult().hasErrors()) {
-            errMessage = exception.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        if (ex.getBindingResult().hasErrors()) {
+            errMessage = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         }
         log.error("Request is not valid [{}]", errMessage);
 
-        objectMapper.writeValue(response.getOutputStream(),
-                getResponse(HttpStatus.BAD_REQUEST, errMessage));
+        return new ResponseEntity<>(getResponse(status, errMessage), status);
     }
 
     private void handleIoTException(IoTException exception, HttpServletResponse response) throws IOException {

@@ -1,8 +1,8 @@
 package com.iot.server.application.security.provider;
 
+import com.iot.server.application.security.jwt.JwtFactory;
 import com.iot.server.common.model.SecurityUser;
 import com.iot.server.common.model.TokenAuthentication;
-import com.iot.server.application.security.jwt.JwtFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;

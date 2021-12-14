@@ -17,17 +17,22 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, CreateUser
 
     @Override
     protected void validate(CreateUserRequest request) throws IoTException {
-
+        validateNotNull("authorities", request.getAuthorities());
+        validateAuthorities("authorities", request.getAuthorities());
     }
 
     @Override
     protected CreateUserResponse processRequest(CreateUserRequest request) {
         CreateUserResponse response = new CreateUserResponse();
-        UserDto user = userService.saveUser(UserDto.builder()
-                .email(request.getEmail())
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .build());
+        UserDto user =
+                userService.saveUserWithAuthorities(
+                        UserDto.builder()
+                                .email(request.getEmail())
+                                .firstName(request.getFirstName())
+                                .lastName(request.getLastName())
+                                .createUid(getCurrentUser().getId())
+                                .build(),
+                        request.getAuthorities());
         response.setUserId(user.getId());
         return response;
     }
