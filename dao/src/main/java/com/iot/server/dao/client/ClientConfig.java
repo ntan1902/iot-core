@@ -13,7 +13,6 @@ import javax.annotation.PostConstruct;
 @Slf4j
 public class ClientConfig {
     private String host;
-    private int port;
     private int maxAttempt;
 
     @PostConstruct

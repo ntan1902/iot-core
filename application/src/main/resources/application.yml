@@ -47,6 +47,5 @@ spring.mvc.cors:
       allowed-origin-pattern: "*"
 
 client.nodejs:
-  host: "${CLIENT_BASE_URL:http://localhost}"
-  port: "${CLIENT_PORT:8081}"
-  max-attempt: 3
+  host: "${CLIENT_BASE_URL:localhost:8081}"
+  max-attempt: "${CLIENT_MAX_ATTEMPT:3}"

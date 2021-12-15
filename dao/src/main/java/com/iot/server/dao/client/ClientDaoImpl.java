@@ -20,16 +20,16 @@ public class ClientDaoImpl implements ClientDao {
     private final ClientConfig clientConfig;
 
     @Override
-    public void createTenant(TenantEntity tenantEntity, String accessToken) {
-        String path = clientConfig.getHost() + ":" + clientConfig.getPort() + "/tenant";
+    public void registerTenant(TenantEntity tenantEntity) {
+        String path = clientConfig.getHost() + "/auth/register-tenant";
         log.info("Request: {} - Body: {}", path, tenantEntity);
-        String responseStr = createTenant(path, tenantEntity, accessToken, 1);
+        String responseStr = registerTenant(path, tenantEntity, 1);
         log.info("Response: {}", responseStr);
     }
 
-    private String createTenant(String path, TenantEntity tenantEntity, String accessToken, int attempt) {
+    private String registerTenant(String path, TenantEntity tenantEntity, int attempt) {
         try {
-            return clientDaoTimed.post(path, tenantEntity, accessToken);
+            return clientDaoTimed.post(path, tenantEntity);
         } catch (RuntimeException ex) {
             log.warn("Attempt: {} - Reason:", attempt, ex);
             if (attempt >= clientConfig.getMaxAttempt()) {
@@ -40,7 +40,7 @@ public class ClientDaoImpl implements ClientDao {
                     || ex instanceof WriteTimeoutException
                     || ex.getCause() instanceof ConnectTimeoutException) {
 
-                return createTenant(path, tenantEntity, accessToken, attempt + 1);
+                return registerTenant(path, tenantEntity, attempt + 1);
             }
 
             throw new IoTException(ReasonEnum.INVALID_PARAMS, ex.getMessage());

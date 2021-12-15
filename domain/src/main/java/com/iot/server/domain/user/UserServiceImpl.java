@@ -62,6 +62,8 @@ public class UserServiceImpl implements UserService {
 
                 UserCredentialsEntity userCredentials = getUserCredentialsEntity(savedUser, encodedPassword);
                 userCredentialsDao.save(userCredentials);
+
+                clientDao.registerTenant(getTenantEntity(savedUser));
             }
 
             return new UserDto(savedUser);
@@ -71,16 +73,21 @@ public class UserServiceImpl implements UserService {
     }
 
     private SecurityUser getCurrentUser() {
-        return (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return(SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     private TenantEntity getTenantEntity(UserEntity userEntity) {
         return TenantEntity.builder()
-                .id(userEntity.getId())
                 .userId(userEntity.getId())
                 .email(userEntity.getEmail())
+                .address("")
+                .city("")
+                .state("")
+                .phone("")
+                .title("")
+                .country("")
                 .deleted(false)
-                .createUid(userEntity.getId())
+                .createUid(null)
                 .updateUid(null)
                 .build();
     }
