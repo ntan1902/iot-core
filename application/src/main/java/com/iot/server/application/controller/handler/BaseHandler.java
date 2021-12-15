@@ -4,15 +4,22 @@ import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
 import com.iot.server.common.model.SecurityUser;
+import com.iot.server.common.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 public abstract class BaseHandler<T, U> {
+    @Autowired
+    protected UserService userService;
+
     protected abstract void validate(T request) throws IoTException;
 
     protected abstract U processRequest(T request);
@@ -62,6 +69,36 @@ public abstract class BaseHandler<T, U> {
 
     protected SecurityUser getCurrentUser() {
         return (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    public boolean isCustomer(Collection<GrantedAuthority> grantedAuthorities) {
+        return grantedAuthorities.stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthorityEnum.CUSTOMER.getAuthority()));
+    }
+
+    public boolean isTenant(Collection<GrantedAuthority> grantedAuthorities) {
+        return grantedAuthorities.stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthorityEnum.TENANT.getAuthority()));
+    }
+
+    public boolean isAdmin(Collection<GrantedAuthority> grantedAuthorities) {
+        return grantedAuthorities.stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthorityEnum.ADMIN.getAuthority()));
+    }
+
+    public boolean isCustomer(List<String> authorities) {
+        return authorities.stream()
+                .anyMatch(authority -> authority.equals(AuthorityEnum.CUSTOMER.getAuthority()));
+    }
+
+    public boolean isTenant(List<String> authorities) {
+        return authorities.stream()
+                .anyMatch(authority -> authority.equals(AuthorityEnum.TENANT.getAuthority()));
+    }
+
+    public boolean isAdmin(List<String> authorities) {
+        return authorities.stream()
+                .anyMatch(authority -> authority.equals(AuthorityEnum.ADMIN.getAuthority()));
     }
 }
 

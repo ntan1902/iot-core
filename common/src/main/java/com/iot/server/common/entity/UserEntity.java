@@ -7,7 +7,6 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -27,6 +26,12 @@ public class UserEntity extends BaseEntity<UUID> {
     @Column(name = EntityConstants.USER_LAST_NAME_PROPERTY)
     private String lastName;
 
+    @Column(name = EntityConstants.USER_TENANT_ID_PROPERTY)
+    private UUID tenantId;
+
+    @Column(name = EntityConstants.USER_CUSTOMER_ID_PROPERTY)
+    private UUID customerId;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = EntityConstants.USER_ROLE_TABLE_NAME,
@@ -43,5 +48,7 @@ public class UserEntity extends BaseEntity<UUID> {
         this.email = userDto.getEmail();
         this.firstName = userDto.getFirstName();
         this.lastName = userDto.getLastName();
+        this.tenantId = userDto.getTenantId();
+        this.customerId = userDto.getCustomerId();
     }
 }

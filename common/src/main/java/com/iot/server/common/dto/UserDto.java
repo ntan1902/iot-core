@@ -19,12 +19,16 @@ public class UserDto extends BaseDto<UUID> {
     private String email;
     private String firstName;
     private String lastName;
+    private UUID tenantId;
+    private UUID customerId;
 
     public UserDto(UserEntity userEntity) {
         super(userEntity);
         this.email = userEntity.getEmail();
         this.firstName = userEntity.getFirstName();
         this.lastName = userEntity.getLastName();
+        this.tenantId = userEntity.getTenantId();
+        this.customerId = userEntity.getCustomerId();
     }
 }
 

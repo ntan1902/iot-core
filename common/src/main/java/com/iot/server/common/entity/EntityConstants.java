@@ -13,6 +13,8 @@ public class EntityConstants {
     public static final String USER_EMAIL_PROPERTY = "email";
     public static final String USER_FIRST_NAME_PROPERTY = "first_name";
     public static final String USER_LAST_NAME_PROPERTY = "last_name";
+    public static final String USER_TENANT_ID_PROPERTY = "tenant_id";
+    public static final String USER_CUSTOMER_ID_PROPERTY = "customer_id";
 
     public static final String USER_CREDENTIALS_TABLE_NAME = "user_credentials";
     public static final String USER_CREDENTIALS_USER_ID_PROPERTY = "user_id";

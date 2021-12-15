@@ -4,15 +4,10 @@ import com.iot.server.application.controller.request.RegisterRequest;
 import com.iot.server.application.controller.response.RegisterResponse;
 import com.iot.server.common.dto.UserDto;
 import com.iot.server.common.exception.IoTException;
-import com.iot.server.common.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
 public class RegisterHandler extends BaseHandler<RegisterRequest, RegisterResponse> {
-    private final UserService userService;
-
     @Override
     protected void validate(RegisterRequest request) throws IoTException {
         validateNotEmpty("email", request.getEmail());
