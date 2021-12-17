@@ -1,5 +1,6 @@
 package com.iot.server.application.controller.response;
 
+import com.iot.server.common.model.SecurityUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginResponse {
+    private SecurityUser user;
     private String accessToken;
     private String refreshToken;
     private String tokenType;

@@ -72,7 +72,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
         String accessToken = jwtFactory.createAccessToken(securityUser);
         String refreshToken = jwtFactory.createRefreshToken(securityUser);
 
-        LoginResponse loginResponse = new LoginResponse(accessToken, refreshToken, "Bearer");
+        LoginResponse loginResponse = new LoginResponse(securityUser, accessToken, refreshToken, "Bearer");
 
         // Response to client
         response.setStatus(HttpStatus.OK.value());
