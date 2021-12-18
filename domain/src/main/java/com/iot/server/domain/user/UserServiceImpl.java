@@ -47,33 +47,35 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto registerUser(UserDto userDto, String password) {
-        log.info("{}", userDto);
+        log.trace("{}", userDto);
 
-        if (!userDao.existsByEmail(userDto.getEmail())) {
-            UserEntity userEntity = new UserEntity(userDto);
-            userEntity.setRoles(Stream.of(AuthorityEnum.TENANT)
-                    .map(authority -> createRoleIfNotFound(authority.name()))
-                    .collect(Collectors.toSet()));
+        if (userDao.existsByEmail(userDto.getEmail())) {
 
-            UserEntity savedUser = userDao.save(userEntity);
-
-            if (savedUser != null && savedUser.getId() != null) {
-                String encodedPassword = passwordEncoder.encode(password);
-
-                UserCredentialsEntity userCredentials = getUserCredentialsEntity(savedUser, encodedPassword);
-                userCredentialsDao.save(userCredentials);
-
-                clientDao.registerTenant(getTenantEntity(savedUser));
-            }
-
-            return new UserDto(savedUser);
-        } else {
             throw new IoTException(ReasonEnum.INVALID_PARAMS, "Email is already existed");
+
         }
+
+        UserEntity userEntity = new UserEntity(userDto);
+        userEntity.setRoles(Stream.of(AuthorityEnum.TENANT)
+                .map(authority -> createRoleIfNotFound(authority.name()))
+                .collect(Collectors.toSet()));
+
+        UserEntity savedUser = userDao.save(userEntity);
+
+        if (savedUser != null && savedUser.getId() != null) {
+            String encodedPassword = passwordEncoder.encode(password);
+
+            UserCredentialsEntity userCredentials = getUserCredentialsEntity(savedUser, encodedPassword);
+            userCredentialsDao.save(userCredentials);
+
+            clientDao.registerTenant(getTenantEntity(savedUser));
+        }
+
+        return new UserDto(savedUser);
     }
 
     private SecurityUser getCurrentUser() {
-        return(SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     private TenantEntity getTenantEntity(UserEntity userEntity) {
@@ -127,7 +129,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findUserWithRolesByEmail(String email) {
-        log.info("{}", email);
+        log.trace("{}", email);
         UserEntity userEntity = userDao.findByEmail(email);
         if (userEntity == null) {
             return null;
@@ -147,64 +149,86 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserCredentialsDto findUserCredentialsByUserId(UUID userId) {
-        log.info("{}", userId);
+        log.trace("{}", userId);
         UserCredentialsEntity userCredentialsEntity = userCredentialsDao.findByUserId(userId);
-        if (userCredentialsEntity != null) {
-
-            UserCredentialsDto userCredentialsDto = new UserCredentialsDto(userCredentialsEntity);
-            userCredentialsDto.setUserId(userId);
-            return userCredentialsDto;
-        } else {
+        if (userCredentialsEntity == null) {
             log.error("User credentials is not found [{}]", userId);
             throw new IoTException(ReasonEnum.INVALID_PARAMS, "User credentials is not found");
         }
+
+        UserCredentialsDto userCredentialsDto = new UserCredentialsDto(userCredentialsEntity);
+        userCredentialsDto.setUserId(userId);
+        return userCredentialsDto;
     }
 
     @Override
     public UserDto findUserWithExtraInfoById(UUID userId) {
-        log.info("{}", userId);
+        log.trace("{}", userId);
 
         UserEntity userEntity = userDao.findById(userId);
 
-        if (userEntity != null) {
-            UserDto userDto = new UserDto(userEntity);
-
-            UserCredentialsDto userCredentialsDto = findUserCredentialsByUserId(userId);
-
-            Map<String, Object> extraInfo = new HashMap<>();
-            extraInfo.put(ENABLED, userCredentialsDto.isEnabled());
-            extraInfo.put(ROLES, userEntity.getRoles()
-                    .stream()
-                    .map(RoleEntity::getName)
-                    .collect(Collectors.toSet()));
-
-            userDto.setExtraInfo(extraInfo);
-            return userDto;
-        } else {
+        if (userEntity == null) {
             log.error("User is not found [{}]", userId);
             throw new IoTException(ReasonEnum.INVALID_PARAMS, "User is not found");
+
         }
+
+        UserDto userDto = new UserDto(userEntity);
+
+        UserCredentialsDto userCredentialsDto = findUserCredentialsByUserId(userId);
+
+        Map<String, Object> extraInfo = new HashMap<>();
+        extraInfo.put(ENABLED, userCredentialsDto.isEnabled());
+        extraInfo.put(ROLES, userEntity.getRoles()
+                .stream()
+                .map(RoleEntity::getName)
+                .collect(Collectors.toSet()));
+
+        userDto.setExtraInfo(extraInfo);
+        return userDto;
     }
 
     @Override
     public UserDto saveUserWithAuthorities(UserDto userDto, List<String> authorities) {
-        log.info("{}", userDto);
+        log.trace("{}", userDto);
 
-        if (!userDao.existsByEmail(userDto.getEmail())) {
-            UserEntity userEntity = new UserEntity(userDto);
-            userEntity.setRoles(authorities.stream()
-                    .map(this::createRoleIfNotFound)
-                    .collect(Collectors.toSet()));
-
-            UserEntity savedUser = userDao.save(userEntity);
-
-            if (savedUser == null || savedUser.getId() == null) {
-                throw new IoTException(ReasonEnum.UNDEFINED, "Can not save user into database");
-            }
-
-            return new UserDto(savedUser);
-        } else {
+        if (userDao.existsByEmail(userDto.getEmail())) {
             throw new IoTException(ReasonEnum.INVALID_PARAMS, "Email is already existed");
         }
+
+        UserEntity userEntity = new UserEntity(userDto);
+        userEntity.setRoles(authorities.stream()
+                .map(this::createRoleIfNotFound)
+                .collect(Collectors.toSet()));
+
+        UserEntity savedUser = userDao.save(userEntity);
+
+        if (savedUser == null || savedUser.getId() == null) {
+            throw new IoTException(ReasonEnum.UNDEFINED, "Can not save user into database");
+        }
+
+        return new UserDto(savedUser);
+    }
+
+    @Override
+    public Boolean changePassword(UUID userId, String currentPassword, String newPassword) {
+        log.trace("[{}], [{}], [{}]", userId, currentPassword, newPassword);
+
+        if (currentPassword.equals(newPassword)) {
+            throw new IoTException(ReasonEnum.INVALID_PARAMS, "Current password and new password are the same");
+        }
+
+        UserCredentialsEntity userCredentialsEntity = userCredentialsDao.findByUserId(userId);
+        if (userCredentialsEntity == null) {
+            throw new IoTException(ReasonEnum.INVALID_PARAMS, "User is not hound");
+
+        }
+
+        if (!passwordEncoder.matches(currentPassword, userCredentialsEntity.getPassword())) {
+            throw new IoTException(ReasonEnum.INVALID_PARAMS, "Current password is not matched. Please try again");
+        }
+
+        userCredentialsEntity.setPassword(passwordEncoder.encode(newPassword));
+        return true;
     }
 }

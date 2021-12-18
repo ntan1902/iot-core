@@ -16,4 +16,6 @@ public interface UserService {
     UserDto findUserWithExtraInfoById(UUID userId);
 
     UserDto saveUserWithAuthorities(UserDto userDto, List<String> authorities);
+
+    Boolean changePassword(UUID userId, String currentPassword, String newPassword);
 }
