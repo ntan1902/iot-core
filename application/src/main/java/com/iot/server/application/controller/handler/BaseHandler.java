@@ -71,35 +71,6 @@ public abstract class BaseHandler<T, U> {
         return (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    public boolean isCustomer(Collection<GrantedAuthority> grantedAuthorities) {
-        return grantedAuthorities.stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthorityEnum.CUSTOMER.getAuthority()));
-    }
-
-    public boolean isTenant(Collection<GrantedAuthority> grantedAuthorities) {
-        return grantedAuthorities.stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthorityEnum.TENANT.getAuthority()));
-    }
-
-    public boolean isAdmin(Collection<GrantedAuthority> grantedAuthorities) {
-        return grantedAuthorities.stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthorityEnum.ADMIN.getAuthority()));
-    }
-
-    public boolean isCustomer(List<String> authorities) {
-        return authorities.stream()
-                .anyMatch(authority -> authority.equals(AuthorityEnum.CUSTOMER.getAuthority()));
-    }
-
-    public boolean isTenant(List<String> authorities) {
-        return authorities.stream()
-                .anyMatch(authority -> authority.equals(AuthorityEnum.TENANT.getAuthority()));
-    }
-
-    public boolean isAdmin(List<String> authorities) {
-        return authorities.stream()
-                .anyMatch(authority -> authority.equals(AuthorityEnum.ADMIN.getAuthority()));
-    }
 }
 
 

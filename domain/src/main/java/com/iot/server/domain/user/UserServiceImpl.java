@@ -17,15 +17,13 @@ import com.iot.server.common.model.SecurityUser;
 import com.iot.server.common.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -189,13 +187,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto saveUserWithAuthorities(UserDto userDto, List<String> authorities) {
-        log.trace("{}", userDto);
+    public UserDto createUserWithAuthorities(SecurityUser currentUser, UserDto userDto, List<String> authorities) {
+        log.trace("[{}], [{}], [{}]", currentUser, userDto, authorities);
+
+        checkPermission(currentUser.getAuthorities(), authorities);
 
         if (userDao.existsByEmail(userDto.getEmail())) {
             throw new IoTException(ReasonEnum.INVALID_PARAMS, "Email is already existed");
         }
 
+        if (isTenant(currentUser.getAuthorities())) {
+            userDto.setTenantId(currentUser.getId());
+        }
+
+        if (isCustomer(currentUser.getAuthorities())) {
+            userDto.setCustomerId(currentUser.getId());
+
+            if (userDto.getTenantId() == null) {
+                userDto.setTenantId(currentUser.getTenantId());
+            }
+        }
         UserEntity userEntity = new UserEntity(userDto);
         userEntity.setRoles(authorities.stream()
                 .map(this::createRoleIfNotFound)
@@ -230,5 +241,69 @@ public class UserServiceImpl implements UserService {
 
         userCredentialsEntity.setPassword(passwordEncoder.encode(newPassword));
         return true;
+    }
+
+    @Override
+    public Boolean deleteUser(SecurityUser currentUser, UUID userId) {
+        log.trace("[{}], [{}]", currentUser, userId);
+        if (currentUser.getId().equals(userId)) {
+            throw new IoTException(ReasonEnum.INVALID_PARAMS, "You can't delete yourself");
+        }
+        
+        UserCredentialsEntity userCredentials = userCredentialsDao.findById(userId);
+        UserEntity user = userCredentials.getUser();
+
+        if (isAdmin(currentUser.getAuthorities())
+                || (isTenant(currentUser.getAuthorities()) && currentUser.getId().equals(user.getTenantId()))
+                || (isCustomer(currentUser.getAuthorities()) && currentUser.getId().equals(user.getCustomerId()))) {
+            user.setDeleted(true);
+            userCredentials.setDeleted(true);
+            return true;
+        } else {
+            throw new IoTException(ReasonEnum.PERMISSION_DENIED, "You don't have permission to delete this user");
+        }
+    }
+
+    private void checkPermission(Collection<GrantedAuthority> currentAuthorities, List<String> requestAuthorities) {
+
+        if (isTenant(currentAuthorities)
+                && isAdmin(requestAuthorities)) {
+            throw new IoTException(ReasonEnum.PERMISSION_DENIED, "You don't have permission to create admin user");
+        }
+
+        if (isCustomer(currentAuthorities)
+                && (isAdmin(requestAuthorities) || isTenant(requestAuthorities))) {
+            throw new IoTException(ReasonEnum.PERMISSION_DENIED, "You don't have permission to create admin or tenant user");
+        }
+    }
+
+    public boolean isCustomer(Collection<GrantedAuthority> grantedAuthorities) {
+        return grantedAuthorities.stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthorityEnum.CUSTOMER.getAuthority()));
+    }
+
+    public boolean isTenant(Collection<GrantedAuthority> grantedAuthorities) {
+        return grantedAuthorities.stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthorityEnum.TENANT.getAuthority()));
+    }
+
+    public boolean isAdmin(Collection<GrantedAuthority> grantedAuthorities) {
+        return grantedAuthorities.stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthorityEnum.ADMIN.getAuthority()));
+    }
+
+    public boolean isCustomer(List<String> authorities) {
+        return authorities.stream()
+                .anyMatch(authority -> authority.equals(AuthorityEnum.CUSTOMER.getAuthority()));
+    }
+
+    public boolean isTenant(List<String> authorities) {
+        return authorities.stream()
+                .anyMatch(authority -> authority.equals(AuthorityEnum.TENANT.getAuthority()));
+    }
+
+    public boolean isAdmin(List<String> authorities) {
+        return authorities.stream()
+                .anyMatch(authority -> authority.equals(AuthorityEnum.ADMIN.getAuthority()));
     }
 }

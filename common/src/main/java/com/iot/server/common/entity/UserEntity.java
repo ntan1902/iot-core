@@ -17,7 +17,7 @@ import java.util.UUID;
 @Entity
 @Table(name = EntityConstants.USER_TABLE_NAME)
 public class UserEntity extends BaseEntity<UUID> {
-    @Column(name = EntityConstants.USER_EMAIL_PROPERTY)
+    @Column(name = EntityConstants.USER_EMAIL_PROPERTY, unique = true)
     private String email;
 
     @Column(name = EntityConstants.USER_FIRST_NAME_PROPERTY)
