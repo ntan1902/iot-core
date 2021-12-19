@@ -272,10 +272,51 @@ public class UserServiceImpl implements UserService {
                 || (isTenant(currentUser.getAuthorities()) && currentUser.getId().equals(user.getTenantId()))
                 || (isCustomer(currentUser.getAuthorities()) && currentUser.getId().equals(user.getCustomerId()))) {
             user.setDeleted(true);
+            user.setUpdateUid(currentUser.getId());
 
             if (userCredentials != null) {
                 userCredentials.setDeleted(true);
+                userCredentials.setUpdateUid(currentUser.getId());
             }
+
+            return true;
+        } else {
+            throw new IoTException(ReasonEnum.PERMISSION_DENIED, "You don't have permission to delete this user");
+        }
+    }
+
+    @Override
+    public Boolean updateUser(UserDto userDto) {
+        log.info("[{}]", userDto);
+
+        SecurityUser currentUser = getCurrentUser();
+
+        UserEntity user = userDao.findById(userDto.getId());
+        if (user == null) {
+            throw new IoTException(ReasonEnum.INVALID_PARAMS, "User is not found");
+        }
+
+        if (isAdmin(currentUser.getAuthorities())
+                || (isTenant(currentUser.getAuthorities()) && currentUser.getId().equals(user.getTenantId()))
+                || (isCustomer(currentUser.getAuthorities()) && currentUser.getId().equals(user.getCustomerId()))) {
+
+            if (!userDto.getEmail().isEmpty() && !userDto.getEmail().equals(user.getEmail())) {
+                user.setEmail(userDto.getEmail());
+            }
+
+            if (!userDto.getFirstName().isEmpty() && !userDto.getFirstName().equals(user.getFirstName())) {
+                user.setFirstName(userDto.getFirstName());
+            }
+
+            if (!userDto.getLastName().isEmpty() && !userDto.getLastName().equals(user.getLastName())) {
+                user.setLastName(userDto.getLastName());
+            }
+
+            if (userDto.getDeleted() != null && !userDto.getDeleted().equals(user.getDeleted())) {
+                user.setDeleted(userDto.getDeleted());
+            }
+
+            user.setUpdateUid(currentUser.getId());
             return true;
         } else {
             throw new IoTException(ReasonEnum.PERMISSION_DENIED, "You don't have permission to delete this user");

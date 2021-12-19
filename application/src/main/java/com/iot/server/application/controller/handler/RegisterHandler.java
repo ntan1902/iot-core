@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RegisterHandler extends BaseHandler<RegisterRequest, RegisterResponse> {
     @Override
-    protected void validate(RegisterRequest request) throws IoTException {
+    protected void validate(final RegisterRequest request) throws IoTException {
         validateNotEmpty("email", request.getEmail());
         validateNotEmpty("firstName", request.getFirstName());
         validateNotEmpty("lastName", request.getLastName());
@@ -17,15 +17,15 @@ public class RegisterHandler extends BaseHandler<RegisterRequest, RegisterRespon
     }
 
     @Override
-    protected RegisterResponse processRequest(RegisterRequest request) {
-        UserDto user = userService.registerUser(getUserDto(request), request.getPassword());
+    protected RegisterResponse processRequest(final RegisterRequest request) {
+        final UserDto user = userService.registerUser(getUserFromRequest(request), request.getPassword());
 
-        RegisterResponse response = new RegisterResponse();
+        final RegisterResponse response = new RegisterResponse();
         response.setUserId(user.getId());
         return response;
     }
 
-    private UserDto getUserDto(RegisterRequest request) {
+    private UserDto getUserFromRequest(RegisterRequest request) {
         return UserDto.builder()
                 .email(request.getEmail())
                 .firstName(request.getFirstName())

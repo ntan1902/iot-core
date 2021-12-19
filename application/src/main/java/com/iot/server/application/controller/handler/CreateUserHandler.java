@@ -19,15 +19,14 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, CreateUser
 
     @Override
     protected CreateUserResponse processRequest(final CreateUserRequest request) {
-        CreateUserResponse response = new CreateUserResponse();
+        final CreateUserResponse response = new CreateUserResponse();
 
         final UserDto user = getUserFromRequest(request);
-        UserDto savedUser = userService.createUserWithAuthorities(user, request.getAuthorities());
+        final UserDto savedUser = userService.createUserWithAuthorities(user, request.getAuthorities());
         response.setUserId(savedUser.getId());
 
         return response;
     }
-
 
     private UserDto getUserFromRequest(CreateUserRequest request) {
         return UserDto.builder()

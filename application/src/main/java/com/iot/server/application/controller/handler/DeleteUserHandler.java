@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeleteUserHandler extends BaseHandler<DeleteUserRequest, DeleteUserResponse> {
     @Override
-    protected void validate(DeleteUserRequest request) throws IoTException {
+    protected void validate(final DeleteUserRequest request) throws IoTException {
 
     }
 
     @Override
-    protected DeleteUserResponse processRequest(DeleteUserRequest request) {
-        DeleteUserResponse response = new DeleteUserResponse();
+    protected DeleteUserResponse processRequest(final DeleteUserRequest request) {
+        final DeleteUserResponse response = new DeleteUserResponse();
         response.setSuccess(
                 userService.deleteUser(toUUID(request.getUserId()))
         );

@@ -22,7 +22,7 @@ public abstract class BaseDto<ID extends Serializable> {
     protected LocalDateTime updatedAt;
     protected UUID createUid;
     protected UUID updateUid;
-    protected boolean deleted;
+    protected Boolean deleted;
 
     protected Map<String, Object> extraInfo;
 
@@ -41,7 +41,7 @@ public abstract class BaseDto<ID extends Serializable> {
 
         this.createdAt = baseEntity.getCreatedAt();
         this.updatedAt = baseEntity.getUpdatedAt();
-        this.deleted = baseEntity.isDeleted();
+        this.deleted = baseEntity.getDeleted();
     }
 
 

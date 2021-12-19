@@ -29,7 +29,7 @@ public abstract class BaseEntity<ID extends Serializable> {
     protected UUID updateUid;
 
     @Column(name = EntityConstants.DELETED_PROPERTY)
-    protected boolean deleted;
+    protected Boolean deleted;
 
     @Column(name = EntityConstants.CREATED_AT_PROPERTY, updatable = false)
     protected LocalDateTime createdAt;
@@ -52,6 +52,6 @@ public abstract class BaseEntity<ID extends Serializable> {
 
         this.createdAt = baseDto.getCreatedAt();
         this.updatedAt = baseDto.getUpdatedAt();
-        this.deleted = baseDto.isDeleted();
+        this.deleted = baseDto.getDeleted();
     }
 }

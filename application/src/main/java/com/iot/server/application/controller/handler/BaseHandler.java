@@ -1,17 +1,15 @@
 package com.iot.server.application.controller.handler;
 
+import com.iot.server.application.controller.request.CreateUserRequest;
+import com.iot.server.common.dto.UserDto;
 import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
-import com.iot.server.common.model.SecurityUser;
 import com.iot.server.common.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,9 +18,9 @@ public abstract class BaseHandler<T, U> {
     @Autowired
     protected UserService userService;
 
-    protected abstract void validate(T request) throws IoTException;
+    protected abstract void validate(final T request) throws IoTException;
 
-    protected abstract U processRequest(T request);
+    protected abstract U processRequest(final T request);
 
     public U handleRequest(T request) {
         log.info("request={}", request);

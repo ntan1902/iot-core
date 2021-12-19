@@ -20,4 +20,6 @@ public interface UserService {
     Boolean changePassword(String currentPassword, String newPassword);
 
     Boolean deleteUser(UUID userId);
+
+    Boolean updateUser(UserDto userDto);
 }

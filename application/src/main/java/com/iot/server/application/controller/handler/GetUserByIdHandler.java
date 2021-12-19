@@ -9,15 +9,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class GetUserByIdHandler extends BaseHandler<GetUserByIdRequest, GetUserByIdResponse> {
     @Override
-    protected void validate(GetUserByIdRequest request) throws IoTException {
+    protected void validate(final GetUserByIdRequest request) throws IoTException {
         validateNotEmpty("userId", request.getUserId());
     }
 
     @Override
-    protected GetUserByIdResponse processRequest(GetUserByIdRequest request) {
-        GetUserByIdResponse response = new GetUserByIdResponse();
+    protected GetUserByIdResponse processRequest(final GetUserByIdRequest request) {
+        final GetUserByIdResponse response = new GetUserByIdResponse();
 
-        UserDto user = userService.findUserWithExtraInfoById(toUUID(request.getUserId()));
+        final UserDto user = userService.findUserWithExtraInfoById(toUUID(request.getUserId()));
         response.setUser(user);
 
         return response;
