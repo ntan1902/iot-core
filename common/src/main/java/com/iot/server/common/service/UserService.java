@@ -2,7 +2,6 @@ package com.iot.server.common.service;
 
 import com.iot.server.common.dto.UserCredentialsDto;
 import com.iot.server.common.dto.UserDto;
-import com.iot.server.common.model.SecurityUser;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,9 +15,9 @@ public interface UserService {
 
     UserDto findUserWithExtraInfoById(UUID userId);
 
-    UserDto createUserWithAuthorities(SecurityUser currentUser, UserDto userDto, List<String> authorities);
+    UserDto createUserWithAuthorities(UserDto userDto, List<String> authorities);
 
-    Boolean changePassword(UUID userId, String currentPassword, String newPassword);
+    Boolean changePassword(String currentPassword, String newPassword);
 
-    Boolean deleteUser(SecurityUser currentUser, UUID userId);
+    Boolean deleteUser(UUID userId);
 }

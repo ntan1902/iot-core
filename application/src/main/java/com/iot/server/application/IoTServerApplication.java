@@ -22,22 +22,22 @@ public class IoTServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(IoTServerApplication.class, args);
     }
-
-    @Bean
-    CommandLineRunner run(final RoleService roleService) {
-        return args -> {
-            roleService.save(
-                    RoleDto.builder()
-                            .name(AuthorityEnum.CUSTOMER.name())
-                            .build());
-            roleService.save(
-                    RoleDto.builder()
-                            .name(AuthorityEnum.TENANT.name())
-                            .build());
-            roleService.save(
-                    RoleDto.builder()
-                            .name(AuthorityEnum.ADMIN.name())
-                            .build());
-        };
-    }
+//
+//    @Bean
+//    CommandLineRunner run(final RoleService roleService) {
+//        return args -> {
+//            roleService.save(
+//                    RoleDto.builder()
+//                            .name(AuthorityEnum.CUSTOMER.name())
+//                            .build());
+//            roleService.save(
+//                    RoleDto.builder()
+//                            .name(AuthorityEnum.TENANT.name())
+//                            .build());
+//            roleService.save(
+//                    RoleDto.builder()
+//                            .name(AuthorityEnum.ADMIN.name())
+//                            .build());
+//        };
+//    }
 }

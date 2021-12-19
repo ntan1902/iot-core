@@ -19,7 +19,7 @@ import java.util.UUID;
 @Table(name = EntityConstants.ROLE_TABLE_NAME)
 public class RoleEntity extends BaseEntity<UUID> {
 
-    @Column(name = EntityConstants.ROLE_NAME_PROPERTY)
+    @Column(name = EntityConstants.ROLE_NAME_PROPERTY, unique = true)
     private String name;
 
     public RoleEntity(RoleDto roleDto) {

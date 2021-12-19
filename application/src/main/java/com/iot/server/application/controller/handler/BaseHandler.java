@@ -67,10 +67,6 @@ public abstract class BaseHandler<T, U> {
         return UUID.fromString(id);
     }
 
-    protected SecurityUser getCurrentUser() {
-        return (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
-
 }
 
 

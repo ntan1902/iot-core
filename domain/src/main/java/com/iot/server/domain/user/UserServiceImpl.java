@@ -187,9 +187,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto createUserWithAuthorities(SecurityUser currentUser, UserDto userDto, List<String> authorities) {
-        log.trace("[{}], [{}], [{}]", currentUser, userDto, authorities);
+    public UserDto createUserWithAuthorities(UserDto userDto, List<String> authorities) {
+        log.trace("[{}], [{}]", userDto, authorities);
 
+        SecurityUser currentUser = getCurrentUser();
         checkPermission(currentUser.getAuthorities(), authorities);
 
         if (userDao.existsByEmail(userDto.getEmail())) {
@@ -207,6 +208,8 @@ public class UserServiceImpl implements UserService {
                 userDto.setTenantId(currentUser.getTenantId());
             }
         }
+        userDto.setCreateUid(currentUser.getId());
+
         UserEntity userEntity = new UserEntity(userDto);
         userEntity.setRoles(authorities.stream()
                 .map(this::createRoleIfNotFound)
@@ -222,14 +225,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean changePassword(UUID userId, String currentPassword, String newPassword) {
-        log.trace("[{}], [{}], [{}]", userId, currentPassword, newPassword);
+    public Boolean changePassword(String currentPassword, String newPassword) {
+        log.trace("[{}], [{}]", currentPassword, newPassword);
 
+        SecurityUser currentUser = getCurrentUser();
         if (currentPassword.equals(newPassword)) {
             throw new IoTException(ReasonEnum.INVALID_PARAMS, "Current password and new password are the same");
         }
 
-        UserCredentialsEntity userCredentialsEntity = userCredentialsDao.findByUserId(userId);
+        UserCredentialsEntity userCredentialsEntity = userCredentialsDao.findByUserId(currentUser.getId());
         if (userCredentialsEntity == null) {
             throw new IoTException(ReasonEnum.INVALID_PARAMS, "User is not hound");
 
@@ -244,20 +248,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean deleteUser(SecurityUser currentUser, UUID userId) {
-        log.trace("[{}], [{}]", currentUser, userId);
+    public Boolean deleteUser(UUID userId) {
+        log.trace("[{}]", userId);
+
+        SecurityUser currentUser = getCurrentUser();
         if (currentUser.getId().equals(userId)) {
             throw new IoTException(ReasonEnum.INVALID_PARAMS, "You can't delete yourself");
         }
-        
+
         UserCredentialsEntity userCredentials = userCredentialsDao.findById(userId);
-        UserEntity user = userCredentials.getUser();
+        UserEntity user;
+        if (userCredentials == null) {
+            user = userDao.findById(userId);
+        } else {
+            user = userCredentials.getUser();
+        }
+
+        if (user == null) {
+            throw new IoTException(ReasonEnum.INVALID_PARAMS, "User is not found");
+        }
 
         if (isAdmin(currentUser.getAuthorities())
                 || (isTenant(currentUser.getAuthorities()) && currentUser.getId().equals(user.getTenantId()))
                 || (isCustomer(currentUser.getAuthorities()) && currentUser.getId().equals(user.getCustomerId()))) {
             user.setDeleted(true);
-            userCredentials.setDeleted(true);
+
+            if (userCredentials != null) {
+                userCredentials.setDeleted(true);
+            }
             return true;
         } else {
             throw new IoTException(ReasonEnum.PERMISSION_DENIED, "You don't have permission to delete this user");

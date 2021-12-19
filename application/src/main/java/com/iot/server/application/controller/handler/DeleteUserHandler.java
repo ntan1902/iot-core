@@ -16,7 +16,7 @@ public class DeleteUserHandler extends BaseHandler<DeleteUserRequest, DeleteUser
     protected DeleteUserResponse processRequest(DeleteUserRequest request) {
         DeleteUserResponse response = new DeleteUserResponse();
         response.setSuccess(
-                userService.deleteUser(getCurrentUser(), toUUID(request.getUserId()))
+                userService.deleteUser(toUUID(request.getUserId()))
         );
         return response;
     }
