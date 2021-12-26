@@ -198,7 +198,11 @@ public class UserServiceImpl implements UserService {
         }
 
         if (isTenant(currentUser.getAuthorities())) {
-            userDto.setTenantId(currentUser.getId());
+            if (currentUser.getTenantId() != null) {
+                userDto.setTenantId(currentUser.getTenantId());
+            } else {
+                userDto.setTenantId(currentUser.getId());
+            }
         }
 
         if (isCustomer(currentUser.getAuthorities())) {
