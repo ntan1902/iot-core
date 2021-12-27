@@ -1,10 +1,8 @@
 package com.iot.server.domain.user;
 
-import com.iot.server.common.dao.client.ClientDao;
-import com.iot.server.common.dao.client.entity.TenantEntity;
-import com.iot.server.common.dao.db.RoleDao;
-import com.iot.server.common.dao.db.UserCredentialsDao;
-import com.iot.server.common.dao.db.UserDao;
+import com.iot.server.common.dao.RoleDao;
+import com.iot.server.common.dao.UserCredentialsDao;
+import com.iot.server.common.dao.UserDao;
 import com.iot.server.common.dto.UserCredentialsDto;
 import com.iot.server.common.dto.UserDto;
 import com.iot.server.common.entity.RoleEntity;
@@ -15,6 +13,8 @@ import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
 import com.iot.server.common.model.SecurityUser;
 import com.iot.server.common.service.UserService;
+import com.iot.server.rest.client.EntityService;
+import com.iot.server.rest.client.entity.TenantEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final UserCredentialsDao userCredentialsDao;
     private final RoleDao roleDao;
-    private final ClientDao clientDao;
+    private final EntityService entityService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
             UserCredentialsEntity userCredentials = getUserCredentialsEntity(savedUser, encodedPassword);
             userCredentialsDao.save(userCredentials);
 
-            clientDao.registerTenant(getTenantEntity(savedUser));
+            entityService.registerTenant(getTenantEntity(savedUser));
         }
 
         return new UserDto(savedUser);

@@ -1,3 +1,5 @@
+server:
+  port: "${SERVER_PORT:8080}"
 spring:
   data:
     jpa:
@@ -16,7 +18,7 @@ spring:
 
   datasource:
     driverClassName: "${SPRING_DRIVER_CLASS_NAME:org.postgresql.Driver}"
-    url: "${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/postgres}"
+    url: "${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/iot_auth}"
     username: "${SPRING_DATASOURCE_USERNAME:postgres}"
     password: "${SPRING_DATASOURCE_PASSWORD:123456}"
     hikari:
@@ -46,6 +48,7 @@ spring.mvc.cors:
 #      allow-credentials: "true"
       allowed-origin-pattern: "*"
 
-client.nodejs:
-  host: "${CLIENT_BASE_URL:localhost:8081}"
-  max-attempt: "${CLIENT_MAX_ATTEMPT:3}"
+entity.service:
+  host: "${ENTITY_SERVICE_URL:localhost:8081}"
+  max-attempt: "${ENTITY_SERVICE_MAX_ATTEMPT:3}"
+

@@ -1,4 +1,4 @@
-package com.iot.server.common.dao.client.entity;
+package com.iot.server.rest.client.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

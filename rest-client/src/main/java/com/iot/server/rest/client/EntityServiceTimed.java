@@ -1,19 +1,18 @@
-package com.iot.server.dao.client;
+package com.iot.server.rest.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Component
-public class ClientDaoTimed {
+public class EntityServiceTimed {
 
     private final WebClient webClient;
 
     @Autowired
-    public ClientDaoTimed(WebClient webClient) {
+    public EntityServiceTimed(WebClient webClient) {
         this.webClient = webClient;
     }
 

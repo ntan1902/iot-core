@@ -1,4 +1,4 @@
-package com.iot.server.dao.client;
+package com.iot.server.rest.client;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -8,15 +8,15 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 @Data
-@ConfigurationProperties(prefix = "client.nodejs")
+@ConfigurationProperties(prefix = "entity.service")
 @Component
 @Slf4j
-public class ClientConfig {
+public class EntityServiceConfig {
     private String host;
     private int maxAttempt;
 
     @PostConstruct
     void printClientConfig() {
-        log.info("ClientConfig [{}]", this);
+        log.info("EntityServiceConfig [{}]", this);
     }
 }

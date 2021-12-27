@@ -1,4 +1,4 @@
-package com.iot.server.dao.client;
+package com.iot.server.rest.client;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,6 +1,6 @@
 package com.iot.server.dao.db.role;
 
-import com.iot.server.common.dao.db.RoleDao;
+import com.iot.server.common.dao.RoleDao;
 import com.iot.server.dao.db.JpaAbstractDao;
 import com.iot.server.common.entity.RoleEntity;
 import lombok.RequiredArgsConstructor;
