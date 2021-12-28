@@ -12,9 +12,9 @@ import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
 import com.iot.server.common.model.SecurityUser;
+import com.iot.server.common.request.TenantRequest;
 import com.iot.server.common.service.UserService;
-import com.iot.server.rest.client.EntityService;
-import com.iot.server.rest.client.entity.TenantEntity;
+import com.iot.server.rest.client.EntityServiceClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final UserCredentialsDao userCredentialsDao;
     private final RoleDao roleDao;
-    private final EntityService entityService;
+    private final EntityServiceClient entityServiceClient;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
             UserCredentialsEntity userCredentials = getUserCredentialsEntity(savedUser, encodedPassword);
             userCredentialsDao.save(userCredentials);
 
-            entityService.registerTenant(getTenantEntity(savedUser));
+            entityServiceClient.registerTenant(getTenantEntity(savedUser));
         }
 
         return new UserDto(savedUser);
@@ -76,8 +76,8 @@ public class UserServiceImpl implements UserService {
         return (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    private TenantEntity getTenantEntity(UserEntity userEntity) {
-        return TenantEntity.builder()
+    private TenantRequest getTenantEntity(UserEntity userEntity) {
+        return TenantRequest.builder()
                 .userId(userEntity.getId())
                 .email(userEntity.getEmail())
                 .address("")

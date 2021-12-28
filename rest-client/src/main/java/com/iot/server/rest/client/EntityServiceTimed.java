@@ -20,7 +20,9 @@ public class EntityServiceTimed {
         Mono<String> responseMono =
                 webClient
                         .get()
-                        .uri(uriBuilder -> uriBuilder.path(path).queryParams(queryParams).build())
+                        .uri(uriBuilder -> uriBuilder.path(path)
+                                .queryParams(queryParams)
+                                .build())
                         .retrieve()
                         .bodyToMono(String.class);
 

@@ -21,12 +21,10 @@ public abstract class BaseHandler<T, U> {
     protected abstract U processRequest(final T request);
 
     public U handleRequest(T request) {
-        log.info("request={}", request);
-
         validate(request);
 
         val response = processRequest(request);
-        log.info("response={}", response);
+        log.info("Request: {} - Response: {}", response, request);
         return response;
     }
 

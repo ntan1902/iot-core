@@ -1,6 +1,6 @@
 package com.iot.server.auth.config;
 
-import com.iot.server.auth.utils.RSAUtils;
+import com.iot.server.common.utils.RSAUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -1,4 +1,4 @@
-package com.iot.server.rest.client;
+package com.iot.server.rest.client.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

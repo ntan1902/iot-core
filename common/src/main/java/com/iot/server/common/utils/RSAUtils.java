@@ -1,11 +1,5 @@
-package com.iot.server.auth.utils;
+package com.iot.server.common.utils;
 
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.BufferedReader;
@@ -70,34 +64,34 @@ public class RSAUtils {
                 .collect(Collectors.joining());
     }
 
-    public static void main(String[] args) throws Exception {
-        PrivateKey privateKey = getPrivateKey("private_key_pkcs8.pem");
-        PublicKey publicKey = getPublicKey("public_key.pem");
-
-        JWKSet jwk = new JWKSet(
-                new RSAKey.Builder((RSAPublicKey) publicKey).privateKey(privateKey).build());
-
-        Claims claims = Jwts.claims()
-                .setSubject("UUID");
-        claims.put("firstName", "An");
-
-        ZonedDateTime currentTime = ZonedDateTime.now();
-
-        String accessToken = Jwts.builder()
-                .setClaims(claims)
-                .setIssuer("com.iot")
-                .setIssuedAt(Date.from(currentTime.toInstant()))
-                .setExpiration(Date.from(currentTime.plusSeconds(60000).toInstant()))
-                .signWith(SignatureAlgorithm.RS256, privateKey)
-                .compact();
-
-        System.out.println(jwk.toJSONObject());
-        System.out.println(accessToken);
-
-        Jws<Claims> claimsJws = Jwts.parser()
-                .setSigningKey(publicKey)
-                .parseClaimsJws(accessToken);
-
-        System.out.println(claimsJws.getBody());
-    }
+//    public static void main(String[] args) throws Exception {
+//        PrivateKey privateKey = getPrivateKey("private_key_pkcs8.pem");
+//        PublicKey publicKey = getPublicKey("public_key.pem");
+//
+//        JWKSet jwk = new JWKSet(
+//                new RSAKey.Builder((RSAPublicKey) publicKey).privateKey(privateKey).build());
+//
+//        Claims claims = Jwts.claims()
+//                .setSubject("UUID");
+//        claims.put("firstName", "An");
+//
+//        ZonedDateTime currentTime = ZonedDateTime.now();
+//
+//        String accessToken = Jwts.builder()
+//                .setClaims(claims)
+//                .setIssuer("com.iot")
+//                .setIssuedAt(Date.from(currentTime.toInstant()))
+//                .setExpiration(Date.from(currentTime.plusSeconds(60000).toInstant()))
+//                .signWith(SignatureAlgorithm.RS256, privateKey)
+//                .compact();
+//
+//        System.out.println(jwk.toJSONObject());
+//        System.out.println(accessToken);
+//
+//        Jws<Claims> claimsJws = Jwts.parser()
+//                .setSigningKey(publicKey)
+//                .parseClaimsJws(accessToken);
+//
+//        System.out.println(claimsJws.getBody());
+//    }
 }

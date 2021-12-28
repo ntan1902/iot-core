@@ -1,4 +1,4 @@
-package com.iot.server.rest.client.entity;
+package com.iot.server.common.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TenantEntity {
+public class TenantRequest {
     private UUID id;
     private UUID userId;
     private String email;
