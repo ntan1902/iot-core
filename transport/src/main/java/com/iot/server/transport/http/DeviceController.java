@@ -1,6 +1,6 @@
 package com.iot.server.transport.http;
 
-import com.iot.server.transport.dto.ValidateDeviceTokenRequest;
+import com.iot.server.transport.dto.ValidateDeviceToken;
 import com.iot.server.transport.enums.TransportType;
 import com.iot.server.transport.service.TransportService;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +23,10 @@ public class DeviceController {
     @PostMapping("/{deviceToken}/telemetry")
     public CompletableFuture<ResponseEntity<?>> sendTelemetry(@PathVariable("deviceToken") String deviceToken,
                                                               @RequestBody String json) {
-        return transportService.process(
+        return CompletableFuture
+                .supplyAsync(() -> transportService.process(
                         TransportType.DEFAULT,
-                        ValidateDeviceTokenRequest.builder().token(deviceToken).build())
+                        ValidateDeviceToken.builder().token(deviceToken).build()))
                 .handle((res, ex) -> {
                     if (ex != null) {
                         throw new IllegalArgumentException();

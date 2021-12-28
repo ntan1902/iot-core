@@ -1,4 +1,4 @@
-package com.iot.server.transport.dto;
+package com.iot.server.common.request;
 
 import lombok.Builder;
 import lombok.Data;
