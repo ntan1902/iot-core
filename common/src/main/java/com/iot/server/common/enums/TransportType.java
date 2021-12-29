@@ -1,4 +1,4 @@
-package com.iot.server.transport.enums;
+package com.iot.server.common.enums;
 
 public enum TransportType {
     DEFAULT,

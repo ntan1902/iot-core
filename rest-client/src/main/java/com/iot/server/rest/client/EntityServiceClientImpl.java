@@ -1,8 +1,9 @@
 package com.iot.server.rest.client;
 
 import com.iot.server.common.request.TenantRequest;
-import com.iot.server.common.request.ValidateDeviceTokenRequest;
-import com.iot.server.common.response.ValidateDeviceTokenResponse;
+import com.iot.server.common.request.ValidateDeviceRequest;
+import com.iot.server.common.response.DeviceResponse;
+import com.iot.server.common.response.ValidateDeviceResponse;
 import com.iot.server.common.utils.GsonUtils;
 import com.iot.server.rest.client.config.EntityServiceConfig;
 import io.netty.channel.ConnectTimeoutException;
@@ -28,14 +29,14 @@ public class EntityServiceClientImpl implements EntityServiceClient {
     }
 
     @Override
-    public boolean validateDeviceToken(ValidateDeviceTokenRequest validateDeviceTokenRequest) {
-        String path = entityServiceConfig.getHost() + "/device/validate-access-token";
-        String responseStr = validateDeviceToken(path, validateDeviceTokenRequest, 1);
-        log.info("Request: {} - Body: {} - Response: {}", path, validateDeviceTokenRequest, responseStr);
+    public DeviceResponse validateDevice(ValidateDeviceRequest validateDeviceRequest) {
+        String path = entityServiceConfig.getHost() + "/device/validate";
+        String responseStr = validateDeviceToken(path, validateDeviceRequest, 1);
+        log.info("Request: {} - Body: {} - Response: {}", path, validateDeviceRequest, responseStr);
 
-        ValidateDeviceTokenResponse response = GsonUtils.fromJson(responseStr, ValidateDeviceTokenResponse.class);
+        ValidateDeviceResponse response = GsonUtils.fromJson(responseStr, ValidateDeviceResponse.class);
 
-        return response.getValid();
+        return response.getDevice();
     }
 
     private String registerTenant(String path, TenantRequest tenantRequest, int attempt) {
@@ -59,9 +60,9 @@ public class EntityServiceClientImpl implements EntityServiceClient {
 
     }
 
-    private String validateDeviceToken(String path, ValidateDeviceTokenRequest validateDeviceTokenRequest, int attempt) {
+    private String validateDeviceToken(String path, ValidateDeviceRequest validateDeviceRequest, int attempt) {
         try {
-            return entityServiceTimed.post(path, validateDeviceTokenRequest);
+            return entityServiceTimed.post(path, validateDeviceRequest);
         } catch (RuntimeException ex) {
             log.warn("Attempt: {} - Reason:", attempt, ex);
             if (attempt >= entityServiceConfig.getMaxAttempt()) {
@@ -72,7 +73,7 @@ public class EntityServiceClientImpl implements EntityServiceClient {
                     || ex instanceof WriteTimeoutException
                     || ex.getCause() instanceof ConnectTimeoutException) {
 
-                return validateDeviceToken(path, validateDeviceTokenRequest, attempt + 1);
+                return validateDeviceToken(path, validateDeviceRequest, attempt + 1);
             }
 
             throw new IllegalArgumentException(ex.getMessage());

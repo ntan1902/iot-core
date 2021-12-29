@@ -1,7 +1,7 @@
 package com.iot.server.transport.http;
 
 import com.iot.server.transport.dto.ValidateDeviceToken;
-import com.iot.server.transport.enums.TransportType;
+import com.iot.server.common.enums.TransportType;
 import com.iot.server.transport.service.TransportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ForkJoinPool;
 
 @RestController
@@ -24,15 +25,13 @@ public class DeviceController {
     public CompletableFuture<ResponseEntity<?>> sendTelemetry(@PathVariable("deviceToken") String deviceToken,
                                                               @RequestBody String json) {
         return CompletableFuture
-                .supplyAsync(() -> transportService.process(
+                .runAsync(() -> transportService.process(
                         TransportType.DEFAULT,
                         ValidateDeviceToken.builder().token(deviceToken).build()))
-                .handle((res, ex) -> {
-                    if (ex != null) {
-                        throw new IllegalArgumentException();
-                    }
-                    return ResponseEntity.ok(res);
-                });
+                .exceptionally(t -> {
+                    throw new CompletionException(t);
+                })
+                .thenApply(r -> ResponseEntity.ok().build());
     }
 
     @GetMapping("/async-deferredresult")

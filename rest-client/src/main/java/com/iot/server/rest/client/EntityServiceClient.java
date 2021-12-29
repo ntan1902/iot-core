@@ -1,11 +1,12 @@
 package com.iot.server.rest.client;
 
 import com.iot.server.common.request.TenantRequest;
-import com.iot.server.common.request.ValidateDeviceTokenRequest;
+import com.iot.server.common.request.ValidateDeviceRequest;
+import com.iot.server.common.response.DeviceResponse;
 
 public interface EntityServiceClient {
     void registerTenant(TenantRequest tenantRequest);
 
-    boolean validateDeviceToken(ValidateDeviceTokenRequest validateDeviceTokenRequest);
+    DeviceResponse validateDevice(ValidateDeviceRequest validateDeviceRequest);
 
 }
