@@ -12,10 +12,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = {"com.iot.server"})
 @EntityScan(basePackages = {"com.iot.server"})
 @ComponentScan({"com.iot.server"})
-public class IoTServerApplication {
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(IoTServerApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
 }

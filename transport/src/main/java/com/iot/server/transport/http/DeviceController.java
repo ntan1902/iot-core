@@ -27,7 +27,8 @@ public class DeviceController {
         return CompletableFuture
                 .runAsync(() -> transportService.process(
                         TransportType.DEFAULT,
-                        ValidateDeviceToken.builder().token(deviceToken).build()))
+                        ValidateDeviceToken.builder().token(deviceToken).build(),
+                        json))
                 .exceptionally(t -> {
                     throw new CompletionException(t);
                 })

@@ -1,3 +1,15 @@
 entity.service:
   host: "${ENTITY_SERVICE_URL:localhost:8081}"
   max-attempt: "${ENTITY_SERVICE_MAX_ATTEMPT:3}"
+
+queue:
+  rabbitmq:
+    telemetry:
+      queue-name: "${QUEUE_RABBIT_MQ_QUEUE_NAME:telemetryQueue}"
+      exchange-name: "${QUEUE_RABBIT_MQ_EXCHANGE_NAME:telemetryExchange}"
+      routing-key: "${QUEUE_RABBIT_MQ_ROUTING_KEY:telemetry}"
+      host: "${QUEUE_RABBIT_MQ_HOST:localhost}"
+      port: "${QUEUE_RABBIT_MQ_PORT:5672}"
+      username: "${QUEUE_RABBIT_MQ_USERNAME:guest}"
+      password: "${QUEUE_RABBIT_MQ_PASSWORD:guest}"
+      connection-timeout: "${QUEUE_RABBIT_MQ_CONNECTION_TIMEOUT:60000}"

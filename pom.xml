@@ -10,6 +10,7 @@
         <module>domain</module>
         <module>transport</module>
         <module>rest-client</module>
+        <module>queue</module>
     </modules>
 
     <groupId>com.iot</groupId>
