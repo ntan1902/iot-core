@@ -11,6 +11,7 @@
         <module>transport</module>
         <module>rest-client</module>
         <module>queue</module>
+        <module>telemetry</module>
     </modules>
 
     <groupId>com.iot</groupId>

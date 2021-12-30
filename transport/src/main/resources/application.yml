@@ -1,3 +1,5 @@
+server:
+  port: "${SERVER_PORT:8082}"
 entity.service:
   host: "${ENTITY_SERVICE_URL:localhost:8081}"
   max-attempt: "${ENTITY_SERVICE_MAX_ATTEMPT:3}"

@@ -1,6 +1,6 @@
 package com.iot.server.queue;
 
-public interface QueueProducerTemplate<T> {
+public interface QueueProducerTemplate {
 
-    void send(T msg);
+    void send(String msg);
 }

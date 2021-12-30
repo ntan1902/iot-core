@@ -1,4 +1,4 @@
-package com.iot.server.transport.dto;
+package com.iot.server.common.model;
 
 import com.iot.server.common.model.TsKvList;
 import lombok.Builder;

@@ -8,14 +8,14 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component("rabbitTemplate")
+@Component("rabbitProducerTemplate")
 @RequiredArgsConstructor
-public class RabbitMQProducerTemplate<T> implements QueueProducerTemplate<T> {
+public class RabbitMQProducerTemplate implements QueueProducerTemplate {
 
     private final RabbitTemplate rabbitTemplate;
 
     @Override
-    public void send(T msg) {
+    public void send(String msg) {
         try {
             rabbitTemplate.convertAndSend(msg);
         } catch (AmqpException ex) {
