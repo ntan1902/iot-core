@@ -30,6 +30,17 @@ public class EntityConstants {
     public static final String USER_ROLE_USER_ID_PROPERTY = "user_id";
     public static final String USER_ROLE_ROLE_ID_PROPERTY = "role_id";
 
+    public static final String TS_KV_TABLE_NAME = "ts_kv";
+    public static final String TS_KV_ENTITY_ID_PROPERTY = "entity_id";
+    public static final String TS_KV_TS_PROPERTY = "ts";
+    public static final String TS_KV_KEY_PROPERTY = "key";
+    public static final String TS_KV_TYPE_PROPERTY = "type";
+    public static final String TS_KV_BOOL_V_PROPERTY = "bool_v";
+    public static final String TS_KV_DOUBLE_V_PROPERTY = "double_v";
+    public static final String TS_KV_LONG_V_PROPERTY = "long_v";
+    public static final String TS_KV_STRING_V_PROPERTY = "string_v";
+    public static final String TS_KV_JSON_V_PROPERTY = "json_v";
+
     private EntityConstants() {
     }
 

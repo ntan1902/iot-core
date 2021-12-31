@@ -58,7 +58,7 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public RabbitAdmin rabbitAdmin() {
+    public RabbitAdmin telemetryRabbitAdmin() {
         RabbitAdmin rabbitAdmin = new RabbitAdmin(createConnectionFactory(telemetry));
 
         rabbitAdmin.declareExchange(telemetryExchange());

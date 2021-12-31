@@ -13,6 +13,8 @@
   <packaging>pom</packaging>
   <modules>
     <module>application</module>
+    <module>dao</module>
+    <module>domain</module>
   </modules>
 
   <properties>

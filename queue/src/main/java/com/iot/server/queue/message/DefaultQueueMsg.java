@@ -1,12 +1,11 @@
 package com.iot.server.queue.message;
 
+import java.util.UUID;
 import lombok.Data;
 
-import java.io.Serializable;
-import java.util.UUID;
-
 @Data
-public class DefaultQueueMsg<T extends Serializable> implements Serializable {
-    private final UUID key;
-    private final T data;
+public class DefaultQueueMsg<T> {
+
+   private final UUID key;
+   private final T data;
 }

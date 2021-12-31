@@ -1,8 +1,8 @@
 package com.iot.server.transport.http;
 
-import com.iot.server.transport.dto.ValidateDeviceToken;
+import com.iot.server.common.dto.ValidateDeviceToken;
 import com.iot.server.common.enums.TransportType;
-import com.iot.server.transport.service.TransportService;
+import com.iot.server.common.service.TransportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

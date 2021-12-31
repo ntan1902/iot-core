@@ -1,16 +1,15 @@
 package com.iot.server.common.model;
 
+import java.util.List;
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Data;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.UUID;
-
 @Data
 @Builder
-public class TsKvList implements Serializable {
-    private long ts;
-    private UUID entityId;
-    private List<Kv> kv;
+public class TsKvList {
+
+   private long ts;
+   private UUID entityId;
+   private List<Kv> kv;
 }
