@@ -1,7 +1,6 @@
 package com.iot.server.transport.service;
 
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import com.iot.server.common.enums.DeviceCredentialsType;
 import com.iot.server.common.enums.TransportType;
 import com.iot.server.common.model.PostTelemetryMsg;
