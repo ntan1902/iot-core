@@ -31,9 +31,11 @@ public final class GsonUtils {
                                     return Base64.getDecoder().decode(in.nextString());
                                 }
                             })
+                    .setLenient()
                     .create();
 
-    private GsonUtils() {}
+    private GsonUtils() {
+    }
 
     public static <T> T fromJson(String json, Class<T> clazz) {
         return GSON.fromJson(json, clazz);
@@ -73,15 +75,17 @@ public final class GsonUtils {
         for (Map.Entry<String, JsonElement> valueEntry : jsonObject.entrySet()) {
             JsonElement element = valueEntry.getValue();
             if (element.isJsonPrimitive()) {
-
                 JsonPrimitive value = element.getAsJsonPrimitive();
                 if (value.isString()) {
-
-                    result.add(Kv.builder()
-                            .key(valueEntry.getKey())
-                            .type(KvType.STRING)
-                            .stringV(value.getAsString())
-                            .build());
+                    try {
+                        result.add(buildNumericKeyValueProto(value, valueEntry.getKey()));
+                    } catch (RuntimeException ex) {
+                        result.add(Kv.builder()
+                                .key(valueEntry.getKey())
+                                .type(KvType.STRING)
+                                .stringV(value.getAsString())
+                                .build());
+                    }
 
                 } else if (value.isBoolean()) {
 
@@ -95,17 +99,17 @@ public final class GsonUtils {
 
                     result.add(buildNumericKeyValueProto(value, valueEntry.getKey()));
 
-                } else if (element.isJsonObject() || element.isJsonArray()) {
-
-                    result.add(Kv.builder()
-                            .key(valueEntry.getKey())
-                            .type(KvType.JSON)
-                            .jsonV(value.toString())
-                            .build());
-
                 } else if (!value.isJsonNull()) {
                     throw new JsonSyntaxException(CAN_NOT_PARSE_VALUE + value);
                 }
+            } else if (element.isJsonObject() || element.isJsonArray()) {
+
+                result.add(Kv.builder()
+                        .key(valueEntry.getKey())
+                        .type(KvType.JSON)
+                        .jsonV(element.toString())
+                        .build());
+
             }
         }
         return result;

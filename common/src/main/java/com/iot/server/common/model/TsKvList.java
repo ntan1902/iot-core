@@ -11,5 +11,5 @@ public class TsKvList {
 
    private long ts;
    private UUID entityId;
-   private List<Kv> kv;
+   private List<Kv> kvs;
 }

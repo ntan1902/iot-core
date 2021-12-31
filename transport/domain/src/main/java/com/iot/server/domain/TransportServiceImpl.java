@@ -1,6 +1,7 @@
 package com.iot.server.domain;
 
 import com.google.gson.JsonParser;
+import com.iot.server.common.model.Kv;
 import com.iot.server.domain.model.ValidateDeviceToken;
 import com.iot.server.common.enums.DeviceCredentialsType;
 import com.iot.server.common.enums.TransportType;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -37,16 +39,20 @@ public class TransportServiceImpl implements TransportService {
             log.warn("Device token is not valid [{}]", validateDeviceToken.getToken());
             throw new IllegalArgumentException("Device token is not valid");
         }
+        try {
+            List<Kv> kvs = GsonUtils.parseJsonElement(JsonParser.parseString(json));
+            PostTelemetryMsg postTelemetryMsg = PostTelemetryMsg.builder()
+                    .tsKvList(TsKvList.builder()
+                            .entityId(deviceResponse.getId())
+                            .kvs(kvs)
+                            .ts(System.currentTimeMillis())
+                            .build())
+                    .build();
 
-        PostTelemetryMsg postTelemetryMsg = PostTelemetryMsg.builder()
-                .tsKvList(TsKvList.builder()
-                        .entityId(deviceResponse.getId())
-                        .kv(GsonUtils.parseJsonElement(JsonParser.parseString(json)))
-                        .ts(System.currentTimeMillis())
-                        .build())
-                .build();
-
-        rabbitProducerTemplate.send(
-                GsonUtils.toJson(new DefaultQueueMsg<>(UUID.randomUUID(), postTelemetryMsg)));
+            rabbitProducerTemplate.send(
+                    GsonUtils.toJson(new DefaultQueueMsg<>(UUID.randomUUID(), postTelemetryMsg)));
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+        }
     }
 }

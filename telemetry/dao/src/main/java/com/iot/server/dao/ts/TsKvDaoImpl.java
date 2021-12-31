@@ -6,13 +6,11 @@ import com.iot.server.dao.entity.TsKvEntity;
 import com.iot.server.dao.repository.TsKvRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,53 +56,60 @@ public class TsKvDaoImpl implements TsKvDao {
 
     @Override
     public void save(List<TsKvEntity> tsKvEntities) {
-        tsKvRepository.saveAll(tsKvEntities);
-//        Map<String, Object>[] params = new HashMap[tsKvEntities.size()];
-//
-//        int count = 0;
-//        for (TsKvEntity tsKvEntity : tsKvEntities) {
-//            Map<String, Object> ps = new HashMap<>();
-//            ps.put("entityId", tsKvEntity.getEntityId());
-//            ps.put("key", tsKvEntity.getKey());
-//            ps.put("ts", tsKvEntity.getTs());
-//
-//            if (tsKvEntity.getBoolV() != null) {
-//                ps.put("boolV", tsKvEntity.getBoolV());
-//                ps.put("type", KvType.BOOLEAN);
-//            } else {
-//                ps.put("boolV", Types.BOOLEAN);
-//            }
-//
-//            if (tsKvEntity.getStringV() != null) {
-//                ps.put("stringV", tsKvEntity.getStringV());
-//                ps.put("type", KvType.STRING);
-//            } else {
-//                ps.put("stringV", Types.VARCHAR);
-//            }
-//
-//
-//            if (tsKvEntity.getLongV() != null) {
-//                ps.put("longV", tsKvEntity.getLongV());
-//                ps.put("type", KvType.LONG);
-//            } else {
-//                ps.put("longV", Types.BIGINT);
-//            }
-//
-//            if (tsKvEntity.getDoubleV() != null) {
-//                ps.put("doubleV", tsKvEntity.getDoubleV());
-//                ps.put("type", KvType.DOUBLE);
-//            } else {
-//                ps.put("doubleV", Types.DOUBLE);
-//            }
-//
-//            if (tsKvEntity.getJsonV() != null) {
-//                ps.put("jsonV", tsKvEntity.getJsonV());
-//                ps.put("type", KvType.DOUBLE);
-//            } else {
-//                ps.put("jsonV", Types.VARCHAR);
-//            }
-//            params[count++] = ps;
-//        }
-//        jdbcTemplate.batchUpdate(INSERT_ON_CONFLICT_DO_UPDATE, params);
+//        tsKvRepository.saveAll(tsKvEntities);
+
+        List<SqlParameterSource> args = new ArrayList<>();
+
+        int count = 0;
+        for (TsKvEntity tsKvEntity : tsKvEntities) {
+            MapSqlParameterSource source = new MapSqlParameterSource()
+                    .addValue("entityId", tsKvEntity.getEntityId())
+                    .addValue("key", tsKvEntity.getKey())
+                    .addValue("ts", tsKvEntity.getTs());
+
+
+            if (tsKvEntity.getBoolV() != null) {
+                source.addValue("boolV", tsKvEntity.getBoolV());
+                source.addValue("type", KvType.BOOLEAN.name());
+            } else {
+                source.addValue("boolV", null);
+            }
+
+            if (tsKvEntity.getStringV() != null) {
+                source.addValue("stringV", tsKvEntity.getStringV());
+                source.addValue("type", KvType.STRING.name());
+            } else {
+                source.addValue("stringV", null);
+            }
+
+            if (tsKvEntity.getLongV() != null) {
+                source.addValue("longV", tsKvEntity.getLongV());
+                source.addValue("type", KvType.LONG.name());
+            } else {
+                source.addValue("longV", null);
+            }
+
+            if (tsKvEntity.getDoubleV() != null) {
+                source.addValue("doubleV", tsKvEntity.getDoubleV());
+                source.addValue("type", KvType.DOUBLE.name());
+            } else {
+
+                source.addValue("doubleV", null);
+            }
+
+            if (tsKvEntity.getJsonV() != null) {
+                source.addValue("jsonV", tsKvEntity.getJsonV());
+                source.addValue("type", KvType.JSON.name());
+            } else {
+                source.addValue("jsonV", null);
+            }
+            args.add(source);
+
+        }
+        try {
+            jdbcTemplate.batchUpdate(INSERT_ON_CONFLICT_DO_UPDATE, args.toArray(new SqlParameterSource[0]));
+        } catch (Exception ex) {
+            log.error("Failed to batch update entities ", ex);
+        }
     }
 }

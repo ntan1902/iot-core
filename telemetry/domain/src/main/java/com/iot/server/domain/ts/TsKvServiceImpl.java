@@ -28,7 +28,7 @@ public class TsKvServiceImpl implements TsKvService {
 
         PostTelemetryMsg postTelemetryMsg = defaultQueueMsg.getData();
         TsKvList tsKvList = postTelemetryMsg.getTsKvList();
-        for (Kv kv : tsKvList.getKv()) {
+        for (Kv kv : tsKvList.getKvs()) {
             TsKvEntity tsKvEntity = new TsKvEntity(kv);
 
             tsKvEntity.setEntityId(tsKvList.getEntityId());
