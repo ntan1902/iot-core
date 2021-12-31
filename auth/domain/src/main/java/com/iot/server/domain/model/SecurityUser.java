@@ -1,7 +1,7 @@
-package com.iot.server.common.model;
+package com.iot.server.domain.model;
 
-import com.iot.server.common.dto.UserDto;
 import com.iot.server.common.enums.AuthorityEnum;
+import com.iot.server.dao.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

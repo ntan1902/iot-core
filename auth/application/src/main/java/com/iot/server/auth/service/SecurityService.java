@@ -1,6 +1,6 @@
 package com.iot.server.auth.service;
 
-import com.iot.server.common.dto.UserCredentialsDto;
+import com.iot.server.dao.dto.UserCredentialsDto;
 
 public interface SecurityService {
 

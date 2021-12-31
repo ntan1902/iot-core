@@ -3,7 +3,7 @@ package com.iot.server.auth.controller.handler;
 import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
-import com.iot.server.common.service.UserService;
+import com.iot.server.domain.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;

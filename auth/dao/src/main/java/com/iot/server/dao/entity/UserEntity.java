@@ -1,6 +1,8 @@
-package com.iot.server.common.entity;
+package com.iot.server.dao.entity;
 
-import com.iot.server.common.dto.UserDto;
+import com.iot.server.common.entity.BaseEntity;
+import com.iot.server.dao.dto.UserDto;
+import com.iot.server.common.entity.EntityConstants;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

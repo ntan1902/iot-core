@@ -1,6 +1,6 @@
 package com.iot.server.auth.service;
 
-import com.iot.server.common.dto.UserCredentialsDto;
+import com.iot.server.dao.dto.UserCredentialsDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;

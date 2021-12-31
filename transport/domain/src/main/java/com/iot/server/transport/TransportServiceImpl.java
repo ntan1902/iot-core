@@ -1,14 +1,13 @@
 package com.iot.server.transport;
 
 import com.google.gson.JsonParser;
-import com.iot.server.common.dto.ValidateDeviceToken;
+import com.iot.server.transport.model.ValidateDeviceToken;
 import com.iot.server.common.enums.DeviceCredentialsType;
 import com.iot.server.common.enums.TransportType;
 import com.iot.server.common.model.PostTelemetryMsg;
 import com.iot.server.common.model.TsKvList;
 import com.iot.server.common.request.ValidateDeviceRequest;
 import com.iot.server.common.response.DeviceResponse;
-import com.iot.server.common.service.TransportService;
 import com.iot.server.common.utils.GsonUtils;
 import com.iot.server.queue.QueueProducerTemplate;
 import com.iot.server.queue.message.DefaultQueueMsg;

@@ -1,6 +1,6 @@
 package com.iot.server.auth.controller.response;
 
-import com.iot.server.common.model.SecurityUser;
+import com.iot.server.domain.model.SecurityUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

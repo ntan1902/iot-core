@@ -17,6 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @SuperBuilder
 public abstract class BaseDto<ID extends Serializable> {
+
     protected ID id;
     protected LocalDateTime createdAt;
     protected LocalDateTime updatedAt;

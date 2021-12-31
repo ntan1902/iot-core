@@ -1,9 +1,8 @@
 package com.iot.server.domain.role;
 
-import com.iot.server.common.dao.RoleDao;
-import com.iot.server.common.dto.RoleDto;
-import com.iot.server.common.entity.RoleEntity;
-import com.iot.server.common.service.RoleService;
+import com.iot.server.dao.db.role.RoleDao;
+import com.iot.server.dao.dto.RoleDto;
+import com.iot.server.dao.entity.RoleEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

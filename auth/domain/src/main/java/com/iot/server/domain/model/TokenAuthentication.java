@@ -1,4 +1,4 @@
-package com.iot.server.common.model;
+package com.iot.server.domain.model;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;

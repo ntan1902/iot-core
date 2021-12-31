@@ -1,8 +1,7 @@
 package com.iot.server.dao.db.role;
 
-import com.iot.server.common.dao.RoleDao;
-import com.iot.server.dao.db.JpaAbstractDao;
-import com.iot.server.common.entity.RoleEntity;
+import com.iot.server.common.dao.JpaAbstractDao;
+import com.iot.server.dao.entity.RoleEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;

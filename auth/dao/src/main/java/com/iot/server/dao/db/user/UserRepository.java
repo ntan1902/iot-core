@@ -1,6 +1,6 @@
 package com.iot.server.dao.db.user;
 
-import com.iot.server.common.entity.UserEntity;
+import com.iot.server.dao.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

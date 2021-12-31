@@ -1,19 +1,18 @@
 package com.iot.server.domain.user;
 
-import com.iot.server.common.dao.RoleDao;
-import com.iot.server.common.dao.UserCredentialsDao;
-import com.iot.server.common.dao.UserDao;
-import com.iot.server.common.dto.UserCredentialsDto;
-import com.iot.server.common.dto.UserDto;
-import com.iot.server.common.entity.RoleEntity;
-import com.iot.server.common.entity.UserCredentialsEntity;
-import com.iot.server.common.entity.UserEntity;
 import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
-import com.iot.server.common.model.SecurityUser;
 import com.iot.server.common.request.TenantRequest;
-import com.iot.server.common.service.UserService;
+import com.iot.server.dao.db.role.RoleDao;
+import com.iot.server.dao.db.user.UserCredentialsDao;
+import com.iot.server.dao.db.user.UserDao;
+import com.iot.server.dao.dto.UserCredentialsDto;
+import com.iot.server.dao.dto.UserDto;
+import com.iot.server.dao.entity.RoleEntity;
+import com.iot.server.dao.entity.UserCredentialsEntity;
+import com.iot.server.dao.entity.UserEntity;
+import com.iot.server.domain.model.SecurityUser;
 import com.iot.server.rest.client.EntityServiceClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +62,8 @@ public class UserServiceImpl implements UserService {
         if (savedUser != null && savedUser.getId() != null) {
             String encodedPassword = passwordEncoder.encode(password);
 
-            UserCredentialsEntity userCredentials = getUserCredentialsEntity(savedUser, encodedPassword);
+            UserCredentialsEntity userCredentials = getUserCredentialsEntity(savedUser,
+                    encodedPassword);
             userCredentialsDao.save(userCredentials);
 
             entityServiceClient.registerTenant(getTenantEntity(savedUser));
@@ -92,7 +92,8 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    private UserCredentialsEntity getUserCredentialsEntity(UserEntity savedUser, String encodedPassword) {
+    private UserCredentialsEntity getUserCredentialsEntity(UserEntity savedUser,
+                                                           String encodedPassword) {
         return UserCredentialsEntity.builder()
                 .user(savedUser)
                 .activateToken(UUID.randomUUID().toString())
@@ -234,17 +235,20 @@ public class UserServiceImpl implements UserService {
 
         SecurityUser currentUser = getCurrentUser();
         if (currentPassword.equals(newPassword)) {
-            throw new IoTException(ReasonEnum.INVALID_PARAMS, "Current password and new password are the same");
+            throw new IoTException(ReasonEnum.INVALID_PARAMS,
+                    "Current password and new password are the same");
         }
 
-        UserCredentialsEntity userCredentialsEntity = userCredentialsDao.findByUserId(currentUser.getId());
+        UserCredentialsEntity userCredentialsEntity = userCredentialsDao.findByUserId(
+                currentUser.getId());
         if (userCredentialsEntity == null) {
             throw new IoTException(ReasonEnum.INVALID_PARAMS, "User is not hound");
 
         }
 
         if (!passwordEncoder.matches(currentPassword, userCredentialsEntity.getPassword())) {
-            throw new IoTException(ReasonEnum.INVALID_PARAMS, "Current password is not matched. Please try again");
+            throw new IoTException(ReasonEnum.INVALID_PARAMS,
+                    "Current password is not matched. Please try again");
         }
 
         userCredentialsEntity.setPassword(passwordEncoder.encode(newPassword));
@@ -273,8 +277,10 @@ public class UserServiceImpl implements UserService {
         }
 
         if (isAdmin(currentUser.getAuthorities())
-                || (isTenant(currentUser.getAuthorities()) && currentUser.getId().equals(user.getTenantId()))
-                || (isCustomer(currentUser.getAuthorities()) && currentUser.getId().equals(user.getCustomerId()))) {
+                || (isTenant(currentUser.getAuthorities()) && currentUser.getId()
+                .equals(user.getTenantId()))
+                || (isCustomer(currentUser.getAuthorities()) && currentUser.getId()
+                .equals(user.getCustomerId()))) {
             user.setDeleted(true);
             user.setUpdateUid(currentUser.getId());
 
@@ -285,7 +291,8 @@ public class UserServiceImpl implements UserService {
 
             return true;
         } else {
-            throw new IoTException(ReasonEnum.PERMISSION_DENIED, "You don't have permission to delete this user");
+            throw new IoTException(ReasonEnum.PERMISSION_DENIED,
+                    "You don't have permission to delete this user");
         }
     }
 
@@ -301,18 +308,22 @@ public class UserServiceImpl implements UserService {
         }
 
         if (isAdmin(currentUser.getAuthorities())
-                || (isTenant(currentUser.getAuthorities()) && currentUser.getId().equals(user.getTenantId()))
-                || (isCustomer(currentUser.getAuthorities()) && currentUser.getId().equals(user.getCustomerId()))) {
+                || (isTenant(currentUser.getAuthorities()) && currentUser.getId()
+                .equals(user.getTenantId()))
+                || (isCustomer(currentUser.getAuthorities()) && currentUser.getId()
+                .equals(user.getCustomerId()))) {
 
             if (!userDto.getEmail().isEmpty() && !userDto.getEmail().equals(user.getEmail())) {
                 user.setEmail(userDto.getEmail());
             }
 
-            if (!userDto.getFirstName().isEmpty() && !userDto.getFirstName().equals(user.getFirstName())) {
+            if (!userDto.getFirstName().isEmpty() && !userDto.getFirstName()
+                    .equals(user.getFirstName())) {
                 user.setFirstName(userDto.getFirstName());
             }
 
-            if (!userDto.getLastName().isEmpty() && !userDto.getLastName().equals(user.getLastName())) {
+            if (!userDto.getLastName().isEmpty() && !userDto.getLastName()
+                    .equals(user.getLastName())) {
                 user.setLastName(userDto.getLastName());
             }
 
@@ -323,36 +334,43 @@ public class UserServiceImpl implements UserService {
             user.setUpdateUid(currentUser.getId());
             return true;
         } else {
-            throw new IoTException(ReasonEnum.PERMISSION_DENIED, "You don't have permission to delete this user");
+            throw new IoTException(ReasonEnum.PERMISSION_DENIED,
+                    "You don't have permission to delete this user");
         }
     }
 
-    private void checkPermission(Collection<GrantedAuthority> currentAuthorities, List<String> requestAuthorities) {
+    private void checkPermission(Collection<GrantedAuthority> currentAuthorities,
+                                 List<String> requestAuthorities) {
 
         if (isTenant(currentAuthorities)
                 && isAdmin(requestAuthorities)) {
-            throw new IoTException(ReasonEnum.PERMISSION_DENIED, "You don't have permission to create admin user");
+            throw new IoTException(ReasonEnum.PERMISSION_DENIED,
+                    "You don't have permission to create admin user");
         }
 
         if (isCustomer(currentAuthorities)
                 && (isAdmin(requestAuthorities) || isTenant(requestAuthorities))) {
-            throw new IoTException(ReasonEnum.PERMISSION_DENIED, "You don't have permission to create admin or tenant user");
+            throw new IoTException(ReasonEnum.PERMISSION_DENIED,
+                    "You don't have permission to create admin or tenant user");
         }
     }
 
     public boolean isCustomer(Collection<GrantedAuthority> grantedAuthorities) {
         return grantedAuthorities.stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthorityEnum.CUSTOMER.getAuthority()));
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority()
+                        .equals(AuthorityEnum.CUSTOMER.getAuthority()));
     }
 
     public boolean isTenant(Collection<GrantedAuthority> grantedAuthorities) {
         return grantedAuthorities.stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthorityEnum.TENANT.getAuthority()));
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority()
+                        .equals(AuthorityEnum.TENANT.getAuthority()));
     }
 
     public boolean isAdmin(Collection<GrantedAuthority> grantedAuthorities) {
         return grantedAuthorities.stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(AuthorityEnum.ADMIN.getAuthority()));
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority()
+                        .equals(AuthorityEnum.ADMIN.getAuthority()));
     }
 
     public boolean isCustomer(List<String> authorities) {

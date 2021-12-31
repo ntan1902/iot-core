@@ -1,10 +1,10 @@
 package com.iot.server.auth.security.provider;
 
 import com.iot.server.auth.service.SecurityService;
-import com.iot.server.common.dto.UserCredentialsDto;
-import com.iot.server.common.dto.UserDto;
-import com.iot.server.common.model.SecurityUser;
-import com.iot.server.common.service.UserService;
+import com.iot.server.dao.dto.UserCredentialsDto;
+import com.iot.server.dao.dto.UserDto;
+import com.iot.server.domain.model.SecurityUser;
+import com.iot.server.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.InsufficientAuthenticationException;

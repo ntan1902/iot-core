@@ -2,7 +2,7 @@ package com.iot.server.auth.controller.handler;
 
 import com.iot.server.auth.controller.request.CreateUserRequest;
 import com.iot.server.auth.controller.response.CreateUserResponse;
-import com.iot.server.common.dto.UserDto;
+import com.iot.server.dao.dto.UserDto;
 import com.iot.server.common.exception.IoTException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

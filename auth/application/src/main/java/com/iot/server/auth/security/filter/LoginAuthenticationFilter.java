@@ -5,7 +5,7 @@ import com.iot.server.auth.controller.request.LoginRequest;
 import com.iot.server.auth.controller.response.LoginResponse;
 import com.iot.server.auth.exception.IoTExceptionHandler;
 import com.iot.server.auth.security.jwt.JwtFactory;
-import com.iot.server.common.model.SecurityUser;
+import com.iot.server.domain.model.SecurityUser;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,7 +2,7 @@ package com.iot.server.auth.controller.handler;
 
 import com.iot.server.auth.controller.request.RegisterRequest;
 import com.iot.server.auth.controller.response.RegisterResponse;
-import com.iot.server.common.dto.UserDto;
+import com.iot.server.dao.dto.UserDto;
 import com.iot.server.common.exception.IoTException;
 import org.springframework.stereotype.Component;
 
