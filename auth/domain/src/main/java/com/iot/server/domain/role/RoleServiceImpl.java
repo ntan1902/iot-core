@@ -1,6 +1,6 @@
 package com.iot.server.domain.role;
 
-import com.iot.server.dao.db.role.RoleDao;
+import com.iot.server.dao.role.RoleDao;
 import com.iot.server.dao.dto.RoleDto;
 import com.iot.server.dao.entity.RoleEntity;
 import lombok.RequiredArgsConstructor;

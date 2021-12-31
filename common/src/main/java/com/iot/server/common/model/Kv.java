@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 @Builder
 public class Kv {
-
    private String key;
    private KvType type;
    private Boolean boolV;
