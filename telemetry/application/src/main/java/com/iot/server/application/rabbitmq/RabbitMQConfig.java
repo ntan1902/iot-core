@@ -1,11 +1,14 @@
-package com.iot.server.application.config;
+package com.iot.server.application.rabbitmq;
 
 
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -46,19 +49,24 @@ public class RabbitMQConfig {
 
     @Bean
     public Binding telemetryBinding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(telemetry.routingKey);
+        return BindingBuilder.bind(queue).to(exchange).with(telemetry.routingKeyTelemetry);
+    }
+
+    @Bean
+    public Binding notificationTelemetryBinding(Queue queue, DirectExchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(telemetry.routingKeyNotificationTelemetry);
     }
 
     @Bean
     public RabbitTemplate telemetryRabbitTemplate() {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(createConnectionFactory(telemetry));
-        rabbitTemplate.setRoutingKey(telemetry.routingKey);
+        rabbitTemplate.setRoutingKey(telemetry.routingKeyNotificationTelemetry);
         rabbitTemplate.setExchange(telemetry.exchangeName);
         return rabbitTemplate;
     }
 
     @Bean
-    public RabbitAdmin telemetryRabbitAdmin() {
+    public RabbitAdmin rabbitAdmin() {
         RabbitAdmin rabbitAdmin = new RabbitAdmin(createConnectionFactory(telemetry));
 
         rabbitAdmin.declareExchange(telemetryExchange());
@@ -73,7 +81,8 @@ public class RabbitMQConfig {
     public static class Config {
         private String queueName;
         private String exchangeName;
-        private String routingKey;
+        private String routingKeyTelemetry;
+        private String routingKeyNotificationTelemetry;
         private String host;
         private int port;
         private String username;

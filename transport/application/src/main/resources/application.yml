@@ -7,11 +7,43 @@ entity.service:
 queue:
   rabbitmq:
     telemetry:
-      queue-name: "${QUEUE_RABBIT_MQ_QUEUE_NAME:telemetryQueue}"
-      exchange-name: "${QUEUE_RABBIT_MQ_EXCHANGE_NAME:telemetryExchange}"
-      routing-key: "${QUEUE_RABBIT_MQ_ROUTING_KEY:telemetry}"
-      host: "${QUEUE_RABBIT_MQ_HOST:localhost}"
-      port: "${QUEUE_RABBIT_MQ_PORT:5672}"
-      username: "${QUEUE_RABBIT_MQ_USERNAME:guest}"
-      password: "${QUEUE_RABBIT_MQ_PASSWORD:guest}"
-      connection-timeout: "${QUEUE_RABBIT_MQ_CONNECTION_TIMEOUT:60000}"
+      queue-name: "${QUEUE_RABBITMQ_TELEMETRY_QUEUE_NAME:telemetryQueue}"
+      exchange-name: "${QUEUE_RABBITMQ_TELEMETRY_EXCHANGE_NAME:telemetryExchange}"
+      routing-key-telemetry: "${QUEUE_RABBITMQ_TELEMETRY_ROUTING_KEY_TELEMETRY:telemetry}"
+      routing-key-notification-telemetry: "${QUEUE_RABBITMQ_TELEMETRY_ROUTING_KEY_NOTI_TELEMETRY:noti.telemetry}"
+      host: "${QUEUE_RABBITMQ_TELEMETRY_HOST:localhost}"
+      port: "${QUEUE_RABBITMQ_TELEMETRY_PORT:5672}"
+      username: "${QUEUE_RABBITMQ_TELEMETRY_USERNAME:guest}"
+      password: "${QUEUE_RABBITMQ_TELEMETRY_PASSWORD:guest}"
+      connection-timeout: "${QUEUE_RABBITMQ_TELEMETRY_CONNECTION_TIMEOUT:60000}"
+    socket:
+      host: "${QUEUE_RABBITMQ_SOCKET_HOST:localhost}"
+      port: "${QUEUE_RABBITMQ_SOCKET_PORT:61613}"
+      username: "${QUEUE_RABBITMQ_SOCKET_USERNAME:guest}"
+      password: "${QUEUE_RABBITMQ_SOCKET_PASSWORD:guest}"
+      app-dest: "${QUEUE_RABBITMQ_SOCKET_APP_DEST:app}"
+      stomp-broker: "${QUEUE_RABBITMQ_SOCKET_STOMP_BROKER:topic}"
+      sockjs-endpoint: "${QUEUE_RABBITMQ_SOCKET_SOCKJS_ENDPOINT:/ws}"
+
+security:
+  jwt:
+    access-token-exp: "${JWT_ACCESS_TOKEN_EXP:604800}" # Number of seconds (2.5 hours)
+    issuer: "${JWT_ISSUER:com.iot.issuer}"
+    public-key-file: "${JWT_PUBLIC_KEY_FILE:public_key.pem}"
+
+# spring CORS configuration
+spring.mvc.cors:
+  mappings:
+    # Intercept path
+    "[/api/**]":
+      #Comma-separated list of origins to allow. '*' allows all origins. When not set,CORS support is disabled.
+      allowed-origins: "*"
+      #Comma-separated list of methods to allow. '*' allows all methods.
+      allowed-methods: "*"
+      #Comma-separated list of headers to allow in a request. '*' allows all headers.
+      allowed-headers: "*"
+      #How long, in seconds, the response from a pre-flight request can be cached by clients.
+      max-age: "1800"
+      #      #Set whether credentials are supported. When not set, credentials are not supported.
+      #      allow-credentials: "true"
+      allowed-origin-pattern: "*"

@@ -28,7 +28,8 @@ queue:
     telemetry:
       queue-name: "${QUEUE_RABBIT_MQ_QUEUE_NAME:telemetryQueue}"
       exchange-name: "${QUEUE_RABBIT_MQ_EXCHANGE_NAME:telemetryExchange}"
-      routing-key: "${QUEUE_RABBIT_MQ_ROUTING_KEY:telemetry}"
+      routing-key-telemetry: "${QUEUE_RABBITMQ_TELEMETRY_ROUTING_KEY_TELEMETRY:telemetry}"
+      routing-key-notification-telemetry: "${QUEUE_RABBITMQ_TELEMETRY_ROUTING_KEY_NOTI_TELEMETRY:noti.telemetry}"
       host: "${QUEUE_RABBIT_MQ_HOST:localhost}"
       port: "${QUEUE_RABBIT_MQ_PORT:5672}"
       username: "${QUEUE_RABBIT_MQ_USERNAME:guest}"

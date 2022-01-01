@@ -1,15 +1,14 @@
 package com.iot.server.domain;
 
 import com.google.gson.JsonParser;
-import com.iot.server.common.model.Kv;
-import com.iot.server.domain.model.ValidateDeviceToken;
 import com.iot.server.common.enums.DeviceCredentialsType;
 import com.iot.server.common.enums.TransportType;
+import com.iot.server.common.model.Kv;
 import com.iot.server.common.model.PostTelemetryMsg;
-import com.iot.server.common.model.TsKvList;
 import com.iot.server.common.request.ValidateDeviceRequest;
 import com.iot.server.common.response.DeviceResponse;
 import com.iot.server.common.utils.GsonUtils;
+import com.iot.server.domain.model.ValidateDeviceToken;
 import com.iot.server.queue.QueueProducerTemplate;
 import com.iot.server.queue.message.DefaultQueueMsg;
 import com.iot.server.rest.client.EntityServiceClient;
@@ -42,11 +41,10 @@ public class TransportServiceImpl implements TransportService {
         try {
             List<Kv> kvs = GsonUtils.parseJsonElement(JsonParser.parseString(json));
             PostTelemetryMsg postTelemetryMsg = PostTelemetryMsg.builder()
-                    .tsKvList(TsKvList.builder()
-                            .entityId(deviceResponse.getId())
-                            .kvs(kvs)
-                            .ts(System.currentTimeMillis())
-                            .build())
+                    .entityId(deviceResponse.getId())
+                    .userId(deviceResponse.getCustomerId())
+                    .kvs(kvs)
+                    .ts(System.currentTimeMillis())
                     .build();
 
             rabbitProducerTemplate.send(

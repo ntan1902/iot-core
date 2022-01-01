@@ -2,7 +2,6 @@ package com.iot.server.domain.ts;
 
 import com.iot.server.common.model.Kv;
 import com.iot.server.common.model.PostTelemetryMsg;
-import com.iot.server.common.model.TsKvList;
 import com.iot.server.dao.entity.TsKvEntity;
 import com.iot.server.dao.ts.TsKvDao;
 import com.iot.server.queue.message.DefaultQueueMsg;
@@ -27,12 +26,11 @@ public class TsKvServiceImpl implements TsKvService {
         List<TsKvEntity> tsKvEntities = new ArrayList<>();
 
         PostTelemetryMsg postTelemetryMsg = defaultQueueMsg.getData();
-        TsKvList tsKvList = postTelemetryMsg.getTsKvList();
-        for (Kv kv : tsKvList.getKvs()) {
+        for (Kv kv : postTelemetryMsg.getKvs()) {
             TsKvEntity tsKvEntity = new TsKvEntity(kv);
 
-            tsKvEntity.setEntityId(tsKvList.getEntityId());
-            tsKvEntity.setTs(tsKvList.getTs());
+            tsKvEntity.setEntityId(postTelemetryMsg.getEntityId());
+            tsKvEntity.setTs(postTelemetryMsg.getTs());
 
             tsKvEntities.add(tsKvEntity);
         }

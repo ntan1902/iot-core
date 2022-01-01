@@ -12,9 +12,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -60,7 +58,6 @@ public class TsKvDaoImpl implements TsKvDao {
 
         List<SqlParameterSource> args = new ArrayList<>();
 
-        int count = 0;
         for (TsKvEntity tsKvEntity : tsKvEntities) {
             MapSqlParameterSource source = new MapSqlParameterSource()
                     .addValue("entityId", tsKvEntity.getEntityId())
@@ -105,11 +102,24 @@ public class TsKvDaoImpl implements TsKvDao {
             }
             args.add(source);
 
+            int batchSize = 100;
+            if (args.size() == batchSize) {
+                try {
+                    jdbcTemplate.batchUpdate(INSERT_ON_CONFLICT_DO_UPDATE, args.toArray(new SqlParameterSource[0]));
+                } catch (Exception ex) {
+                    log.error("Failed to batch update entities ", ex);
+                }
+                args.clear();
+            }
+
         }
-        try {
-            jdbcTemplate.batchUpdate(INSERT_ON_CONFLICT_DO_UPDATE, args.toArray(new SqlParameterSource[0]));
-        } catch (Exception ex) {
-            log.error("Failed to batch update entities ", ex);
+
+        if (!args.isEmpty()) {
+            try {
+                jdbcTemplate.batchUpdate(INSERT_ON_CONFLICT_DO_UPDATE, args.toArray(new SqlParameterSource[0]));
+            } catch (Exception ex) {
+                log.error("Failed to batch update entities ", ex);
+            }
         }
     }
 }
