@@ -5,7 +5,7 @@ import com.iot.server.common.request.ValidateDeviceRequest;
 import com.iot.server.common.response.DeviceResponse;
 
 public interface EntityServiceClient {
-    void registerTenant(TenantRequest tenantRequest);
+    String registerTenant(TenantRequest tenantRequest);
 
     DeviceResponse validateDevice(ValidateDeviceRequest validateDeviceRequest);
 

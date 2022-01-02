@@ -27,6 +27,8 @@ public class SecurityUser extends UserDto {
         this.setEmail(user.getEmail());
         this.setFirstName(user.getFirstName());
         this.setLastName(user.getLastName());
+        this.setTenantId(user.getTenantId());
+        this.setCustomerId(user.getCustomerId());
         this.setCreatedAt(user.getCreatedAt());
         this.setUpdatedAt(user.getUpdatedAt());
         this.enabled = enabled;

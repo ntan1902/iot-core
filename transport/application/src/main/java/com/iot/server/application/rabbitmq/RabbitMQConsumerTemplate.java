@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import com.iot.server.common.model.PostTelemetryMsg;
 import com.iot.server.common.utils.GsonUtils;
 import com.iot.server.domain.WebSocketService;
-import com.iot.server.queue.message.DefaultQueueMsg;
+import com.iot.server.queue.message.QueueMsg;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -19,11 +19,12 @@ public class RabbitMQConsumerTemplate {
 
     @RabbitListener(queues = "${queue.rabbitmq.telemetry.queue-name}")
     public void notificationTelemetry(String msg) {
-        DefaultQueueMsg<PostTelemetryMsg> defaultQueueMsg =
-                GsonUtils.fromJson(msg, new TypeToken<DefaultQueueMsg<PostTelemetryMsg>>(){}.getType());
-        log.info("Consume message [{}]", defaultQueueMsg);
+        QueueMsg<PostTelemetryMsg> queueMsg =
+                GsonUtils.fromJson(msg, new TypeToken<QueueMsg<PostTelemetryMsg>>() {
+                }.getType());
+        log.info("Consume message [{}]", queueMsg);
 
-        PostTelemetryMsg postTelemetryMsg = defaultQueueMsg.getData();
-        webSocketService.send(postTelemetryMsg.getUserId().toString(), GsonUtils.toJson(postTelemetryMsg));
+        PostTelemetryMsg postTelemetryMsg = queueMsg.getData();
+        webSocketService.send(postTelemetryMsg);
     }
 }

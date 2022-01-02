@@ -10,7 +10,7 @@ import com.iot.server.common.response.DeviceResponse;
 import com.iot.server.common.utils.GsonUtils;
 import com.iot.server.domain.model.ValidateDeviceToken;
 import com.iot.server.queue.QueueProducerTemplate;
-import com.iot.server.queue.message.DefaultQueueMsg;
+import com.iot.server.queue.message.QueueMsg;
 import com.iot.server.rest.client.EntityServiceClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,13 +42,15 @@ public class TransportServiceImpl implements TransportService {
             List<Kv> kvs = GsonUtils.parseJsonElement(JsonParser.parseString(json));
             PostTelemetryMsg postTelemetryMsg = PostTelemetryMsg.builder()
                     .entityId(deviceResponse.getId())
-                    .userId(deviceResponse.getCustomerId())
+                    .userId(deviceResponse.getCustomerId() != null
+                            ? deviceResponse.getCustomerId()
+                            : deviceResponse.getTenantId())
                     .kvs(kvs)
                     .ts(System.currentTimeMillis())
                     .build();
 
             rabbitProducerTemplate.send(
-                    GsonUtils.toJson(new DefaultQueueMsg<>(UUID.randomUUID(), postTelemetryMsg)));
+                    GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), postTelemetryMsg)));
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
         }

@@ -7,11 +7,11 @@ import lombok.Data;
 @Data
 @Builder
 public class Kv {
-   private String key;
-   private KvType type;
-   private Boolean boolV;
-   private Long longV;
-   private Double doubleV;
-   private String stringV;
-   private String jsonV;
+    private String key;
+    private KvType type;
+    private Boolean boolV;
+    private Long longV;
+    private Double doubleV;
+    private String stringV;
+    private String jsonV;
 }

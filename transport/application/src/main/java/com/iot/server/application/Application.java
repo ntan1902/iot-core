@@ -1,10 +1,12 @@
 package com.iot.server.application;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.iot.server"})
+@SpringBootConfiguration
 @ComponentScan({"com.iot.server"})
 public class Application {
 

@@ -62,11 +62,11 @@ public class UserServiceImpl implements UserService {
         if (savedUser != null && savedUser.getId() != null) {
             String encodedPassword = passwordEncoder.encode(password);
 
-            UserCredentialsEntity userCredentials = getUserCredentialsEntity(savedUser,
-                    encodedPassword);
+            UserCredentialsEntity userCredentials = getUserCredentialsEntity(savedUser, encodedPassword);
             userCredentialsDao.save(userCredentials);
 
-            entityServiceClient.registerTenant(getTenantEntity(savedUser));
+            String tenantId = entityServiceClient.registerTenant(getTenantEntity(savedUser));
+            savedUser.setTenantId(UUID.fromString(tenantId));
         }
 
         return new UserDto(savedUser);

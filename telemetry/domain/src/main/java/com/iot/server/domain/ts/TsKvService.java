@@ -1,8 +1,8 @@
 package com.iot.server.domain.ts;
 
 import com.iot.server.common.model.PostTelemetryMsg;
-import com.iot.server.queue.message.DefaultQueueMsg;
+import com.iot.server.queue.message.QueueMsg;
 
 public interface TsKvService {
-    void saveOrUpdate(DefaultQueueMsg<PostTelemetryMsg> defaultQueueMsg);
+    void saveOrUpdate(QueueMsg<PostTelemetryMsg> queueMsg);
 }

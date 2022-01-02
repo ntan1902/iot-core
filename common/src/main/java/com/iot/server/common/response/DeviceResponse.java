@@ -16,4 +16,5 @@ public class DeviceResponse {
     private String label;
     private UUID firmwareId;
     private UUID softwareId;
+    private UUID userId;
 }

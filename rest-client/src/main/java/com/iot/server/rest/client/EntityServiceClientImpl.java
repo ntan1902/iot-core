@@ -3,6 +3,7 @@ package com.iot.server.rest.client;
 import com.iot.server.common.request.TenantRequest;
 import com.iot.server.common.request.ValidateDeviceRequest;
 import com.iot.server.common.response.DeviceResponse;
+import com.iot.server.common.response.TenantResponse;
 import com.iot.server.common.response.ValidateDeviceResponse;
 import com.iot.server.common.utils.GsonUtils;
 import com.iot.server.rest.client.config.EntityServiceConfig;
@@ -22,10 +23,13 @@ public class EntityServiceClientImpl implements EntityServiceClient {
     private final EntityServiceConfig entityServiceConfig;
 
     @Override
-    public void registerTenant(TenantRequest tenantRequest) {
+    public String registerTenant(TenantRequest tenantRequest) {
         String path = entityServiceConfig.getHost() + "/auth/register-tenant";
         String responseStr = registerTenant(path, tenantRequest, 1);
         log.info("Request: {} - Body: {} - Response: {}", path, tenantRequest, responseStr);
+
+        TenantResponse response = GsonUtils.fromJson(responseStr, TenantResponse.class);
+        return response.getId();
     }
 
     @Override

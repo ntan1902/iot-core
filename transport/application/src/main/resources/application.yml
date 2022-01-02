@@ -21,8 +21,8 @@ queue:
       port: "${QUEUE_RABBITMQ_SOCKET_PORT:61613}"
       username: "${QUEUE_RABBITMQ_SOCKET_USERNAME:guest}"
       password: "${QUEUE_RABBITMQ_SOCKET_PASSWORD:guest}"
-      app-dest: "${QUEUE_RABBITMQ_SOCKET_APP_DEST:app}"
-      stomp-broker: "${QUEUE_RABBITMQ_SOCKET_STOMP_BROKER:topic}"
+      app-dest: "${QUEUE_RABBITMQ_SOCKET_APP_DEST:/app}"
+      stomp-broker: "${QUEUE_RABBITMQ_SOCKET_STOMP_BROKER:/topic}"
       sockjs-endpoint: "${QUEUE_RABBITMQ_SOCKET_SOCKJS_ENDPOINT:/ws}"
 
 security:

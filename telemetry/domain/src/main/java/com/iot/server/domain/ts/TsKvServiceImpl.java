@@ -4,7 +4,7 @@ import com.iot.server.common.model.Kv;
 import com.iot.server.common.model.PostTelemetryMsg;
 import com.iot.server.dao.entity.TsKvEntity;
 import com.iot.server.dao.ts.TsKvDao;
-import com.iot.server.queue.message.DefaultQueueMsg;
+import com.iot.server.queue.message.QueueMsg;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,12 +20,12 @@ public class TsKvServiceImpl implements TsKvService {
     private final TsKvDao tsKvDao;
 
     @Override
-    public void saveOrUpdate(DefaultQueueMsg<PostTelemetryMsg> defaultQueueMsg) {
-        log.trace("[{}]", defaultQueueMsg);
+    public void saveOrUpdate(QueueMsg<PostTelemetryMsg> queueMsg) {
+        log.trace("[{}]", queueMsg);
 
         List<TsKvEntity> tsKvEntities = new ArrayList<>();
 
-        PostTelemetryMsg postTelemetryMsg = defaultQueueMsg.getData();
+        PostTelemetryMsg postTelemetryMsg = queueMsg.getData();
         for (Kv kv : postTelemetryMsg.getKvs()) {
             TsKvEntity tsKvEntity = new TsKvEntity(kv);
 

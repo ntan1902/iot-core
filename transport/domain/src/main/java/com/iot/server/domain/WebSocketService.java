@@ -1,5 +1,7 @@
 package com.iot.server.domain;
 
+import com.iot.server.common.model.PostTelemetryMsg;
+
 public interface WebSocketService {
-    void send(String userId, String msg);
+    void send(PostTelemetryMsg postTelemetryMsg);
 }
