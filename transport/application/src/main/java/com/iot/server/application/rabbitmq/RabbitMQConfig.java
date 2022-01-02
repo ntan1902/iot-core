@@ -5,7 +5,10 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -13,7 +16,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 @Data
 @ConfigurationProperties(prefix = "queue.rabbitmq")
@@ -44,13 +46,8 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding telemetryBinding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(telemetry.routingKeyTelemetry);
-    }
-
-    @Bean
-    public Binding notificationTelemetryBinding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(telemetry.routingKeyNotificationTelemetry);
+    public Binding telemetryBinding(Queue telemetryQueue, DirectExchange telemetryExchange) {
+        return BindingBuilder.bind(telemetryQueue).to(telemetryExchange).with(telemetry.routingKeyTelemetry);
     }
 
     @Bean
@@ -70,6 +67,11 @@ public class RabbitMQConfig {
         rabbitAdmin.declareBinding(telemetryBinding(telemetryQueue(), telemetryExchange()));
 
         return rabbitAdmin;
+    }
+
+    @Bean
+    public Binding notificationTelemetryBinding(Queue telemetryQueue, DirectExchange telemetryExchange) {
+        return BindingBuilder.bind(telemetryQueue).to(telemetryExchange).with(telemetry.routingKeyNotificationTelemetry);
     }
 
     @Getter

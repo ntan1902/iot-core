@@ -42,9 +42,7 @@ public class TransportServiceImpl implements TransportService {
             List<Kv> kvs = GsonUtils.parseJsonElement(JsonParser.parseString(json));
             PostTelemetryMsg postTelemetryMsg = PostTelemetryMsg.builder()
                     .entityId(deviceResponse.getId())
-                    .userId(deviceResponse.getCustomerId() != null
-                            ? deviceResponse.getCustomerId()
-                            : deviceResponse.getTenantId())
+                    .userId(deviceResponse.getUserId())
                     .kvs(kvs)
                     .ts(System.currentTimeMillis())
                     .build();
