@@ -1,4 +1,4 @@
-package com.iot.server.application.http;
+package com.iot.server.application.controller.http;
 
 import com.iot.server.common.enums.TransportType;
 import com.iot.server.domain.TransportService;
@@ -15,11 +15,11 @@ import java.util.concurrent.CompletionException;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 @Slf4j
-public class DeviceController {
+public class HttpController {
     private final TransportService transportService;
 
     @PostMapping("/{deviceToken}/telemetry")
-    public CompletableFuture<ResponseEntity<?>> sendTelemetry(@PathVariable("deviceToken") String deviceToken,
+    public CompletableFuture<ResponseEntity<?>> postTelemetry(@PathVariable("deviceToken") String deviceToken,
                                                               @RequestBody String json) {
         return CompletableFuture
                 .runAsync(() -> transportService.process(
