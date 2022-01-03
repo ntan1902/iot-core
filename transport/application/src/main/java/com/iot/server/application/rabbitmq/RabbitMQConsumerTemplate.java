@@ -18,7 +18,7 @@ public class RabbitMQConsumerTemplate {
     private final WebSocketService webSocketService;
 
     @RabbitListener(queues = "${queue.rabbitmq.telemetry.queue-name}")
-    public void notificationTelemetry(String msg) {
+    public void postTelemetry(String msg) {
         QueueMsg<PostTelemetryMsg> queueMsg =
                 GsonUtils.fromJson(msg, new TypeToken<QueueMsg<PostTelemetryMsg>>() {
                 }.getType());
@@ -27,4 +27,5 @@ public class RabbitMQConsumerTemplate {
         PostTelemetryMsg postTelemetryMsg = queueMsg.getData();
         webSocketService.send(postTelemetryMsg);
     }
+
 }

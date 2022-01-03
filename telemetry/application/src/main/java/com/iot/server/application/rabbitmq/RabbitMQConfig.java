@@ -5,14 +5,10 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,26 +39,13 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public DirectExchange telemetryExchange() {
-        return new DirectExchange(telemetry.exchangeName);
+    public FanoutExchange telemetryExchange() {
+        return new FanoutExchange(telemetry.exchangeName);
     }
 
     @Bean
-    public Binding telemetryBinding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(telemetry.routingKeyTelemetry);
-    }
-
-    @Bean
-    public Binding notificationTelemetryBinding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(telemetry.routingKeyNotificationTelemetry);
-    }
-
-    @Bean
-    public RabbitTemplate telemetryRabbitTemplate() {
-        RabbitTemplate rabbitTemplate = new RabbitTemplate(createConnectionFactory(telemetry));
-        rabbitTemplate.setRoutingKey(telemetry.routingKeyNotificationTelemetry);
-        rabbitTemplate.setExchange(telemetry.exchangeName);
-        return rabbitTemplate;
+    public Binding telemetryBinding(Queue queue, FanoutExchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange);
     }
 
     @Bean
@@ -81,8 +64,6 @@ public class RabbitMQConfig {
     public static class Config {
         private String queueName;
         private String exchangeName;
-        private String routingKeyTelemetry;
-        private String routingKeyNotificationTelemetry;
         private String host;
         private int port;
         private String username;

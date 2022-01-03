@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -41,19 +41,18 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public DirectExchange telemetryExchange() {
-        return new DirectExchange(telemetry.exchangeName);
+    public FanoutExchange telemetryExchange() {
+        return new FanoutExchange(telemetry.exchangeName);
     }
 
     @Bean
-    public Binding telemetryBinding(Queue telemetryQueue, DirectExchange telemetryExchange) {
-        return BindingBuilder.bind(telemetryQueue).to(telemetryExchange).with(telemetry.routingKeyTelemetry);
+    public Binding telemetryBinding(Queue telemetryQueue, FanoutExchange telemetryExchange) {
+        return BindingBuilder.bind(telemetryQueue).to(telemetryExchange);
     }
 
     @Bean
     public RabbitTemplate telemetryRabbitTemplate() {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(createConnectionFactory(telemetry));
-        rabbitTemplate.setRoutingKey(telemetry.routingKeyTelemetry);
         rabbitTemplate.setExchange(telemetry.exchangeName);
         return rabbitTemplate;
     }
@@ -69,18 +68,11 @@ public class RabbitMQConfig {
         return rabbitAdmin;
     }
 
-    @Bean
-    public Binding notificationTelemetryBinding(Queue telemetryQueue, DirectExchange telemetryExchange) {
-        return BindingBuilder.bind(telemetryQueue).to(telemetryExchange).with(telemetry.routingKeyNotificationTelemetry);
-    }
-
     @Getter
     @Setter
     public static class Config {
         private String queueName;
         private String exchangeName;
-        private String routingKeyTelemetry;
-        private String routingKeyNotificationTelemetry;
         private String host;
         private int port;
         private String username;

@@ -7,10 +7,8 @@ entity.service:
 queue:
   rabbitmq:
     telemetry:
-      queue-name: "${QUEUE_RABBITMQ_TELEMETRY_QUEUE_NAME:telemetryQueue}"
+      queue-name: "${QUEUE_RABBITMQ_TELEMETRY_QUEUE_NAME:transportQueue}"
       exchange-name: "${QUEUE_RABBITMQ_TELEMETRY_EXCHANGE_NAME:telemetryExchange}"
-      routing-key-telemetry: "${QUEUE_RABBITMQ_TELEMETRY_ROUTING_KEY_TELEMETRY:telemetry}"
-      routing-key-notification-telemetry: "${QUEUE_RABBITMQ_TELEMETRY_ROUTING_KEY_NOTI_TELEMETRY:noti.telemetry}"
       host: "${QUEUE_RABBITMQ_TELEMETRY_HOST:localhost}"
       port: "${QUEUE_RABBITMQ_TELEMETRY_PORT:5672}"
       username: "${QUEUE_RABBITMQ_TELEMETRY_USERNAME:guest}"
