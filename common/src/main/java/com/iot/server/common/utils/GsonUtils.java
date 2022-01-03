@@ -51,13 +51,13 @@ public final class GsonUtils {
 
     public static List<Kv> parseJsonElement(JsonElement jsonElement) {
         if (jsonElement.isJsonObject()) {
-            return parseKvs(jsonElement.getAsJsonObject());
+            return parseKvs(jsonElement.getAsJsonObject(), System.currentTimeMillis());
         } else if (jsonElement.isJsonArray()) {
             List<Kv> res = new ArrayList<>();
 
             jsonElement.getAsJsonArray().forEach(je -> {
                 if (je.isJsonObject()) {
-                    res.addAll(parseKvs(je.getAsJsonObject()));
+                    res.addAll(parseKvs(je.getAsJsonObject(), System.currentTimeMillis()));
                 } else {
                     throw new JsonSyntaxException(CAN_NOT_PARSE_VALUE + je);
                 }
@@ -69,7 +69,7 @@ public final class GsonUtils {
         }
     }
 
-    private static List<Kv> parseKvs(JsonObject jsonObject) {
+    private static List<Kv> parseKvs(JsonObject jsonObject, Long ts) {
         List<Kv> result = new ArrayList<>();
 
         for (Map.Entry<String, JsonElement> valueEntry : jsonObject.entrySet()) {
@@ -78,12 +78,13 @@ public final class GsonUtils {
                 JsonPrimitive value = element.getAsJsonPrimitive();
                 if (value.isString()) {
                     try {
-                        result.add(buildNumericKeyValueProto(value, valueEntry.getKey()));
+                        result.add(buildNumericKeyValueProto(value, valueEntry.getKey(), ts));
                     } catch (RuntimeException ex) {
                         result.add(Kv.builder()
                                 .key(valueEntry.getKey())
                                 .type(KvType.STRING)
-                                .stringV(value.getAsString())
+                                .value(value.getAsString())
+                                .ts(ts)
                                 .build());
                     }
 
@@ -92,12 +93,13 @@ public final class GsonUtils {
                     result.add(Kv.builder()
                             .key(valueEntry.getKey())
                             .type(KvType.BOOLEAN)
-                            .boolV(value.getAsBoolean())
+                            .value(value.getAsBoolean())
+                            .ts(ts)
                             .build());
 
                 } else if (value.isNumber()) {
 
-                    result.add(buildNumericKeyValueProto(value, valueEntry.getKey()));
+                    result.add(buildNumericKeyValueProto(value, valueEntry.getKey(), ts));
 
                 } else if (!value.isJsonNull()) {
                     throw new JsonSyntaxException(CAN_NOT_PARSE_VALUE + value);
@@ -107,7 +109,8 @@ public final class GsonUtils {
                 result.add(Kv.builder()
                         .key(valueEntry.getKey())
                         .type(KvType.JSON)
-                        .jsonV(element.toString())
+                        .value(element.toString())
+                        .ts(ts)
                         .build());
 
             }
@@ -115,7 +118,7 @@ public final class GsonUtils {
         return result;
     }
 
-    private static Kv buildNumericKeyValueProto(JsonPrimitive value, String key) {
+    private static Kv buildNumericKeyValueProto(JsonPrimitive value, String key, Long ts) {
         String valueAsString = value.getAsString();
         Kv.KvBuilder builder = Kv.builder().key(key);
 
@@ -124,12 +127,14 @@ public final class GsonUtils {
                 && !isSimpleDouble(valueAsString)) {
             return builder
                     .type(KvType.LONG)
-                    .longV(bigDecimal.longValueExact())
+                    .value(bigDecimal.longValueExact())
+                    .ts(ts)
                     .build();
         } else {
             return builder
                     .type(KvType.DOUBLE)
-                    .doubleV(bigDecimal.doubleValue())
+                    .value(bigDecimal.doubleValue())
+                    .ts(ts)
                     .build();
         }
     }

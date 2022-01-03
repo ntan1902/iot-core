@@ -8,9 +8,7 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class PostTelemetryMsg {
-
-   private long ts;
+public class TelemetryMsg {
    private UUID entityId;
    private UUID userId;
    private List<Kv> kvs;

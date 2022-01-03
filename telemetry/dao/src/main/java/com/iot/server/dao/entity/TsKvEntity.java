@@ -3,6 +3,7 @@ package com.iot.server.dao.entity;
 import com.iot.server.common.entity.EntityConstants;
 import com.iot.server.common.enums.KvType;
 import com.iot.server.common.model.Kv;
+import com.iot.server.dao.dto.TsKvDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -52,25 +53,53 @@ public class TsKvEntity {
     public TsKvEntity(Kv kv) {
         this.type = kv.getType();
         this.key = kv.getKey();
+        this.ts = kv.getTs();
 
-        if (kv.getBoolV() != null) {
-            this.boolV = kv.getBoolV();
+        switch (kv.getType()) {
+            case DOUBLE:
+                this.doubleV = (Double) kv.getValue();
+                break;
+            case LONG:
+                this.longV = ((Double) kv.getValue()).longValue();
+                break;
+            case BOOLEAN:
+                this.boolV = (Boolean) kv.getValue();
+                break;
+            case STRING:
+                this.stringV = (String) kv.getValue();
+                break;
+            case JSON:
+                this.jsonV = (String) kv.getValue();
+                break;
+            default:
+                break;
         }
+    }
 
-        if (kv.getDoubleV() != null) {
-            this.doubleV = kv.getDoubleV();
-        }
+    public TsKvEntity(TsKvDto tsKvDto) {
+        this.type = tsKvDto.getType();
+        this.key = tsKvDto.getKey();
+        this.ts = tsKvDto.getTs();
+        this.entityId = tsKvDto.getEntityId();
 
-        if (kv.getLongV() != null) {
-            this.longV = kv.getLongV();
-        }
-
-        if (kv.getStringV() != null) {
-            this.stringV = kv.getStringV();
-        }
-
-        if (kv.getJsonV() != null) {
-            this.jsonV = kv.getJsonV();
+        switch (tsKvDto.getType()) {
+            case DOUBLE:
+                this.doubleV = (Double) tsKvDto.getValue();
+                break;
+            case LONG:
+                this.longV = ((Double) tsKvDto.getValue()).longValue();
+                break;
+            case BOOLEAN:
+                this.boolV = (Boolean) tsKvDto.getValue();
+                break;
+            case STRING:
+                this.stringV = (String) tsKvDto.getValue();
+                break;
+            case JSON:
+                this.jsonV = (String) tsKvDto.getValue();
+                break;
+            default:
+                break;
         }
     }
 }

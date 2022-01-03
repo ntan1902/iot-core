@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -121,5 +122,12 @@ public class TsKvDaoImpl implements TsKvDao {
                 log.error("Failed to batch update entities ", ex);
             }
         }
+    }
+
+    @Override
+    public List<TsKvEntity> findTsKvByEntityId(UUID entityId) {
+        log.debug("[{}]", entityId);
+
+        return tsKvRepository.findAllByEntityIdOrderByTsDesc(entityId);
     }
 }

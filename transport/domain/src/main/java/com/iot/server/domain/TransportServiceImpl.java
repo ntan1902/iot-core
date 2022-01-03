@@ -4,7 +4,7 @@ import com.google.gson.JsonParser;
 import com.iot.server.common.enums.DeviceCredentialsType;
 import com.iot.server.common.enums.TransportType;
 import com.iot.server.common.model.Kv;
-import com.iot.server.common.model.PostTelemetryMsg;
+import com.iot.server.common.model.TelemetryMsg;
 import com.iot.server.common.request.ValidateDeviceRequest;
 import com.iot.server.common.response.DeviceResponse;
 import com.iot.server.common.utils.GsonUtils;
@@ -31,6 +31,23 @@ public class TransportServiceImpl implements TransportService {
     public void process(TransportType transportType, ValidateDeviceToken validateDeviceToken, String json) {
         log.trace("[{}], [{}], [{}]", transportType, validateDeviceToken, json);
 
+        DeviceResponse deviceResponse = validateAndGetDevice(transportType, validateDeviceToken);
+        try {
+            List<Kv> kvs = GsonUtils.parseJsonElement(JsonParser.parseString(json));
+            TelemetryMsg telemetryMsg = TelemetryMsg.builder()
+                    .entityId(deviceResponse.getId())
+                    .userId(deviceResponse.getUserId())
+                    .kvs(kvs)
+                    .build();
+
+            rabbitProducerTemplate.send(
+                    GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), telemetryMsg)));
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+        }
+    }
+
+    private DeviceResponse validateAndGetDevice(TransportType transportType, ValidateDeviceToken validateDeviceToken) {
         ValidateDeviceRequest validateDeviceRequest = new ValidateDeviceRequest();
 
         if (transportType.equals(TransportType.DEFAULT)) {
@@ -46,19 +63,6 @@ public class TransportServiceImpl implements TransportService {
             log.warn("Device token is not valid [{}]", validateDeviceToken.getToken());
             throw new IllegalArgumentException("Device token is not valid");
         }
-        try {
-            List<Kv> kvs = GsonUtils.parseJsonElement(JsonParser.parseString(json));
-            PostTelemetryMsg postTelemetryMsg = PostTelemetryMsg.builder()
-                    .entityId(deviceResponse.getId())
-                    .userId(deviceResponse.getUserId())
-                    .kvs(kvs)
-                    .ts(System.currentTimeMillis())
-                    .build();
-
-            rabbitProducerTemplate.send(
-                    GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), postTelemetryMsg)));
-        } catch (Exception ex) {
-            log.error(ex.getMessage(), ex);
-        }
+        return deviceResponse;
     }
 }
