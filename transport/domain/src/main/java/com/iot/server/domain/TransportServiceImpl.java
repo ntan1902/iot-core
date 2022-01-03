@@ -30,10 +30,18 @@ public class TransportServiceImpl implements TransportService {
     @Override
     public void process(TransportType transportType, ValidateDeviceToken validateDeviceToken, String json) {
         log.trace("[{}], [{}], [{}]", transportType, validateDeviceToken, json);
-        DeviceResponse deviceResponse = entityServiceClient.validateDevice(ValidateDeviceRequest.builder()
-                .token(validateDeviceToken.getToken())
-                .type(DeviceCredentialsType.ACCESS_TOKEN)
-                .build());
+
+        ValidateDeviceRequest validateDeviceRequest = new ValidateDeviceRequest();
+
+        if (transportType.equals(TransportType.DEFAULT)) {
+            validateDeviceRequest.setType(DeviceCredentialsType.ACCESS_TOKEN);
+            validateDeviceRequest.setToken(validateDeviceToken.getToken());
+        } else if (transportType.equals(TransportType.MQTT)) {
+            validateDeviceRequest.setType(DeviceCredentialsType.MQTT_BASIC);
+            validateDeviceRequest.setToken(validateDeviceToken.getBasicMqttCredentials());
+        }
+
+        DeviceResponse deviceResponse = entityServiceClient.validateDevice(validateDeviceRequest);
         if (deviceResponse == null) {
             log.warn("Device token is not valid [{}]", validateDeviceToken.getToken());
             throw new IllegalArgumentException("Device token is not valid");

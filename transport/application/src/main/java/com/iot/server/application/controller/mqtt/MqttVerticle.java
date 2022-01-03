@@ -1,5 +1,6 @@
 package com.iot.server.application.controller.mqtt;
 
+import io.netty.handler.codec.mqtt.MqttConnectReturnCode;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Context;
@@ -7,6 +8,7 @@ import io.vertx.core.Vertx;
 import io.vertx.mqtt.MqttEndpoint;
 import io.vertx.mqtt.MqttServer;
 import io.vertx.mqtt.messages.MqttPublishMessage;
+import io.vertx.mqtt.messages.codes.MqttReasonCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -26,10 +28,8 @@ public class MqttVerticle extends AbstractVerticle {
         MqttServer mqttServer = MqttServer.create(vertx);
         mqttServer
                 .endpointHandler(endpoint -> {
-                    log.trace("MQTT client [" + endpoint.clientIdentifier() + "] request to connect, clean session = " + endpoint.isCleanSession());
                     // accept connection from the remote client
                     endpoint.accept(false);
-
                     publishHandler(endpoint);
                 })
                 .listen(ar -> {

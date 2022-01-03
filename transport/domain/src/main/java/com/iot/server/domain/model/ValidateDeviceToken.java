@@ -7,4 +7,5 @@ import lombok.Data;
 @Builder
 public class ValidateDeviceToken {
     private String token;
+    private BasicMqttCredentials basicMqttCredentials;
 }

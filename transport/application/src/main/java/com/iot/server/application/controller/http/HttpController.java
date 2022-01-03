@@ -25,7 +25,8 @@ public class HttpController {
                 .runAsync(() -> transportService.process(
                         TransportType.DEFAULT,
                         ValidateDeviceToken.builder().token(deviceToken).build(),
-                        json))
+                        json)
+                )
                 .exceptionally(t -> {
                     throw new CompletionException(t);
                 })
