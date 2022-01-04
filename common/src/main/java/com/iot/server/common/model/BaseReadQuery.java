@@ -1,12 +1,11 @@
-package com.iot.server.application.controller.request;
+package com.iot.server.common.model;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class GetDeviceTelemetryRequest {
-    private String deviceId;
+public class BaseReadQuery {
     private int page;
     private int size;
     private String order;

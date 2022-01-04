@@ -1,5 +1,6 @@
 package com.iot.server.domain.ts;
 
+import com.iot.server.common.model.BaseReadQuery;
 import com.iot.server.common.model.Kv;
 import com.iot.server.common.model.TelemetryMsg;
 import com.iot.server.dao.dto.TsKvDto;
@@ -40,10 +41,10 @@ public class TsKvServiceImpl implements TsKvService {
     }
 
     @Override
-    public List<TsKvDto> findTsKvByEntityId(UUID entityId) {
+    public List<TsKvDto> findTsKvByEntityId(UUID entityId, BaseReadQuery query) {
         log.trace("[{}]", entityId);
 
-        List<TsKvEntity> tsKvByEntityId = tsKvDao.findTsKvByEntityId(entityId);
+        List<TsKvEntity> tsKvByEntityId = tsKvDao.findTsKvByEntityId(entityId, query);
 
         return tsKvByEntityId.stream()
                 .map(tsKvEntity -> new TsKvDto(tsKvEntity))

@@ -1,11 +1,14 @@
 package com.iot.server.dao.ts;
 
 import com.iot.server.common.enums.KvType;
+import com.iot.server.common.model.BaseReadQuery;
 import com.iot.server.dao.entity.TsKvCompositeKey;
 import com.iot.server.dao.entity.TsKvEntity;
 import com.iot.server.dao.repository.TsKvRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -125,9 +128,15 @@ public class TsKvDaoImpl implements TsKvDao {
     }
 
     @Override
-    public List<TsKvEntity> findTsKvByEntityId(UUID entityId) {
+    public List<TsKvEntity> findTsKvByEntityId(UUID entityId, BaseReadQuery query) {
         log.debug("[{}]", entityId);
 
-        return tsKvRepository.findAllByEntityIdOrderByTsDesc(entityId);
+        return tsKvRepository.findAllByEntityIdOrderByTsDesc(
+                entityId,
+                PageRequest.of(
+                        query.getPage(),
+                        query.getSize(),
+                        Sort.Direction.fromString(query.getOrder()),
+                        query.getProperty()));
     }
 }
