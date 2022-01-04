@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-@CrossOrigin({"http://localhost:3000"})
 public class TelemetryController {
 
     private final GetDeviceTelemetryHandler getDeviceTelemetryHandler;
 
     @GetMapping("/device/{deviceId}/telemetry")
-    public ResponseEntity<GetDeviceTelemetryResponse> getDeviceTelemetry(@PathVariable("deviceId") String deviceId,
-                                                                         @RequestParam(value = "page", defaultValue = "0") int page,
-                                                                         @RequestParam(value = "size", defaultValue = "10") int size,
-                                                                         @RequestParam(value = "order", defaultValue = "DESC") String order,
-                                                                         @RequestParam(value = "property", defaultValue = "ts") String property) {
+    public ResponseEntity<GetDeviceTelemetryResponse>
+    getDeviceTelemetry(@PathVariable("deviceId") String deviceId,
+                       @RequestParam(value = "page", defaultValue = "0") int page,
+                       @RequestParam(value = "size", defaultValue = "10") int size,
+                       @RequestParam(value = "order", defaultValue = "DESC") String order,
+                       @RequestParam(value = "property", defaultValue = "ts") String property) {
         return ResponseEntity.ok(
                 getDeviceTelemetryHandler.handleRequest(
                         GetDeviceTelemetryRequest.builder()
