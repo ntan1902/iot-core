@@ -4,14 +4,14 @@ import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
 import com.iot.server.common.request.TenantRequest;
-import com.iot.server.dao.role.RoleDao;
-import com.iot.server.dao.user.UserCredentialsDao;
-import com.iot.server.dao.user.UserDao;
 import com.iot.server.dao.dto.UserCredentialsDto;
 import com.iot.server.dao.dto.UserDto;
 import com.iot.server.dao.entity.RoleEntity;
 import com.iot.server.dao.entity.UserCredentialsEntity;
 import com.iot.server.dao.entity.UserEntity;
+import com.iot.server.dao.role.RoleDao;
+import com.iot.server.dao.user.UserCredentialsDao;
+import com.iot.server.dao.user.UserDao;
 import com.iot.server.domain.model.SecurityUser;
 import com.iot.server.rest.client.EntityServiceClient;
 import lombok.RequiredArgsConstructor;
@@ -67,6 +67,8 @@ public class UserServiceImpl implements UserService {
 
             String tenantId = entityServiceClient.registerTenant(getTenantEntity(savedUser));
             savedUser.setTenantId(UUID.fromString(tenantId));
+        } else {
+            throw new IoTException(ReasonEnum.UNDEFINED, "Can not save user into database");
         }
 
         return new UserDto(savedUser);
@@ -97,22 +99,8 @@ public class UserServiceImpl implements UserService {
         return UserCredentialsEntity.builder()
                 .user(savedUser)
                 .activateToken(UUID.randomUUID().toString())
-                .enabled(true)
+                .enabled(!encodedPassword.isEmpty())
                 .password(encodedPassword)
-                .build();
-    }
-
-    private UserEntity getUserEntity(UserDto userDto) {
-        return UserEntity.builder()
-                .email(userDto.getEmail())
-                .firstName(userDto.getFirstName())
-                .lastName(userDto.getLastName())
-                .roles(Stream.of(AuthorityEnum.TENANT)
-                        .map(authority -> createRoleIfNotFound(authority.name()))
-                        .collect(Collectors.toSet()))
-                .createUid(userDto.getCreateUid())
-                .updateUid(userDto.getUpdateUid())
-                .createdAt(userDto.getCreatedAt())
                 .build();
     }
 
@@ -221,8 +209,10 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toSet()));
 
         UserEntity savedUser = userDao.save(userEntity);
-
-        if (savedUser == null || savedUser.getId() == null) {
+        if (savedUser != null && savedUser.getId() != null) {
+            UserCredentialsEntity userCredentials = getUserCredentialsEntity(savedUser, "");
+            userCredentialsDao.save(userCredentials);
+        } else {
             throw new IoTException(ReasonEnum.UNDEFINED, "Can not save user into database");
         }
 
