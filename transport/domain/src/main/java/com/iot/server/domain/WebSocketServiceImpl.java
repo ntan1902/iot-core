@@ -27,7 +27,7 @@ public class WebSocketServiceImpl implements WebSocketService {
         try {
             messagingTemplate.convertAndSend("/topic/telemetry-" + userId, msg);
         } catch (MessagingException ex) {
-            log.error("Failed to publish message [{}]", msg, ex);
+            log.error("Failed to publish message {}", msg, ex);
         }
     }
 }

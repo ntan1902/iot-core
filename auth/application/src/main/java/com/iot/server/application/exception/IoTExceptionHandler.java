@@ -61,7 +61,7 @@ public class IoTExceptionHandler extends ResponseEntityExceptionHandler implemen
                        HttpServletResponse response,
                        AccessDeniedException accessDeniedException) throws IOException {
         if (!response.isCommitted()) {
-            log.error("Forbidden [{}]", accessDeniedException.getMessage());
+            log.error("Forbidden {}", accessDeniedException.getMessage());
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(HttpStatus.FORBIDDEN.value());
@@ -72,7 +72,7 @@ public class IoTExceptionHandler extends ResponseEntityExceptionHandler implemen
 
     @ExceptionHandler(Exception.class)
     public void handle(HttpServletResponse response, Exception exception) {
-        log.info("Processing exception [{}]", exception.getMessage());
+        log.info("Processing exception {}", exception.getMessage());
         if (!response.isCommitted()) {
             try {
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -99,7 +99,7 @@ public class IoTExceptionHandler extends ResponseEntityExceptionHandler implemen
         if (ex.getBindingResult().hasErrors()) {
             errMessage = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         }
-        log.error("Request is not valid [{}]", errMessage);
+        log.error("Request is not valid {}", errMessage);
 
         return new ResponseEntity<>(getResponse(status, errMessage), status);
     }

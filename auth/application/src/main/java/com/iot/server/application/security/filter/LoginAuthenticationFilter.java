@@ -67,7 +67,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
         SecurityUser securityUser = (SecurityUser) authResult.getPrincipal();
-        log.info("Login successfully [{}]", securityUser);
+        log.info("Login successfully {}", securityUser);
 
         String accessToken = jwtFactory.createAccessToken(securityUser);
         String refreshToken = jwtFactory.createRefreshToken(securityUser);

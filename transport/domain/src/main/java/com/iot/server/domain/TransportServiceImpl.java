@@ -29,7 +29,7 @@ public class TransportServiceImpl implements TransportService {
 
     @Override
     public void process(TransportType transportType, ValidateDeviceToken validateDeviceToken, String json) {
-        log.trace("[{}], [{}], [{}]", transportType, validateDeviceToken, json);
+        log.trace("{}, {}, {}", transportType, validateDeviceToken, json);
 
         DeviceResponse deviceResponse = validateAndGetDevice(transportType, validateDeviceToken);
         try {
@@ -60,7 +60,7 @@ public class TransportServiceImpl implements TransportService {
 
         DeviceResponse deviceResponse = entityServiceClient.validateDevice(validateDeviceRequest);
         if (deviceResponse == null) {
-            log.warn("Device token is not valid [{}]", validateDeviceToken.getToken());
+            log.warn("Device token is not valid {}", validateDeviceToken.getToken());
             throw new IllegalArgumentException("Device token is not valid");
         }
         return deviceResponse;

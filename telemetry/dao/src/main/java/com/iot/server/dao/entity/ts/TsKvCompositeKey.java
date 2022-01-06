@@ -1,4 +1,4 @@
-package com.iot.server.dao.entity;
+package com.iot.server.dao.entity.ts;
 
 import java.io.Serializable;
 import java.util.UUID;

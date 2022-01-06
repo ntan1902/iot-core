@@ -24,7 +24,7 @@ public class RabbitMQConsumerTemplate {
         QueueMsg<TelemetryMsg> queueMsg =
                 GsonUtils.fromJson(msg, new TypeToken<QueueMsg<TelemetryMsg>>() {
                 }.getType());
-        log.trace("Consume message [{}]", queueMsg);
+        log.trace("Consume message {}", queueMsg);
 
         CompletableFuture
                 .runAsync(() -> tsKvService.saveOrUpdate(queueMsg));

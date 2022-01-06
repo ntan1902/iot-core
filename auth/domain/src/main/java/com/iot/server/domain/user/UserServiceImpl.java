@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
         log.trace("{}", userId);
         UserCredentialsEntity userCredentialsEntity = userCredentialsDao.findByUserId(userId);
         if (userCredentialsEntity == null) {
-            log.error("User credentials is not found [{}]", userId);
+            log.error("User credentials is not found {}", userId);
             throw new IoTException(ReasonEnum.INVALID_PARAMS, "User credentials is not found");
         }
 
@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userDao.findById(userId);
 
         if (userEntity == null) {
-            log.error("User is not found [{}]", userId);
+            log.error("User is not found {}", userId);
             throw new IoTException(ReasonEnum.INVALID_PARAMS, "User is not found");
 
         }
@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUserWithAuthorities(UserDto userDto, List<String> authorities) {
-        log.trace("[{}], [{}]", userDto, authorities);
+        log.trace("{}, {}", userDto, authorities);
 
         SecurityUser currentUser = getCurrentUser();
         checkPermission(currentUser.getAuthorities(), authorities);
@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean changePassword(String currentPassword, String newPassword) {
-        log.trace("[{}], [{}]", currentPassword, newPassword);
+        log.trace("{}, {}", currentPassword, newPassword);
 
         SecurityUser currentUser = getCurrentUser();
         if (currentPassword.equals(newPassword)) {
@@ -247,7 +247,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean deleteUser(UUID userId) {
-        log.trace("[{}]", userId);
+        log.trace("{}", userId);
 
         SecurityUser currentUser = getCurrentUser();
         if (currentUser.getId().equals(userId)) {
@@ -288,7 +288,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean updateUser(UserDto userDto) {
-        log.info("[{}]", userDto);
+        log.info("{}", userDto);
 
         SecurityUser currentUser = getCurrentUser();
 

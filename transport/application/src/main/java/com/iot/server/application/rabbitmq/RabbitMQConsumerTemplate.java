@@ -22,7 +22,7 @@ public class RabbitMQConsumerTemplate {
         QueueMsg<TelemetryMsg> queueMsg =
                 GsonUtils.fromJson(msg, new TypeToken<QueueMsg<TelemetryMsg>>() {
                 }.getType());
-        log.info("Consume message [{}]", queueMsg);
+        log.info("Consume message {}", queueMsg);
 
         TelemetryMsg telemetryMsg = queueMsg.getData();
         webSocketService.send(telemetryMsg);

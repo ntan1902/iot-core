@@ -1,4 +1,4 @@
-package com.iot.server.dao.entity;
+package com.iot.server.dao.entity.ts;
 
 import com.iot.server.common.entity.EntityConstants;
 import com.iot.server.common.enums.KvType;

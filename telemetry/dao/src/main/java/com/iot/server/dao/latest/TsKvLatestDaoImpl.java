@@ -1,14 +1,11 @@
-package com.iot.server.dao.ts;
+package com.iot.server.dao.latest;
 
 import com.iot.server.common.enums.KvType;
-import com.iot.server.common.model.BaseReadQuery;
-import com.iot.server.dao.entity.ts.TsKvCompositeKey;
-import com.iot.server.dao.entity.ts.TsKvEntity;
-import com.iot.server.dao.repository.TsKvRepository;
+import com.iot.server.dao.entity.latest.TsKvLatestCompositeKey;
+import com.iot.server.dao.entity.latest.TsKvLatestEntity;
+import com.iot.server.dao.repository.TsKvLatestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -16,90 +13,91 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class TsKvDaoImpl implements TsKvDao {
+public class TsKvLatestDaoImpl implements TsKvLatestDao {
 
     private static final String INSERT_ON_CONFLICT_DO_UPDATE =
-            "INSERT INTO ts_kv (entity_id, key, ts, type, bool_v, string_v, long_v, double_v, json_v) " +
+            "INSERT INTO ts_kv_latest (entity_id, key, ts, type, bool_v, string_v, long_v, double_v, json_v) " +
                     "VALUES (:entityId, :key, :ts, :type, :boolV, :stringV, :longV, :doubleV, cast(:jsonV AS json)) " +
-                    "ON CONFLICT (entity_id, key, ts) " +
+                    "ON CONFLICT (entity_id, key) " +
                     "DO UPDATE SET type = :type, bool_v = :boolV, string_v = :stringV, long_v = :longV, double_v = :doubleV, json_v = cast(:jsonV AS json)";
-    private final TsKvRepository tsKvRepository;
+    private final TsKvLatestRepository tsKvLatestRepository;
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public List<TsKvEntity> findAll() {
+    public List<TsKvLatestEntity> findAll() {
         log.debug("Executing");
-        return tsKvRepository.findAll();
+        return tsKvLatestRepository.findAll();
     }
 
     @Override
-    public TsKvEntity findById(TsKvCompositeKey id) {
+    public TsKvLatestEntity findById(TsKvLatestCompositeKey id) {
         log.debug("{}", id);
-        return tsKvRepository.findById(id).orElse(null);
+        return tsKvLatestRepository.findById(id).orElse(null);
     }
 
     @Override
-    public TsKvEntity save(TsKvEntity entity) {
+    public TsKvLatestEntity save(TsKvLatestEntity entity) {
         log.debug("{}", entity);
-        return tsKvRepository.save(entity);
+        return tsKvLatestRepository.save(entity);
     }
 
     @Override
     @Transactional
-    public boolean removeById(TsKvCompositeKey id) {
+    public boolean removeById(TsKvLatestCompositeKey id) {
         log.debug("{}", id);
-        tsKvRepository.deleteById(id);
-        return !tsKvRepository.existsById(id);
+        tsKvLatestRepository.deleteById(id);
+        return !tsKvLatestRepository.existsById(id);
     }
 
     @Override
-    public void save(List<TsKvEntity> tsKvEntities) {
+    public void save(List<TsKvLatestEntity> tsKvLatestEntities) {
         List<SqlParameterSource> args = new ArrayList<>();
 
-        for (TsKvEntity tsKvEntity : tsKvEntities) {
+        for (TsKvLatestEntity tsKvLatestEntity : tsKvLatestEntities) {
             MapSqlParameterSource source = new MapSqlParameterSource()
-                    .addValue("entityId", tsKvEntity.getEntityId())
-                    .addValue("key", tsKvEntity.getKey())
-                    .addValue("ts", tsKvEntity.getTs());
+                    .addValue("entityId", tsKvLatestEntity.getEntityId())
+                    .addValue("key", tsKvLatestEntity.getKey())
+                    .addValue("ts", tsKvLatestEntity.getTs());
 
 
-            if (tsKvEntity.getBoolV() != null) {
-                source.addValue("boolV", tsKvEntity.getBoolV());
+            if (tsKvLatestEntity.getBoolV() != null) {
+                source.addValue("boolV", tsKvLatestEntity.getBoolV());
                 source.addValue("type", KvType.BOOLEAN.name());
             } else {
                 source.addValue("boolV", null);
             }
 
-            if (tsKvEntity.getStringV() != null) {
-                source.addValue("stringV", tsKvEntity.getStringV());
+            if (tsKvLatestEntity.getStringV() != null) {
+                source.addValue("stringV", tsKvLatestEntity.getStringV());
                 source.addValue("type", KvType.STRING.name());
             } else {
                 source.addValue("stringV", null);
             }
 
-            if (tsKvEntity.getLongV() != null) {
-                source.addValue("longV", tsKvEntity.getLongV());
+            if (tsKvLatestEntity.getLongV() != null) {
+                source.addValue("longV", tsKvLatestEntity.getLongV());
                 source.addValue("type", KvType.LONG.name());
             } else {
                 source.addValue("longV", null);
             }
 
-            if (tsKvEntity.getDoubleV() != null) {
-                source.addValue("doubleV", tsKvEntity.getDoubleV());
+            if (tsKvLatestEntity.getDoubleV() != null) {
+                source.addValue("doubleV", tsKvLatestEntity.getDoubleV());
                 source.addValue("type", KvType.DOUBLE.name());
             } else {
 
                 source.addValue("doubleV", null);
             }
 
-            if (tsKvEntity.getJsonV() != null) {
-                source.addValue("jsonV", tsKvEntity.getJsonV());
+            if (tsKvLatestEntity.getJsonV() != null) {
+                source.addValue("jsonV", tsKvLatestEntity.getJsonV());
                 source.addValue("type", KvType.JSON.name());
             } else {
                 source.addValue("jsonV", null);
@@ -128,15 +126,9 @@ public class TsKvDaoImpl implements TsKvDao {
     }
 
     @Override
-    public List<TsKvEntity> findTsKvByEntityId(UUID entityId, BaseReadQuery query) {
+    public List<TsKvLatestEntity> findTsKvLatestByEntityId(UUID entityId) {
         log.debug("{}", entityId);
 
-        return tsKvRepository.findAllByEntityIdOrderByTsDesc(
-                entityId,
-                PageRequest.of(
-                        query.getPage(),
-                        query.getSize(),
-                        Sort.Direction.fromString(query.getOrder()),
-                        query.getProperty()));
+        return tsKvLatestRepository.findAllByEntityId(entityId);
     }
 }

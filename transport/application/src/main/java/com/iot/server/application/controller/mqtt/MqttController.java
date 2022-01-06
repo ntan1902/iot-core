@@ -21,7 +21,7 @@ public class MqttController {
     private final TransportService transportService;
 
     public void postTelemetry(MqttPublishMessage message, MqttEndpoint endpoint) {
-        log.trace("Received message [{}] from MQTT Client [{}] with QoS [{}]", message.payload().toString(Charset.defaultCharset()), endpoint.clientIdentifier(), message.qosLevel());
+        log.trace("Received message {} from MQTT Client {} with QoS {}", message.payload().toString(Charset.defaultCharset()), endpoint.clientIdentifier(), message.qosLevel());
 
         try {
             if (endpoint.auth() != null) {

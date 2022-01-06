@@ -1,7 +1,7 @@
 package com.iot.server.dao.repository;
 
-import com.iot.server.dao.entity.TsKvCompositeKey;
-import com.iot.server.dao.entity.TsKvEntity;
+import com.iot.server.dao.entity.ts.TsKvCompositeKey;
+import com.iot.server.dao.entity.ts.TsKvEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

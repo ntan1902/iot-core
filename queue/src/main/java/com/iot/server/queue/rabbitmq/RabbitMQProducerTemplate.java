@@ -19,7 +19,7 @@ public class RabbitMQProducerTemplate implements QueueProducerTemplate {
         try {
             amqpTemplate.convertAndSend(msg);
         } catch (AmqpException ex) {
-            log.error("Failed to publish message [{}]", msg, ex);
+            log.error("Failed to publish message {}", msg, ex);
         }
     }
 }

@@ -16,7 +16,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public void validateUserCredentials(UserCredentialsDto userCredentials, String email, String password) {
-        log.info("Executing [{}] [{}]", userCredentials, email);
+        log.info("Executing {} {}", userCredentials, email);
         if (!passwordEncoder.matches(password, userCredentials.getPassword())) {
             throw new BadCredentialsException("Authentication failed. Email or password is not valid");
         }

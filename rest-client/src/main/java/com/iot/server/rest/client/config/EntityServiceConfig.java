@@ -17,6 +17,6 @@ public class EntityServiceConfig {
 
     @PostConstruct
     void printClientConfig() {
-        log.info("EntityServiceConfig [{}]", this);
+        log.info("EntityServiceConfig {}", this);
     }
 }

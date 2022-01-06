@@ -33,6 +33,6 @@ public class JwtConfig {
         publicKey = RSAUtils.getPublicKey(publicKeyFile);
         privateKey = RSAUtils.getPrivateKey(privateKeyFile);
 
-        log.info("JwtConfig [{}]", this);
+        log.info("JwtConfig {}", this);
     }
 }

@@ -12,4 +12,6 @@ public interface TsKvService {
     void saveOrUpdate(QueueMsg<TelemetryMsg> queueMsg);
 
     List<TsKvDto> findTsKvByEntityId(UUID entityId, BaseReadQuery query);
+
+    List<TsKvDto> findTsKvLatestByEntityId(UUID entityId);
 }

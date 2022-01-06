@@ -26,6 +26,6 @@ public class JwtConfig {
     @PostConstruct
     void loadRSAKeyPair() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
         publicKey = RSAUtils.getPublicKey(publicKeyFile);
-        log.info("JwtConfig [{}]", this);
+        log.info("JwtConfig {}", this);
     }
 }
