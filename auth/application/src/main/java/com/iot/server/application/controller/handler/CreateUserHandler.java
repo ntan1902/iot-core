@@ -33,14 +33,12 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, CreateUser
                 .email(request.getEmail())
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
-                .tenantId(toUUID(request.getTenantId()))
-                .customerId(toUUID(request.getCustomerId()))
                 .build();
 
-        if (!request.getTenantId().isEmpty())
+        if (request.getTenantId() != null && !request.getTenantId().isEmpty())
             userDto.setTenantId(toUUID(request.getTenantId()));
 
-        if (!request.getCustomerId().isEmpty())
+        if (request.getCustomerId() != null && !request.getCustomerId().isEmpty())
             userDto.setCustomerId(toUUID(request.getCustomerId()));
 
         return userDto;
