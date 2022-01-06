@@ -2,8 +2,8 @@ package com.iot.server.application.controller.handler;
 
 import com.iot.server.application.controller.request.CreateUserRequest;
 import com.iot.server.application.controller.response.CreateUserResponse;
-import com.iot.server.dao.dto.UserDto;
 import com.iot.server.common.exception.IoTException;
+import com.iot.server.dao.dto.UserDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -29,10 +29,20 @@ public class CreateUserHandler extends BaseHandler<CreateUserRequest, CreateUser
     }
 
     private UserDto getUserFromRequest(CreateUserRequest request) {
-        return UserDto.builder()
+        UserDto userDto = UserDto.builder()
                 .email(request.getEmail())
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
+                .tenantId(toUUID(request.getTenantId()))
+                .customerId(toUUID(request.getCustomerId()))
                 .build();
+
+        if (!request.getTenantId().isEmpty())
+            userDto.setTenantId(toUUID(request.getTenantId()));
+
+        if (!request.getCustomerId().isEmpty())
+            userDto.setCustomerId(toUUID(request.getCustomerId()));
+
+        return userDto;
     }
 }

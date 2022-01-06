@@ -18,6 +18,9 @@ public class CreateUserRequest {
     @NotEmpty(message = "Last name must be not empty")
     private String lastName;
 
+    private String tenantId;
+    private String customerId;
+
     @NotEmpty(message = "Authorities must be not empty")
     @Size(min = 1)
     private List<String> authorities;
