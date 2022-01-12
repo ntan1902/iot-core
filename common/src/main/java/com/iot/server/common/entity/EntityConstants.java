@@ -55,6 +55,12 @@ public class EntityConstants {
     public static final String RULE_NODE_CONFIGURATION_PROPERTY = "configuration";
     public static final String RULE_NODE_ADDITIONAL_INFO_PROPERTY = "additionalInfo";
 
+    public static final String RELATION_TABLE_NAME = "relation";
+    public static final String RELATION_FROM_ID_PROPERTY = "from_id";
+    public static final String RELATION_FROM_TYPE_PROPERTY = "from_type";
+    public static final String RELATION_TO_ID_PROPERTY = "to_id";
+    public static final String RELATION_TO_TYPE_PROPERTY = "to_type";
+
 
     private EntityConstants() {
     }

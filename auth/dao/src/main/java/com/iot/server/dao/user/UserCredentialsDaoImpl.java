@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class UserCredentialsDaoImpl extends JpaAbstractDao<UserCredentialsEntity,UUID> implements UserCredentialsDao {
+public class UserCredentialsDaoImpl extends JpaAbstractDao<UserCredentialsEntity, UUID> implements UserCredentialsDao {
 
     private final UserCredentialsRepository userCredentialsRepository;
 
