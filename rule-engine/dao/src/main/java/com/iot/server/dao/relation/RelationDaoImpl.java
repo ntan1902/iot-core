@@ -9,15 +9,32 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class RelationDaoImpl extends JpaAbstractDao<RelationEntity, RelationCompositeKey> implements RelationDao {
+public class RelationDaoImpl implements RelationDao {
 
     private final RelationRepository relationRepository;
 
     @Override
-    protected JpaRepository<RelationEntity, RelationCompositeKey> getJpaRepository() {
-        return relationRepository;
+    public List<RelationEntity> findAll() {
+        return null;
+    }
+
+    @Override
+    public RelationEntity findById(RelationCompositeKey relationCompositeKey) {
+        return null;
+    }
+
+    @Override
+    public RelationEntity save(RelationEntity entity) {
+        return null;
+    }
+
+    @Override
+    public boolean removeById(RelationCompositeKey relationCompositeKey) {
+        return false;
     }
 }
