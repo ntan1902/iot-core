@@ -21,8 +21,7 @@ public class UserCredentialsEntity extends BaseEntity<UUID> {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(
             name = EntityConstants.USER_CREDENTIALS_USER_ID_PROPERTY,
-            referencedColumnName = EntityConstants.ID_PROPERTY,
-            foreignKey = @ForeignKey(name = "none"))
+            referencedColumnName = EntityConstants.ID_PROPERTY)
     private UserEntity user;
 
     @Column(name = EntityConstants.USER_CREDENTIALS_PASSWORD_PROPERTY)

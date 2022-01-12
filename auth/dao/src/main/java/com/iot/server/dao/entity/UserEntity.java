@@ -38,9 +38,7 @@ public class UserEntity extends BaseEntity<UUID> {
     @JoinTable(
             name = EntityConstants.USER_ROLE_TABLE_NAME,
             joinColumns = @JoinColumn(name = EntityConstants.USER_ROLE_USER_ID_PROPERTY),
-            inverseJoinColumns = @JoinColumn(name = EntityConstants.USER_ROLE_ROLE_ID_PROPERTY),
-            foreignKey = @ForeignKey(name = "none"),
-            inverseForeignKey = @ForeignKey(name = "none")
+            inverseJoinColumns = @JoinColumn(name = EntityConstants.USER_ROLE_ROLE_ID_PROPERTY)
     )
     @ToString.Exclude
     private Set<RoleEntity> roles;

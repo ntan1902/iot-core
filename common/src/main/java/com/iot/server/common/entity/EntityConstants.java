@@ -42,6 +42,19 @@ public class EntityConstants {
     public static final String TS_KV_STRING_V_PROPERTY = "string_v";
     public static final String TS_KV_JSON_V_PROPERTY = "json_v";
 
+    public static final String RULE_CHAIN_TABLE_NAME = "rule_chain";
+    public static final String RULE_CHAIN_TENANT_ID_PROPERTY = "tenant_id";
+    public static final String RULE_CHAIN_NAME_PROPERTY = "name";
+    public static final String RULE_CHAIN_FIRST_RULE_NODE_ID_PROPERTY = "first_rule_node_id";
+    public static final String RULE_CHAIN_ROOT_PROPERTY = "root";
+
+    public static final String RULE_NODE_TABLE_NAME = "rule_node";
+    public static final String RULE_NODE_CHAIN_ID_PROPERTY = "rule_chain_id";
+    public static final String RULE_NODE_TYPE_PROPERTY = "type";
+    public static final String RULE_NODE_NAME_PROPERTY = "name";
+    public static final String RULE_NODE_CONFIGURATION_PROPERTY = "configuration";
+    public static final String RULE_NODE_ADDITIONAL_INFO_PROPERTY = "additionalInfo";
+
 
     private EntityConstants() {
     }

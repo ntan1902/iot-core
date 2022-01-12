@@ -1,7 +1,6 @@
 package com.iot.server.dao.latest;
 
 import com.iot.server.common.dao.Dao;
-import com.iot.server.common.model.BaseReadQuery;
 import com.iot.server.dao.entity.latest.TsKvLatestCompositeKey;
 import com.iot.server.dao.entity.latest.TsKvLatestEntity;
 

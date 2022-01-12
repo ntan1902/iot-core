@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>com.iot.auth</groupId>
     <artifactId>domain</artifactId>
     <packaging>jar</packaging>
 
@@ -26,7 +27,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.iot</groupId>
+            <groupId>com.iot.auth</groupId>
             <artifactId>dao</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 @Data
-@ConfigurationProperties(prefix = "entity.service")
+@ConfigurationProperties(prefix = "com.iot.server.dao.entity.service")
 @Component
 @Slf4j
 public class EntityServiceConfig {
