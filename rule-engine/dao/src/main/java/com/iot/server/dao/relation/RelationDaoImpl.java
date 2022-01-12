@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @Slf4j
@@ -44,5 +45,11 @@ public class RelationDaoImpl implements RelationDao {
         log.trace("{}", id);
         relationRepository.deleteById(id);
         return !relationRepository.existsById(id);
+    }
+
+    @Override
+    public List<RelationEntity> findAllByFromIds(List<UUID> fromIds) {
+        log.trace("{}", fromIds);
+        return relationRepository.findAllByFromIdIn(fromIds);
     }
 }

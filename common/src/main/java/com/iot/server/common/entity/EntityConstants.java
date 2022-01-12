@@ -60,6 +60,7 @@ public class EntityConstants {
     public static final String RELATION_FROM_TYPE_PROPERTY = "from_type";
     public static final String RELATION_TO_ID_PROPERTY = "to_id";
     public static final String RELATION_TO_TYPE_PROPERTY = "to_type";
+    public static final String RELATION_TYPE_PROPERTY = "type";
 
 
     private EntityConstants() {

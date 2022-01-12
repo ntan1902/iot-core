@@ -1,12 +1,19 @@
 package com.iot.server.dao.entity.relation;
 
 import com.iot.server.common.entity.EntityConstants;
-import lombok.Data;
+import com.iot.server.dao.dto.RelationDto;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = EntityConstants.RELATION_TABLE_NAME)
 @IdClass(RelationCompositeKey.class)
@@ -27,4 +34,15 @@ public final class RelationEntity {
     @Id
     @Column(name = EntityConstants.RELATION_TO_TYPE_PROPERTY)
     private String toType;
+
+    @Column(name = EntityConstants.RELATION_TYPE_PROPERTY)
+    private String type;
+
+    public RelationEntity(RelationDto relationDto) {
+        this.fromId = relationDto.getFromId();
+        this.fromType = relationDto.getFromType();
+        this.toId = relationDto.getToId();
+        this.toType = relationDto.getToType();
+        this.type = relationDto.getType();
+    }
 }

@@ -3,6 +3,7 @@ package com.iot.server.application.controller.handler;
 import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
+import com.iot.server.domain.relation.RelationService;
 import com.iot.server.domain.rule_chain.RuleChainService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -16,6 +17,9 @@ public abstract class BaseHandler<T, U> {
 
     @Autowired
     protected RuleChainService ruleChainService;
+
+    @Autowired
+    protected RelationService relationService;
 
     protected abstract void validate(final T request) throws IoTException;
 
