@@ -10,6 +10,7 @@
         <module>rest-client</module>
         <module>queue</module>
         <module>telemetry</module>
+        <module>rule-engine</module>
     </modules>
 
     <groupId>com.iot</groupId>
