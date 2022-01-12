@@ -2,6 +2,7 @@ package com.iot.server.dao.entity.rule_node;
 
 import com.iot.server.common.entity.BaseEntity;
 import com.iot.server.common.entity.EntityConstants;
+import com.iot.server.dao.dto.RuleNodeDto;
 import com.iot.server.dao.entity.rule_chain.RuleChainEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -36,4 +37,13 @@ public class RuleNodeEntity extends BaseEntity<UUID> {
 
     @Column(name = EntityConstants.RULE_NODE_ADDITIONAL_INFO_PROPERTY)
     private String additionalInfo;
+
+    public RuleNodeEntity(RuleNodeDto ruleNodeDto) {
+        super(ruleNodeDto);
+        this.ruleChain.setId(ruleNodeDto.getRuleChainId());
+        this.type = ruleNodeDto.getType();
+        this.name = ruleNodeDto.getName();
+        this.configuration = ruleNodeDto.getConfiguration();
+        this.additionalInfo = ruleNodeDto.getAdditionalInfo();
+    }
 }

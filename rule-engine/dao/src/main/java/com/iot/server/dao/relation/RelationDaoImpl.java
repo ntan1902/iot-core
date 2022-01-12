@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Component
@@ -20,21 +21,28 @@ public class RelationDaoImpl implements RelationDao {
 
     @Override
     public List<RelationEntity> findAll() {
+        log.trace("Executing");
+        return relationRepository.findAll();
+    }
+
+    @Override
+    public RelationEntity findById(RelationCompositeKey id) {
+        log.trace("{}", id);
         return null;
     }
 
     @Override
-    public RelationEntity findById(RelationCompositeKey relationCompositeKey) {
-        return null;
-    }
-
-    @Override
+    @Transactional
     public RelationEntity save(RelationEntity entity) {
-        return null;
+        log.trace("{}", entity);
+        return relationRepository.save(entity);
     }
 
     @Override
-    public boolean removeById(RelationCompositeKey relationCompositeKey) {
-        return false;
+    @Transactional
+    public boolean removeById(RelationCompositeKey id) {
+        log.trace("{}", id);
+        relationRepository.deleteById(id);
+        return !relationRepository.existsById(id);
     }
 }

@@ -2,6 +2,7 @@ package com.iot.server.dao.entity.rule_chain;
 
 import com.iot.server.common.entity.BaseEntity;
 import com.iot.server.common.entity.EntityConstants;
+import com.iot.server.dao.dto.RuleChainDto;
 import com.iot.server.dao.entity.rule_node.RuleNodeEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -30,9 +31,17 @@ public class RuleChainEntity extends BaseEntity<UUID> {
     private UUID firstRuleNodeId;
 
     @Column(name = EntityConstants.RULE_CHAIN_ROOT_PROPERTY)
-    private boolean root;
+    private Boolean root;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "ruleChain")
     @ToString.Exclude
     private Set<RuleNodeEntity> ruleNodes;
+
+    public RuleChainEntity(RuleChainDto ruleChainDto) {
+        super(ruleChainDto);
+        this.tenantId = ruleChainDto.getTenantId();
+        this.name = ruleChainDto.getName();
+        this.firstRuleNodeId = ruleChainDto.getFirstRuleNodeId();
+        this.root = ruleChainDto.getRoot();
+    }
 }
