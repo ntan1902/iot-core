@@ -13,7 +13,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetRuleNodesByRuleChainIdResponse {
+public class UpdateRuleNodesResponse {
+    private String ruleChainId;
     private List<RuleNodeRelation> relations;
     private List<RuleNodeDto> ruleNodes;
 }

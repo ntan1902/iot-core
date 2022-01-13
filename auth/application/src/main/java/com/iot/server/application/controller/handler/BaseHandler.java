@@ -3,10 +3,12 @@ package com.iot.server.application.controller.handler;
 import com.iot.server.common.enums.AuthorityEnum;
 import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
+import com.iot.server.domain.model.SecurityUser;
 import com.iot.server.domain.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 import java.util.UUID;
@@ -62,6 +64,9 @@ public abstract class BaseHandler<T, U> {
         return UUID.fromString(id);
     }
 
+    protected SecurityUser getCurrentUser() {
+        return (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
 }
 
 

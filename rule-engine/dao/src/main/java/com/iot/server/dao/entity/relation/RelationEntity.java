@@ -3,7 +3,6 @@ package com.iot.server.dao.entity.relation;
 import com.iot.server.common.entity.EntityConstants;
 import com.iot.server.dao.dto.RelationDto;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -36,13 +35,13 @@ public final class RelationEntity {
     private String toType;
 
     @Column(name = EntityConstants.RELATION_TYPE_PROPERTY)
-    private String type;
+    private String name;
 
     public RelationEntity(RelationDto relationDto) {
         this.fromId = relationDto.getFromId();
         this.fromType = relationDto.getFromType();
         this.toId = relationDto.getToId();
         this.toType = relationDto.getToType();
-        this.type = relationDto.getType();
+        this.name = relationDto.getName();
     }
 }

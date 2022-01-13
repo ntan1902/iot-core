@@ -1,15 +1,14 @@
 package com.iot.server.application.controller.http;
 
-import com.iot.server.application.controller.handler.GetRuleChainByIdHandler;
-import com.iot.server.application.controller.handler.GetRuleChainsHandler;
-import com.iot.server.application.controller.request.GetRuleChainByIdRequest;
-import com.iot.server.application.controller.request.GetRuleChainsRequest;
-import com.iot.server.application.controller.response.GetRuleChainByIdResponse;
-import com.iot.server.application.controller.response.GetRuleChainsResponse;
+import com.iot.server.application.controller.handler.*;
+import com.iot.server.application.controller.request.*;
+import com.iot.server.application.controller.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
@@ -18,6 +17,9 @@ public class RuleChainController {
 
     private final GetRuleChainByIdHandler getRuleChainByIdHandler;
     private final GetRuleChainsHandler getRuleChainsHandler;
+    private final GetRuleNodesByRuleChainIdHandler getRuleNodesByRuleChainIdHandler;
+    private final UpdateRuleNodesHandler updateRuleNodesHandler;
+    private final CreateRuleChainHandler createRuleChainHandler;
 
     @GetMapping("/rule-chain/{ruleChainId}")
     @PreAuthorize("hasAnyAuthority('TENANT')")
@@ -44,6 +46,32 @@ public class RuleChainController {
                                 .property(property)
                                 .build()
                 )
+        );
+    }
+
+    @GetMapping("/rule-chain/{ruleChainId}/rule-nodes")
+    @PreAuthorize("hasAnyAuthority('TENANT')")
+    public ResponseEntity<GetRuleNodesByRuleChainIdResponse> getRuleNodes(@PathVariable("ruleChainId") String ruleChainId) {
+        return ResponseEntity.ok(
+                getRuleNodesByRuleChainIdHandler.handleRequest(GetRuleNodesByRuleChainIdRequest.builder()
+                        .ruleChainId(ruleChainId)
+                        .build())
+        );
+    }
+
+    @PostMapping("/rule-chain")
+    @PreAuthorize("hasAnyAuthority('TENANT')")
+    public ResponseEntity<CreateRuleChainResponse> createRuleChain(@RequestBody @Valid CreateRuleChainRequest request) {
+        return ResponseEntity.ok(
+                createRuleChainHandler.handleRequest(request)
+        );
+    }
+
+    @PostMapping("/rule-chain/rule-nodes")
+    @PreAuthorize("hasAnyAuthority('TENANT')")
+    public ResponseEntity<UpdateRuleNodesResponse> updateRuleNodes(@RequestBody UpdateRuleNodesRequest request) {
+        return ResponseEntity.ok(
+                updateRuleNodesHandler.handleRequest(request)
         );
     }
 }

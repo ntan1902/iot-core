@@ -17,13 +17,13 @@ public class RelationDto {
     private String fromType;
     private UUID toId;
     private String toType;
-    private String type;
+    private String name;
 
     public RelationDto(RelationEntity relationEntity) {
         this.fromId = relationEntity.getFromId();
         this.fromType = relationEntity.getFromType();
         this.toId = relationEntity.getToId();
         this.toType = relationEntity.getToType();
-        this.type = relationEntity.getType();
+        this.name = relationEntity.getName();
     }
 }

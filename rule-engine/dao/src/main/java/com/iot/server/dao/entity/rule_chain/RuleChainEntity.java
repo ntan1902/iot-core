@@ -8,7 +8,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -32,10 +32,6 @@ public class RuleChainEntity extends BaseEntity<UUID> {
 
     @Column(name = EntityConstants.RULE_CHAIN_ROOT_PROPERTY)
     private Boolean root;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ruleChain")
-    @ToString.Exclude
-    private Set<RuleNodeEntity> ruleNodes;
 
     public RuleChainEntity(RuleChainDto ruleChainDto) {
         super(ruleChainDto);

@@ -25,7 +25,7 @@ public class RuleNodeDto extends BaseDto<UUID> {
 
     public RuleNodeDto(RuleNodeEntity ruleNodeEntity) {
         super(ruleNodeEntity);
-        this.ruleChainId = ruleNodeEntity.getRuleChain().getId();
+        this.ruleChainId = ruleNodeEntity.getRuleChainId();
         this.type = ruleNodeEntity.getType();
         this.name = ruleNodeEntity.getName();
         this.configuration = ruleNodeEntity.getConfiguration();

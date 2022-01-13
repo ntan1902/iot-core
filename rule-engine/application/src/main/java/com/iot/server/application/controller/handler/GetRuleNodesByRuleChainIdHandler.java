@@ -5,10 +5,12 @@ import com.iot.server.application.controller.response.GetRuleNodesByRuleChainIdR
 import com.iot.server.common.exception.IoTException;
 import com.iot.server.dao.dto.RelationDto;
 import com.iot.server.dao.dto.RuleNodeDto;
+import com.iot.server.dao.dto.RuleNodeRelation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -30,14 +32,42 @@ public class GetRuleNodesByRuleChainIdHandler extends BaseHandler<GetRuleNodesBy
         if (ruleNodes != null && !ruleNodes.isEmpty()) {
             response.setRuleNodes(ruleNodes);
 
-            List<UUID> fromIds = ruleNodes.stream().map(RuleNodeDto::getId).collect(Collectors.toList());
-            List<RelationDto> relations = relationService.findRelationsByFromIds(fromIds);
+            List<UUID> ruleNodeIds = getRuleNodeIds(ruleNodes);
+            List<RelationDto> relationDtos = relationService.findRelationsByFromIds(ruleNodeIds);
 
-            if (relations != null && !relations.isEmpty()) {
-                response.setRelations(relations);
+            if (relationDtos != null && !relationDtos.isEmpty()) {
+                List<RuleNodeRelation> relations = getRuleNodeRelations(ruleNodeIds, relationDtos);
+
+                if (relations != null && !relations.isEmpty()) {
+                    response.setRelations(relations);
+                }
             }
         }
 
         return response;
+    }
+
+    private List<UUID> getRuleNodeIds(List<RuleNodeDto> ruleNodes) {
+        return ruleNodes.stream()
+                .map(RuleNodeDto::getId)
+                .collect(Collectors.toList());
+    }
+
+    private List<RuleNodeRelation> getRuleNodeRelations(List<UUID> ruleNodeIds, List<RelationDto> relationDtos) {
+        Map<UUID, Integer> ruleNodeIndexMap = getRuleNodeIndexMap(ruleNodeIds);
+
+        return relationDtos.stream()
+                .map(relationDto -> RuleNodeRelation.builder()
+                        .fromIndex(ruleNodeIndexMap.get(relationDto.getFromId()))
+                        .toIndex(ruleNodeIndexMap.get(relationDto.getToId()))
+                        .name(relationDto.getName())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    private Map<UUID, Integer> getRuleNodeIndexMap(List<UUID> ruleNodeIds) {
+        return ruleNodeIds.stream()
+                .collect(
+                        Collectors.toMap(ruleNodeId -> ruleNodeId, ruleNodeId -> ruleNodeIds.indexOf(ruleNodeId)));
     }
 }

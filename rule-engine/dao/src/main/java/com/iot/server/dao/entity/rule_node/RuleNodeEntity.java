@@ -13,6 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
@@ -20,11 +21,8 @@ import java.util.UUID;
 @Table(name = EntityConstants.RULE_NODE_TABLE_NAME)
 public class RuleNodeEntity extends BaseEntity<UUID> {
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(
-            name = EntityConstants.RULE_NODE_CHAIN_ID_PROPERTY,
-            referencedColumnName = EntityConstants.ID_PROPERTY)
-    private RuleChainEntity ruleChain;
+    @Column(name = EntityConstants.RULE_NODE_CHAIN_ID_PROPERTY)
+    private UUID ruleChainId;
 
     @Column(name = EntityConstants.RULE_NODE_TYPE_PROPERTY)
     private String type;
@@ -40,7 +38,7 @@ public class RuleNodeEntity extends BaseEntity<UUID> {
 
     public RuleNodeEntity(RuleNodeDto ruleNodeDto) {
         super(ruleNodeDto);
-        this.ruleChain.setId(ruleNodeDto.getRuleChainId());
+        this.ruleChainId = ruleNodeDto.getRuleChainId();
         this.type = ruleNodeDto.getType();
         this.name = ruleNodeDto.getName();
         this.configuration = ruleNodeDto.getConfiguration();

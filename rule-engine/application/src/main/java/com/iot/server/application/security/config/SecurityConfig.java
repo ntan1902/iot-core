@@ -28,8 +28,6 @@ import java.util.List;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public static final String JWT_TOKEN_QUERY_PARAM = "token";
-
     private final IoTExceptionHandler ioTExceptionHandler;
 
     private final JwtAuthorizationProvider jwtAuthorizationProvider;
