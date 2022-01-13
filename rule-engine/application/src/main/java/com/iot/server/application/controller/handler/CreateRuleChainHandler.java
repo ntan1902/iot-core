@@ -21,7 +21,7 @@ public class CreateRuleChainHandler extends BaseHandler<CreateRuleChainRequest, 
         UUID tenantId = getCurrentUser().getId();
         final RuleChainDto savedRuleChain = ruleChainService.createRuleChain(getRuleChainFromRequest(request, tenantId));
 
-        response.setRuleChainId(savedRuleChain.getId());
+        response.setRuleChain(savedRuleChain);
         return response;
     }
 

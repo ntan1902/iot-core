@@ -1,5 +1,6 @@
 package com.iot.server.application.controller.response;
 
+import com.iot.server.dao.dto.RuleChainDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,5 +13,5 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateRuleChainResponse {
-    private UUID ruleChainId;
+    private RuleChainDto ruleChain;
 }
