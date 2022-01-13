@@ -129,7 +129,7 @@ public class TsKvDaoImpl implements TsKvDao {
 
     @Override
     public List<TsKvEntity> findTsKvByEntityId(UUID entityId, BaseReadQuery query) {
-        log.debug("{}", entityId);
+        log.debug("{}, {}", entityId, query);
 
         return tsKvRepository.findAllByEntityIdOrderByTsDesc(
                 entityId,

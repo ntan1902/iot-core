@@ -1,7 +1,9 @@
 package com.iot.server.domain.rule_chain;
 
+import com.iot.server.common.model.BaseReadQuery;
 import com.iot.server.dao.dto.RuleChainDto;
 import com.iot.server.dao.dto.RuleNodeDto;
+import com.iot.server.dao.entity.rule_chain.RuleChainEntity;
 import com.iot.server.dao.rule_chain.RuleChainDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +36,17 @@ public class RuleChainServiceImpl implements RuleChainService {
                 .getRuleNodes()
                 .stream()
                 .map(ruleNodeEntity -> new RuleNodeDto(ruleNodeEntity))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RuleChainDto> findAllByTenantId(UUID tenantId, BaseReadQuery query) {
+        log.trace("{}, {}", tenantId, query);
+
+        List<RuleChainEntity> ruleChainEntities = ruleChainDao.findAllByTenantId(tenantId, query);
+
+        return ruleChainEntities.stream()
+                .map(ruleChainEntity -> new RuleChainDto(ruleChainEntity))
                 .collect(Collectors.toList());
     }
 }
