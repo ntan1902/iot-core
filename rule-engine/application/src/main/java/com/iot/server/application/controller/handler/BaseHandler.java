@@ -31,7 +31,7 @@ public abstract class BaseHandler<T, U> {
         validate(request);
 
         val response = processRequest(request);
-        log.info("Request: {} - Response: {}", response, request);
+        log.info("Request: {} - Response: {}", request, response);
         return response;
     }
 
