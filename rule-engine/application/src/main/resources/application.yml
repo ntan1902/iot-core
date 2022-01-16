@@ -25,15 +25,22 @@ spring:
       maximumPoolSize: "${SPRING_DATASOURCE_MAXIMUM_POOL_SIZE:16}"
 queue:
   rabbitmq:
-    telemetry:
-      queue-name: "${QUEUE_RABBIT_MQ_QUEUE_NAME:telemetryQueue}"
+    rule-engine:
+      queue-name: "${QUEUE_RABBIT_MQ_QUEUE_NAME:ruleEngineQueue}"
       exchange-name: "${QUEUE_RABBIT_MQ_EXCHANGE_NAME:telemetryExchange}"
       host: "${QUEUE_RABBIT_MQ_HOST:localhost}"
       port: "${QUEUE_RABBIT_MQ_PORT:5672}"
       username: "${QUEUE_RABBIT_MQ_USERNAME:guest}"
       password: "${QUEUE_RABBIT_MQ_PASSWORD:guest}"
       connection-timeout: "${QUEUE_RABBIT_MQ_CONNECTION_TIMEOUT:60000}"
-
+    device-client:
+      queue-name: "${QUEUE_RABBIT_MQ_QUEUE_NAME:deviceQueue}"
+      exchange-name: "${QUEUE_RABBIT_MQ_EXCHANGE_NAME:deviceExchange}"
+      host: "${QUEUE_RABBIT_MQ_HOST:localhost}"
+      port: "${QUEUE_RABBIT_MQ_PORT:5672}"
+      username: "${QUEUE_RABBIT_MQ_USERNAME:guest}"
+      password: "${QUEUE_RABBIT_MQ_PASSWORD:guest}"
+      connection-timeout: "${QUEUE_RABBIT_MQ_CONNECTION_TIMEOUT:60000}"
 security:
   jwt:
     access-token-exp: "${JWT_ACCESS_TOKEN_EXP:604800}" # Number of seconds (2.5 hours)

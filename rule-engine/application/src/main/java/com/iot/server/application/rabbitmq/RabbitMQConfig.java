@@ -12,6 +12,7 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +25,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class RabbitMQConfig {
 
-    private Config telemetry;
+    private Config ruleEngine;
+    private Config deviceClient;
 
     public ConnectionFactory createConnectionFactory(Config config) {
         CachingConnectionFactory rabbitConnectionFactory = new CachingConnectionFactory();
@@ -37,27 +39,46 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue telemetryQueue() {
-        return new Queue(telemetry.queueName, false);
+    public Queue ruleEngineQueue() {
+        return new Queue(ruleEngine.queueName, false);
     }
 
     @Bean
     public FanoutExchange telemetryExchange() {
-        return new FanoutExchange(telemetry.exchangeName);
+        return new FanoutExchange(ruleEngine.exchangeName);
     }
 
     @Bean
-    public Binding telemetryBinding(Queue queue, FanoutExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange);
+    public Binding telemetryBinding(Queue ruleEngineQueue, FanoutExchange telemetryExchange) {
+        return BindingBuilder.bind(ruleEngineQueue).to(telemetryExchange);
+    }
+
+    @Bean
+    public Queue deviceQueue() {
+        return new Queue(deviceClient.queueName, false);
+    }
+
+    @Bean
+    public FanoutExchange deviceExchange() {
+        return new FanoutExchange(deviceClient.exchangeName);
+    }
+
+    @Bean
+    public Binding deviceBinding(Queue deviceQueue, FanoutExchange deviceExchange) {
+        return BindingBuilder.bind(deviceQueue).to(deviceExchange);
     }
 
     @Bean
     public RabbitAdmin rabbitAdmin() {
-        RabbitAdmin rabbitAdmin = new RabbitAdmin(createConnectionFactory(telemetry));
+        RabbitAdmin rabbitAdmin = new RabbitAdmin(createConnectionFactory(ruleEngine));
 
         rabbitAdmin.declareExchange(telemetryExchange());
-        rabbitAdmin.declareQueue(telemetryQueue());
-        rabbitAdmin.declareBinding(telemetryBinding(telemetryQueue(), telemetryExchange()));
+        rabbitAdmin.declareQueue(ruleEngineQueue());
+        rabbitAdmin.declareBinding(telemetryBinding(ruleEngineQueue(), telemetryExchange()));
+
+        rabbitAdmin.declareExchange(deviceExchange());
+        rabbitAdmin.declareQueue(deviceQueue());
+        rabbitAdmin.declareBinding(deviceBinding(deviceQueue(), deviceExchange()));
 
         return rabbitAdmin;
     }

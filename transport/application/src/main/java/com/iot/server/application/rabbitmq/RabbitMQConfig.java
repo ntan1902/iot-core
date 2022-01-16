@@ -5,10 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -24,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     private Config telemetry;
+    private Config mqtt;
 
     public ConnectionFactory createConnectionFactory(Config config) {
         CachingConnectionFactory rabbitConnectionFactory = new CachingConnectionFactory();
@@ -58,6 +56,21 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue mqttQueue() {
+        return new Queue(mqtt.queueName);
+    }
+
+    @Bean
+    public TopicExchange mqttExchange() {
+        return new TopicExchange(mqtt.exchangeName);
+    }
+
+    @Bean
+    public Binding mqttBinding(Queue mqttQueue, TopicExchange mqttExchange) {
+        return BindingBuilder.bind(mqttQueue).to(mqttExchange).with(mqtt.routingKey);
+    }
+
+    @Bean
     public RabbitAdmin telemetryRabbitAdmin() {
         RabbitAdmin rabbitAdmin = new RabbitAdmin(createConnectionFactory(telemetry));
 
@@ -78,6 +91,7 @@ public class RabbitMQConfig {
         private String username;
         private String password;
         private int connectionTimeout;
+        private String routingKey;
     }
 
 }

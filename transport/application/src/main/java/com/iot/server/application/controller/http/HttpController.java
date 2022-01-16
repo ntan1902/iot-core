@@ -1,5 +1,6 @@
 package com.iot.server.application.controller.http;
 
+import com.iot.server.application.controller.request.PostTelemetryRequest;
 import com.iot.server.common.enums.TransportType;
 import com.iot.server.domain.TransportService;
 import com.iot.server.domain.model.ValidateDeviceToken;
@@ -18,14 +19,13 @@ import java.util.concurrent.CompletionException;
 public class HttpController {
     private final TransportService transportService;
 
-    @PostMapping("/{deviceToken}/telemetry")
-    public CompletableFuture<ResponseEntity<?>> postTelemetry(@PathVariable("deviceToken") String deviceToken,
-                                                              @RequestBody String json) {
+    @PostMapping("/telemetry")
+    public CompletableFuture<ResponseEntity<?>> postTelemetry(@RequestBody PostTelemetryRequest request) {
         return CompletableFuture
                 .runAsync(() -> transportService.process(
                         TransportType.DEFAULT,
-                        ValidateDeviceToken.builder().token(deviceToken).build(),
-                        json)
+                        ValidateDeviceToken.builder().token(request.getToken().toString()).build(),
+                        request.getJson().toString())
                 )
                 .exceptionally(t -> {
                     throw new CompletionException(t);

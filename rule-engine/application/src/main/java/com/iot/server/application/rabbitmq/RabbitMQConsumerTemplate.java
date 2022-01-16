@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RabbitMQConsumerTemplate {
 
-    @RabbitListener(queues = "${queue.rabbitmq.telemetry.queue-name}")
+    @RabbitListener(queues = "${queue.rabbitmq.rule-engine.queue-name}")
     public void postTelemetry(String msg) {
         QueueMsg<TelemetryMsg> queueMsg =
                 GsonUtils.fromJson(msg, new TypeToken<QueueMsg<TelemetryMsg>>() {

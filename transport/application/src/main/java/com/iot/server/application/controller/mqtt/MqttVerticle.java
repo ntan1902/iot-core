@@ -23,21 +23,21 @@ public class MqttVerticle extends AbstractVerticle {
     public void init(Vertx vertx, Context context) {
         super.init(vertx, context);
 
-        MqttServer mqttServer = MqttServer.create(vertx);
-        mqttServer
-                .endpointHandler(endpoint -> {
-                    // accept connection from the remote client
-                    endpoint.accept(false);
-                    publishHandler(endpoint);
-                })
-                .listen(ar -> {
-                    if (ar.succeeded()) {
-                        log.info("MQTT server is listening on port " + ar.result().actualPort());
-                    } else {
-                        log.info("Error on starting the server");
-                        ar.cause().printStackTrace();
-                    }
-                });
+//        MqttServer mqttServer = MqttServer.create(vertx);
+//        mqttServer
+//                .endpointHandler(endpoint -> {
+//                    // accept connection from the remote client
+//                    endpoint.accept(false);
+//                    publishHandler(endpoint);
+//                })
+//                .listen(ar -> {
+//                    if (ar.succeeded()) {
+//                        log.info("MQTT server is listening on port " + ar.result().actualPort());
+//                    } else {
+//                        log.info("Error on starting the server");
+//                        ar.cause().printStackTrace();
+//                    }
+//                });
     }
 
     private void publishHandler(MqttEndpoint endpoint) {
