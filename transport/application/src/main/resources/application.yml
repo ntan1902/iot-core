@@ -1,5 +1,6 @@
 server:
   port: "${SERVER_PORT:8082}"
+
 entity.service:
   host: "${ENTITY_SERVICE_URL:localhost:8081}"
   max-attempt: "${ENTITY_SERVICE_MAX_ATTEMPT:3}"
@@ -23,9 +24,9 @@ queue:
       stomp-broker: "${QUEUE_RABBITMQ_SOCKET_STOMP_BROKER:/topic}"
       sockjs-endpoint: "${QUEUE_RABBITMQ_SOCKET_SOCKJS_ENDPOINT:/ws}"
     mqtt:
-      queue-name: "${QUEUE_RABBITMQ_MQTT_QUEUE_NAME:mqttQueue}"
+      queue-name: "${QUEUE_RABBITMQ_MQTT_QUEUE_NAME:telemetryRequestQueue}"
       exchange-name: "${QUEUE_RABBITMQ_MQTT_EXCHANGE_NAME:amq.topic}"
-      routing-key: "${QUEUE_RABBITMQ_MQTT_ROUTING_KEY:.v1.device.telemetry}"
+      routing-key: "${QUEUE_RABBITMQ_MQTT_ROUTING_KEY:.v1.device.telemetry.request}"
 
 security:
   jwt:

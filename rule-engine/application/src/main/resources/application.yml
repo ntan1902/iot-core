@@ -33,14 +33,15 @@ queue:
       username: "${QUEUE_RABBIT_MQ_USERNAME:guest}"
       password: "${QUEUE_RABBIT_MQ_PASSWORD:guest}"
       connection-timeout: "${QUEUE_RABBIT_MQ_CONNECTION_TIMEOUT:60000}"
-    device-client:
-      queue-name: "${QUEUE_RABBIT_MQ_QUEUE_NAME:deviceQueue}"
-      exchange-name: "${QUEUE_RABBIT_MQ_EXCHANGE_NAME:deviceExchange}"
-      host: "${QUEUE_RABBIT_MQ_HOST:localhost}"
-      port: "${QUEUE_RABBIT_MQ_PORT:5672}"
-      username: "${QUEUE_RABBIT_MQ_USERNAME:guest}"
-      password: "${QUEUE_RABBIT_MQ_PASSWORD:guest}"
-      connection-timeout: "${QUEUE_RABBIT_MQ_CONNECTION_TIMEOUT:60000}"
+    mqtt:
+      queue-name: "${QUEUE_RABBITMQ_MQTT_QUEUE_NAME:telemetryResponseQueue}"
+      exchange-name: "${QUEUE_RABBITMQ_MQTT_EXCHANGE_NAME:amq.topic}"
+      routing-key: "${QUEUE_RABBITMQ_MQTT_ROUTING_KEY:.v1.device.telemetry.response}"
+      host: "${QUEUE_RABBIT_MQ_MQTT_HOST:127.0.0.1}"
+      port: "${QUEUE_RABBIT_MQ_MQTT_PORT:5672}"
+      username: "${QUEUE_RABBIT_MQ_MQTT_USERNAME:guest}"
+      password: "${QUEUE_RABBIT_MQ_MQTT_PASSWORD:guest}"
+      connection-timeout: "${QUEUE_RABBIT_MQ_MQTT_CONNECTION_TIMEOUT:60000}"
 security:
   jwt:
     access-token-exp: "${JWT_ACCESS_TOKEN_EXP:604800}" # Number of seconds (2.5 hours)
