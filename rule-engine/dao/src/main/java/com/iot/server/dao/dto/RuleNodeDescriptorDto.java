@@ -24,6 +24,7 @@ public class RuleNodeDescriptorDto extends BaseDto<UUID> {
     private String relationNames;
 
     public RuleNodeDescriptorDto(RuleNodeDescriptorEntity ruleNodeDescriptorEntity) {
+        super(ruleNodeDescriptorEntity);
         this.type = ruleNodeDescriptorEntity.getType();
         this.name = ruleNodeDescriptorEntity.getName();
         this.configClazz = ruleNodeDescriptorEntity.getConfigClazz();

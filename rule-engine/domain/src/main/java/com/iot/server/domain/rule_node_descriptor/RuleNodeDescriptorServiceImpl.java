@@ -35,4 +35,10 @@ public class RuleNodeDescriptorServiceImpl implements RuleNodeDescriptorService 
                 .map(ruleNodeDescriptorEntity -> new RuleNodeDescriptorDto(ruleNodeDescriptorEntity))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteAll() {
+        log.trace("");
+        ruleNodeDescriptorDao.deleteAll();
+    }
 }

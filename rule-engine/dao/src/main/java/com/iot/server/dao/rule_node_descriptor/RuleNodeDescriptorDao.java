@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface RuleNodeDescriptorDao extends Dao<RuleNodeDescriptorEntity, UUID> {
     void saveAll(List<RuleNodeDescriptorEntity> ruleNodeDescriptorEntities);
+
+    void deleteAll();
 }

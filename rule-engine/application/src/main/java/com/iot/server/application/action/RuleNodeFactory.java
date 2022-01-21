@@ -30,6 +30,8 @@ public class RuleNodeFactory implements ApplicationContextAware {
         Map<String, Object> beanMap = applicationContext.getBeansWithAnnotation(RuleNode.class);
         log.info("RuleNode beans {}", beanMap);
 
+        ruleNodeDescriptorService.deleteAll();
+
         List<RuleNodeDescriptorDto> ruleNodeDescriptors = new ArrayList<>();
         for (Object object : beanMap.values()) {
             RuleNodeDescriptorDto ruleNodeDescriptor = getRuleNodeDescriptorDto(object);

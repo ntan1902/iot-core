@@ -9,4 +9,6 @@ public interface RuleNodeDescriptorService {
     void saveAll(List<RuleNodeDescriptorDto> ruleNodeDescriptorDtos);
 
     List<RuleNodeDescriptorDto> findAll();
+
+    void deleteAll();
 }

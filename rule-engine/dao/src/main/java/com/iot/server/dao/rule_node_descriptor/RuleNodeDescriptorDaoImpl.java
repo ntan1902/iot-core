@@ -28,4 +28,10 @@ public class RuleNodeDescriptorDaoImpl extends JpaAbstractDao<RuleNodeDescriptor
         log.debug("{}", ruleNodeDescriptorEntities);
         ruleNodeDescriptorRepository.saveAll(ruleNodeDescriptorEntities);
     }
+
+    @Override
+    public void deleteAll() {
+        log.debug("");
+        ruleNodeDescriptorRepository.deleteAll();
+    }
 }
