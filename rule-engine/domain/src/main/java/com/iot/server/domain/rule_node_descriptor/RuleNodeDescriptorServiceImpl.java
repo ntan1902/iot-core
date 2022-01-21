@@ -26,4 +26,13 @@ public class RuleNodeDescriptorServiceImpl implements RuleNodeDescriptorService 
                         .collect(Collectors.toList())
         );
     }
+
+    @Override
+    public List<RuleNodeDescriptorDto> findAll() {
+        log.trace("");
+        return ruleNodeDescriptorDao.findAll()
+                .stream()
+                .map(ruleNodeDescriptorEntity -> new RuleNodeDescriptorDto(ruleNodeDescriptorEntity))
+                .collect(Collectors.toList());
+    }
 }

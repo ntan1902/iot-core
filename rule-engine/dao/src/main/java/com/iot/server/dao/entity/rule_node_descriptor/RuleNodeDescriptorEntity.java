@@ -31,13 +31,13 @@ public class RuleNodeDescriptorEntity extends BaseEntity<UUID> {
     @Column(name = EntityConstants.RULE_NODE_DESCRIPTOR_CONFIG_CLAZZ_PROPERTY)
     private String configClazz;
 
-    @Column(name = EntityConstants.RULE_NODE_DESCRIPTOR_DEFAULT_CONFIG_PROPERTY)
+    @Column(name = EntityConstants.RULE_NODE_DESCRIPTOR_DEFAULT_CONFIG_PROPERTY, length = 10_000)
     private String defaultConfig;
 
     @Column(name = EntityConstants.RULE_NODE_DESCRIPTOR_CLAZZ_PROPERTY)
     private String clazz;
 
-    @Column(name = EntityConstants.RULE_NODE_RELATION_NAMES_PROPERTY)
+    @Column(name = EntityConstants.RULE_NODE_RELATION_NAMES_PROPERTY, length = 10_000)
     private String relationNames;
 
     public RuleNodeDescriptorEntity(RuleNodeDescriptorDto ruleNodeDescriptorDto) {

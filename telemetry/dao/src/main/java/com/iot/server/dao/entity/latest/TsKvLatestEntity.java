@@ -6,6 +6,7 @@ import com.iot.server.common.enums.KvType;
 import com.iot.server.common.model.Kv;
 import com.iot.server.dao.dto.TsKvDto;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -38,7 +39,7 @@ public class TsKvLatestEntity {
     @Column(name = EntityConstants.TS_KV_BOOL_V_PROPERTY)
     protected Boolean boolV;
 
-    @Column(name = EntityConstants.TS_KV_STRING_V_PROPERTY)
+    @Column(name = EntityConstants.TS_KV_STRING_V_PROPERTY, length = 10_000)
     protected String stringV;
 
     @Column(name = EntityConstants.TS_KV_LONG_V_PROPERTY)
@@ -47,7 +48,7 @@ public class TsKvLatestEntity {
     @Column(name = EntityConstants.TS_KV_DOUBLE_V_PROPERTY)
     protected Double doubleV;
 
-    @Column(name = EntityConstants.TS_KV_JSON_V_PROPERTY)
+    @Column(name = EntityConstants.TS_KV_JSON_V_PROPERTY, length = 10_000_000)
     protected String jsonV;
 
     public TsKvLatestEntity(Kv kv) {

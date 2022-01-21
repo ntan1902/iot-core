@@ -29,7 +29,7 @@ public class RuleNodeEntity extends BaseEntity<UUID> {
     @Column(name = EntityConstants.RULE_NODE_NAME_PROPERTY)
     private String name;
 
-    @Column(name = EntityConstants.RULE_NODE_CONFIG_PROPERTY)
+    @Column(name = EntityConstants.RULE_NODE_CONFIG_PROPERTY, length = 10_000)
     private String config;
 
     @Column(name = EntityConstants.RULE_NODE_ADDITIONAL_INFO_PROPERTY)

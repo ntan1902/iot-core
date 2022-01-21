@@ -1,5 +1,6 @@
 package com.iot.server.application.service;
 
+import com.iot.server.application.action.RuleNodeAction;
 import com.iot.server.application.condition.DefaultCondition;
 import com.iot.server.application.condition.RelationCondition;
 import com.iot.server.application.message.RuleNodeMsg;
@@ -42,6 +43,9 @@ public class RuleEngineServiceImpl implements RuleEngineService {
         if (ruleNodes != null && !ruleNodes.isEmpty()) {
             ruleNodes.forEach(ruleNode -> ruleNodeMap.put(ruleNode.getId(), ruleNode));
 
+            Facts facts = new Facts();
+            facts.put("msg", ruleNodeMsg);
+
             Rules rules = new Rules();
             registerRule(ruleChain.getFirstRuleNodeId(), "", ruleNodeMap, rules, true);
 
@@ -51,20 +55,27 @@ public class RuleEngineServiceImpl implements RuleEngineService {
             }
 
             RulesEngine rulesEngine = new InferenceRulesEngine();
-            rulesEngine.fire(rules, new Facts());
+            rulesEngine.fire(rules, facts);
         }
     }
 
-    private void registerRule(UUID ruleNodeId, String name, Map<UUID, RuleNodeDto> ruleNodeMap, Rules rules, boolean defaultCondition) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    private void registerRule(UUID ruleNodeId, String conditionName, Map<UUID, RuleNodeDto> ruleNodeMap, Rules rules, boolean defaultCondition) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         RuleNodeDto ruleNode = ruleNodeMap.get(ruleNodeId);
 
-        Condition condition = defaultCondition ? new DefaultCondition() : new RelationCondition(name);
-        Class<?> componentClazz = Class.forName(ruleNode.getClazz());
-        Action action = (Action) componentClazz.getDeclaredConstructor().newInstance();
+        Condition condition = defaultCondition ? new DefaultCondition() : new RelationCondition(conditionName);
 
+        RuleNodeAction action = null;
+        String name = "";
+        if (ruleNode != null) {
+            name = ruleNode.getName();
+
+            Class<?> componentClazz = Class.forName(ruleNode.getClazz());
+            action = (RuleNodeAction) componentClazz.getDeclaredConstructor().newInstance();
+            action.init(ruleNode.getConfig());
+        }
         rules.register(
                 new RuleBuilder()
-                        .name(ruleNode.getName())
+                        .name(name)
                         .when(condition)
                         .then(action)
                         .build()

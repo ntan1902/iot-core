@@ -6,6 +6,7 @@ import com.iot.server.common.enums.ReasonEnum;
 import com.iot.server.common.exception.IoTException;
 import com.iot.server.domain.relation.RelationService;
 import com.iot.server.domain.rule_chain.RuleChainService;
+import com.iot.server.domain.rule_node_descriptor.RuleNodeDescriptorService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public abstract class BaseHandler<T, U> {
 
     @Autowired
     protected RelationService relationService;
+
+    @Autowired
+    protected RuleNodeDescriptorService ruleNodeDescriptorService;
 
     protected abstract void validate(final T request) throws IoTException;
 

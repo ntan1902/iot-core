@@ -38,7 +38,7 @@ public class TsKvEntity {
     @Column(name = EntityConstants.TS_KV_BOOL_V_PROPERTY)
     protected Boolean boolV;
 
-    @Column(name = EntityConstants.TS_KV_STRING_V_PROPERTY)
+    @Column(name = EntityConstants.TS_KV_STRING_V_PROPERTY, length = 10_000)
     protected String stringV;
 
     @Column(name = EntityConstants.TS_KV_LONG_V_PROPERTY)
@@ -47,7 +47,7 @@ public class TsKvEntity {
     @Column(name = EntityConstants.TS_KV_DOUBLE_V_PROPERTY)
     protected Double doubleV;
 
-    @Column(name = EntityConstants.TS_KV_JSON_V_PROPERTY)
+    @Column(name = EntityConstants.TS_KV_JSON_V_PROPERTY, length = 10_000_000)
     protected String jsonV;
 
     public TsKvEntity(Kv kv) {
