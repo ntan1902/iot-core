@@ -52,7 +52,7 @@ public class EntityConstants {
     public static final String RULE_NODE_CHAIN_ID_PROPERTY = "rule_chain_id";
     public static final String RULE_NODE_CLAZZ_PROPERTY = "clazz";
     public static final String RULE_NODE_NAME_PROPERTY = "name";
-    public static final String RULE_NODE_CONFIGURATION_PROPERTY = "configuration";
+    public static final String RULE_NODE_CONFIG_PROPERTY = "configuration";
     public static final String RULE_NODE_ADDITIONAL_INFO_PROPERTY = "additionalInfo";
 
     public static final String RELATION_TABLE_NAME = "relation";
@@ -65,10 +65,10 @@ public class EntityConstants {
     public static final String RULE_NODE_DESCRIPTOR_TABLE_NAME = "rule_node_descriptor";
     public static final String RULE_NODE_DESCRIPTOR_TYPE_PROPERTY = "type";
     public static final String RULE_NODE_DESCRIPTOR_NAME_PROPERTY = "name";
-    public static final String RULE_NODE_DESCRIPTOR_CONFIGURATION_PROPERTY = "config";
+    public static final String RULE_NODE_DESCRIPTOR_CONFIG_CLAZZ_PROPERTY = "config_clazz";
     public static final String RULE_NODE_DESCRIPTOR_CLAZZ_PROPERTY = "clazz";
     public static final String RULE_NODE_RELATION_NAMES_PROPERTY = "relation_names";
-    public static final String RULE_NODE_DESCRIPTOR_DEFAULT_CONFIGURATION_PROPERTY = "default_config";
+    public static final String RULE_NODE_DESCRIPTOR_DEFAULT_CONFIG_PROPERTY = "default_config";
 
 
     private EntityConstants() {

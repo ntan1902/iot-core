@@ -18,7 +18,7 @@ import java.util.UUID;
 public class RuleNodeDescriptorDto extends BaseDto<UUID> {
     private String type;
     private String name;
-    private String config;
+    private String configClazz;
     private String defaultConfig;
     private String clazz;
     private String relationNames;
@@ -26,7 +26,7 @@ public class RuleNodeDescriptorDto extends BaseDto<UUID> {
     public RuleNodeDescriptorDto(RuleNodeDescriptorEntity ruleNodeDescriptorEntity) {
         this.type = ruleNodeDescriptorEntity.getType();
         this.name = ruleNodeDescriptorEntity.getName();
-        this.config = ruleNodeDescriptorEntity.getConfig();
+        this.configClazz = ruleNodeDescriptorEntity.getConfigClazz();
         this.defaultConfig = ruleNodeDescriptorEntity.getDefaultConfig();
         this.clazz = ruleNodeDescriptorEntity.getClazz();
         this.relationNames = ruleNodeDescriptorEntity.getRelationNames();

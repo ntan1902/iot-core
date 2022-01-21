@@ -56,7 +56,7 @@ public class RuleNodeFactory implements ApplicationContextAware {
         ActionConfiguration config = configClazz.getDeclaredConstructor().newInstance();
         ActionConfiguration defaultConfig = config.getDefaultConfiguration();
 
-        ruleNodeDescriptor.setConfig(GsonUtils.toJson(config));
+        ruleNodeDescriptor.setConfigClazz(configClazz.getName());
         ruleNodeDescriptor.setDefaultConfig(GsonUtils.toJson(defaultConfig));
         return ruleNodeDescriptor;
     }

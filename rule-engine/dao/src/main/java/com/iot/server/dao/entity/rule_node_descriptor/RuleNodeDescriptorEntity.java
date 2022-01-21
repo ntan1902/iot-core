@@ -28,10 +28,10 @@ public class RuleNodeDescriptorEntity extends BaseEntity<UUID> {
     @Column(name = EntityConstants.RULE_NODE_DESCRIPTOR_NAME_PROPERTY)
     private String name;
 
-    @Column(name = EntityConstants.RULE_NODE_DESCRIPTOR_CONFIGURATION_PROPERTY)
-    private String config;
+    @Column(name = EntityConstants.RULE_NODE_DESCRIPTOR_CONFIG_CLAZZ_PROPERTY)
+    private String configClazz;
 
-    @Column(name = EntityConstants.RULE_NODE_DESCRIPTOR_DEFAULT_CONFIGURATION_PROPERTY)
+    @Column(name = EntityConstants.RULE_NODE_DESCRIPTOR_DEFAULT_CONFIG_PROPERTY)
     private String defaultConfig;
 
     @Column(name = EntityConstants.RULE_NODE_DESCRIPTOR_CLAZZ_PROPERTY)
@@ -43,7 +43,7 @@ public class RuleNodeDescriptorEntity extends BaseEntity<UUID> {
     public RuleNodeDescriptorEntity(RuleNodeDescriptorDto ruleNodeDescriptorDto) {
         this.type = ruleNodeDescriptorDto.getType();
         this.name = ruleNodeDescriptorDto.getName();
-        this.config = ruleNodeDescriptorDto.getConfig();
+        this.configClazz = ruleNodeDescriptorDto.getConfigClazz();
         this.defaultConfig = ruleNodeDescriptorDto.getDefaultConfig();
         this.clazz = ruleNodeDescriptorDto.getClazz();
         this.relationNames = ruleNodeDescriptorDto.getRelationNames();
