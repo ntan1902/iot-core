@@ -18,17 +18,17 @@ import java.util.UUID;
 @SuperBuilder
 public class RuleNodeDto extends BaseDto<UUID> {
     private UUID ruleChainId;
-    private String type;
+    private String clazz;
     private String name;
-    private String configuration;
+    private String config;
     private String additionalInfo;
 
     public RuleNodeDto(RuleNodeEntity ruleNodeEntity) {
         super(ruleNodeEntity);
         this.ruleChainId = ruleNodeEntity.getRuleChainId();
-        this.type = ruleNodeEntity.getType();
+        this.clazz = ruleNodeEntity.getClazz();
         this.name = ruleNodeEntity.getName();
-        this.configuration = ruleNodeEntity.getConfiguration();
+        this.config = ruleNodeEntity.getConfig();
         this.additionalInfo = ruleNodeEntity.getAdditionalInfo();
     }
 }

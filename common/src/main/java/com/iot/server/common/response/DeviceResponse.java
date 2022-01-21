@@ -17,4 +17,5 @@ public class DeviceResponse {
     private UUID firmwareId;
     private UUID softwareId;
     private UUID userId;
+    private UUID ruleChainId;
 }

@@ -2,6 +2,7 @@ package com.iot.server.domain;
 
 import com.google.gson.JsonParser;
 import com.iot.server.common.enums.DeviceCredentialsType;
+import com.iot.server.common.enums.MsgType;
 import com.iot.server.common.enums.TransportType;
 import com.iot.server.common.model.Kv;
 import com.iot.server.common.model.TelemetryMsg;
@@ -37,11 +38,14 @@ public class TransportServiceImpl implements TransportService {
             TelemetryMsg telemetryMsg = TelemetryMsg.builder()
                     .entityId(deviceResponse.getId())
                     .userId(deviceResponse.getUserId())
+                    .ruleChainId(deviceResponse.getRuleChainId())
+                    .tenantId(deviceResponse.getTenantId())
                     .kvs(kvs)
                     .build();
 
             rabbitProducerTemplate.send(
-                    GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), telemetryMsg)));
+                    GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), telemetryMsg, MsgType.POST_TELEMETRY_REQUEST.name()))
+            );
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
         }

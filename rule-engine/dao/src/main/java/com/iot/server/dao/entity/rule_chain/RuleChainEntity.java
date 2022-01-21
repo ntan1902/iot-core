@@ -3,12 +3,12 @@ package com.iot.server.dao.entity.rule_chain;
 import com.iot.server.common.entity.BaseEntity;
 import com.iot.server.common.entity.EntityConstants;
 import com.iot.server.dao.dto.RuleChainDto;
-import com.iot.server.dao.entity.rule_node.RuleNodeEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.UUID;
 
 @Getter

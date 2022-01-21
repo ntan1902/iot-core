@@ -34,7 +34,7 @@ public final class RelationEntity {
     @Column(name = EntityConstants.RELATION_TO_TYPE_PROPERTY)
     private String toType;
 
-    @Column(name = EntityConstants.RELATION_TYPE_PROPERTY)
+    @Column(name = EntityConstants.RELATION_NAME_PROPERTY)
     private String name;
 
     public RelationEntity(RelationDto relationDto) {

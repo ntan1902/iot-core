@@ -3,7 +3,6 @@ package com.iot.server.dao.entity.rule_node;
 import com.iot.server.common.entity.BaseEntity;
 import com.iot.server.common.entity.EntityConstants;
 import com.iot.server.dao.dto.RuleNodeDto;
-import com.iot.server.dao.entity.rule_chain.RuleChainEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -24,14 +23,14 @@ public class RuleNodeEntity extends BaseEntity<UUID> {
     @Column(name = EntityConstants.RULE_NODE_CHAIN_ID_PROPERTY)
     private UUID ruleChainId;
 
-    @Column(name = EntityConstants.RULE_NODE_TYPE_PROPERTY)
-    private String type;
+    @Column(name = EntityConstants.RULE_NODE_CLAZZ_PROPERTY)
+    private String clazz;
 
     @Column(name = EntityConstants.RULE_NODE_NAME_PROPERTY)
     private String name;
 
     @Column(name = EntityConstants.RULE_NODE_CONFIGURATION_PROPERTY)
-    private String configuration;
+    private String config;
 
     @Column(name = EntityConstants.RULE_NODE_ADDITIONAL_INFO_PROPERTY)
     private String additionalInfo;
@@ -39,9 +38,9 @@ public class RuleNodeEntity extends BaseEntity<UUID> {
     public RuleNodeEntity(RuleNodeDto ruleNodeDto) {
         super(ruleNodeDto);
         this.ruleChainId = ruleNodeDto.getRuleChainId();
-        this.type = ruleNodeDto.getType();
+        this.clazz = ruleNodeDto.getClazz();
         this.name = ruleNodeDto.getName();
-        this.configuration = ruleNodeDto.getConfiguration();
+        this.config = ruleNodeDto.getConfig();
         this.additionalInfo = ruleNodeDto.getAdditionalInfo();
     }
 }
