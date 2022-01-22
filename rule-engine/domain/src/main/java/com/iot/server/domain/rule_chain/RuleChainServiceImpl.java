@@ -119,6 +119,7 @@ public class RuleChainServiceImpl implements RuleChainService {
     private void deleteNodes(List<RuleNodeEntity> foundRuleNodes, List<RuleNodeEntity> toDelete) {
         for (RuleNodeEntity ruleNode : toDelete) {
             relationDao.deleteRelations(ruleNode.getId());
+            ruleNodeDao.removeById(ruleNode.getId());
             foundRuleNodes.remove(ruleNode);
         }
     }
