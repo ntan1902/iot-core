@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     private Config telemetry;
+    private Config ruleEngine;
     private Config mqtt;
 
     public ConnectionFactory createConnectionFactory(Config config) {
@@ -49,9 +50,9 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public RabbitTemplate telemetryRabbitTemplate() {
-        RabbitTemplate rabbitTemplate = new RabbitTemplate(createConnectionFactory(telemetry));
-        rabbitTemplate.setExchange(telemetry.exchangeName);
+    public RabbitTemplate ruleEngineRabbitTemplate() {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(createConnectionFactory(ruleEngine));
+        rabbitTemplate.setExchange(ruleEngine.exchangeName);
         return rabbitTemplate;
     }
 

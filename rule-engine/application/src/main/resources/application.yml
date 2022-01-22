@@ -27,12 +27,19 @@ queue:
   rabbitmq:
     rule-engine:
       queue-name: "${QUEUE_RABBIT_MQ_QUEUE_NAME:ruleEngineQueue}"
-      exchange-name: "${QUEUE_RABBIT_MQ_EXCHANGE_NAME:telemetryExchange}"
+      exchange-name: "${QUEUE_RABBIT_MQ_EXCHANGE_NAME:ruleEngineExchange}"
       host: "${QUEUE_RABBIT_MQ_HOST:localhost}"
       port: "${QUEUE_RABBIT_MQ_PORT:5672}"
       username: "${QUEUE_RABBIT_MQ_USERNAME:guest}"
       password: "${QUEUE_RABBIT_MQ_PASSWORD:guest}"
       connection-timeout: "${QUEUE_RABBIT_MQ_CONNECTION_TIMEOUT:60000}"
+    telemetry:
+      exchange-name: "${QUEUE_RABBIT_MQ_TELEMETRY_EXCHANGE_NAME:telemetryExchange}"
+      host: "${QUEUE_RABBIT_MQ_TELEMETRY_HOST:localhost}"
+      port: "${QUEUE_RABBIT_MQ_TELEMETRY_PORT:5672}"
+      username: "${QUEUE_RABBIT_MQ_TELEMETRY_USERNAME:guest}"
+      password: "${QUEUE_RABBIT_MQ_TELEMETRY_PASSWORD:guest}"
+      connection-timeout: "${QUEUE_RABBIT_MQ_TELEMETRY_CONNECTION_TIMEOUT:60000}"
     mqtt:
       queue-name: "${QUEUE_RABBITMQ_MQTT_QUEUE_NAME:telemetryResponseQueue}"
       exchange-name: "${QUEUE_RABBITMQ_MQTT_EXCHANGE_NAME:amq.topic}"

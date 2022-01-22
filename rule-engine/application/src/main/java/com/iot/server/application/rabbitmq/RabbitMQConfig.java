@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 public class RabbitMQConfig {
 
     private Config ruleEngine;
+    private Config telemetry;
     private Config mqtt;
 
     public ConnectionFactory createConnectionFactory(Config config) {
@@ -41,13 +42,18 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public FanoutExchange telemetryExchange() {
+    public FanoutExchange ruleEngineExchange() {
         return new FanoutExchange(ruleEngine.exchangeName);
     }
 
     @Bean
-    public Binding telemetryBinding(Queue ruleEngineQueue, FanoutExchange telemetryExchange) {
-        return BindingBuilder.bind(ruleEngineQueue).to(telemetryExchange);
+    public Binding ruleEngineBinding(Queue ruleEngineQueue, FanoutExchange ruleEngineExchange) {
+        return BindingBuilder.bind(ruleEngineQueue).to(ruleEngineExchange);
+    }
+
+    @Bean
+    public FanoutExchange telemetryExchange() {
+        return new FanoutExchange(telemetry.exchangeName);
     }
 
     @Bean
@@ -74,12 +80,19 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public RabbitTemplate telemetryRabbitTemplate() {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(createConnectionFactory(telemetry));
+        rabbitTemplate.setExchange(telemetry.exchangeName);
+        return rabbitTemplate;
+    }
+
+    @Bean
     public RabbitAdmin rabbitAdmin() {
         RabbitAdmin rabbitAdmin = new RabbitAdmin(createConnectionFactory(ruleEngine));
 
-        rabbitAdmin.declareExchange(telemetryExchange());
+        rabbitAdmin.declareExchange(ruleEngineExchange());
         rabbitAdmin.declareQueue(ruleEngineQueue());
-        rabbitAdmin.declareBinding(telemetryBinding(ruleEngineQueue(), telemetryExchange()));
+        rabbitAdmin.declareBinding(ruleEngineBinding(ruleEngineQueue(), ruleEngineExchange()));
 
         return rabbitAdmin;
     }

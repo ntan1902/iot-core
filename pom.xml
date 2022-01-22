@@ -8,7 +8,6 @@
         <module>auth</module>
         <module>transport</module>
         <module>rest-client</module>
-        <module>queue</module>
         <module>telemetry</module>
         <module>rule-engine</module>
     </modules>

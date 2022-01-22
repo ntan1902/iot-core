@@ -10,11 +10,11 @@ import com.iot.server.common.request.ValidateDeviceRequest;
 import com.iot.server.common.response.DeviceResponse;
 import com.iot.server.common.utils.GsonUtils;
 import com.iot.server.domain.model.ValidateDeviceToken;
-import com.iot.server.queue.QueueProducerTemplate;
-import com.iot.server.queue.message.QueueMsg;
+import com.iot.server.common.queue.QueueMsg;
 import com.iot.server.rest.client.EntityServiceClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.UUID;
 public class TransportServiceImpl implements TransportService {
 
     private final EntityServiceClient entityServiceClient;
-    private final QueueProducerTemplate rabbitProducerTemplate;
+    private final RabbitTemplate ruleEngineRabbitTemplate;
 
     @Override
     public void process(TransportType transportType, ValidateDeviceToken validateDeviceToken, String json) {
@@ -43,7 +43,7 @@ public class TransportServiceImpl implements TransportService {
                     .kvs(kvs)
                     .build();
 
-            rabbitProducerTemplate.send(
+            ruleEngineRabbitTemplate.convertAndSend(
                     GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), telemetryMsg, MsgType.POST_TELEMETRY_REQUEST.name()))
             );
         } catch (Exception ex) {

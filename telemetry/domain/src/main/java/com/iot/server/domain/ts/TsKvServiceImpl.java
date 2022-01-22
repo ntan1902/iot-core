@@ -1,14 +1,15 @@
 package com.iot.server.domain.ts;
 
+import com.iot.server.common.enums.MsgType;
 import com.iot.server.common.model.BaseReadQuery;
 import com.iot.server.common.model.Kv;
 import com.iot.server.common.model.TelemetryMsg;
+import com.iot.server.common.queue.QueueMsg;
 import com.iot.server.dao.dto.TsKvDto;
 import com.iot.server.dao.entity.latest.TsKvLatestEntity;
 import com.iot.server.dao.entity.ts.TsKvEntity;
 import com.iot.server.dao.latest.TsKvLatestDao;
 import com.iot.server.dao.ts.TsKvDao;
-import com.iot.server.queue.message.QueueMsg;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,6 @@ public class TsKvServiceImpl implements TsKvService {
 
     @Override
     public void saveOrUpdate(QueueMsg<TelemetryMsg> queueMsg) {
-        log.trace("{}", queueMsg);
-
         List<TsKvEntity> tsKvEntities = new ArrayList<>();
         List<TsKvLatestEntity> tsKvLatestEntities = new ArrayList<>();
 
@@ -47,7 +46,9 @@ public class TsKvServiceImpl implements TsKvService {
         }
 
         CompletableFuture.runAsync(() -> tsKvDao.save(tsKvEntities), Executors.newSingleThreadExecutor());
-        CompletableFuture.runAsync(() -> tsKvLatestDao.save(tsKvLatestEntities), Executors.newSingleThreadExecutor());
+        if (queueMsg.getType().equals(MsgType.SAVE_LATEST_TELEMETRY.name())) {
+            CompletableFuture.runAsync(() -> tsKvLatestDao.save(tsKvLatestEntities), Executors.newSingleThreadExecutor());
+        }
     }
 
     @Override

@@ -2,11 +2,19 @@ package com.iot.server.application.action.save_ts;
 
 import com.iot.server.application.action.RuleNode;
 import com.iot.server.application.action.RuleNodeAction;
+import com.iot.server.application.action.ctx.RuleNodeCtx;
 import com.iot.server.application.message.RuleNodeMsg;
+import com.iot.server.common.enums.MsgType;
+import com.iot.server.common.model.TelemetryMsg;
+import com.iot.server.common.queue.QueueMsg;
 import com.iot.server.common.utils.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.jeasy.rules.api.Action;
 import org.jeasy.rules.api.Facts;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Slf4j
 @RuleNode(
@@ -17,9 +25,11 @@ import org.jeasy.rules.api.Facts;
 public class SaveTsAction implements RuleNodeAction {
 
     private SaveTsConfiguration config;
+    private RuleNodeCtx ctx;
 
     @Override
-    public void init(String config) {
+    public void init(RuleNodeCtx ctx, String config) {
+        this.ctx = ctx;
         this.config = GsonUtils.fromJson(config, SaveTsConfiguration.class);
     }
 
@@ -27,6 +37,19 @@ public class SaveTsAction implements RuleNodeAction {
     public void execute(Facts facts) throws Exception {
         log.trace("{}", facts);
         RuleNodeMsg msg = facts.get("msg");
+
+        TelemetryMsg telemetryMsg = GsonUtils.fromJson(msg.getData(), TelemetryMsg.class);
+
+        String type = "";
+        if (config.isSkipLatestPersistence()) {
+            type = MsgType.SAVE_TELEMETRY.name();
+        } else {
+            type = MsgType.SAVE_LATEST_TELEMETRY.name();
+        }
+
+        ctx.getTelemetryTemplate().convertAndSend(
+                GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), telemetryMsg, type))
+        );
     }
 
 }

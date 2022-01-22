@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import com.iot.server.common.model.TelemetryMsg;
 import com.iot.server.common.utils.GsonUtils;
 import com.iot.server.domain.WebSocketService;
-import com.iot.server.queue.message.QueueMsg;
+import com.iot.server.common.queue.QueueMsg;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;

@@ -13,6 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class RuleNodeMsg {
     private UUID ruleChainId;
+    private UUID entityId;
     private UUID tenantId;
     private UUID userId;
     private String data;

@@ -1,6 +1,7 @@
 package com.iot.server.application.service;
 
 import com.iot.server.application.action.RuleNodeAction;
+import com.iot.server.application.action.ctx.RuleNodeCtx;
 import com.iot.server.application.condition.DefaultCondition;
 import com.iot.server.application.condition.RelationCondition;
 import com.iot.server.application.message.RuleNodeMsg;
@@ -16,7 +17,6 @@ import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.Rules;
 import org.jeasy.rules.api.RulesEngine;
 import org.jeasy.rules.core.DefaultRulesEngine;
-import org.jeasy.rules.core.InferenceRulesEngine;
 import org.jeasy.rules.core.RuleBuilder;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +34,7 @@ public class RuleEngineServiceImpl implements RuleEngineService {
 
     private final RuleChainService ruleChainService;
     private final RelationService relationService;
+    private final RuleNodeCtx ruleNodeCtx;
 
     @Override
     public void process(RuleNodeMsg ruleNodeMsg) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
@@ -79,7 +80,7 @@ public class RuleEngineServiceImpl implements RuleEngineService {
 
             Class<?> componentClazz = Class.forName(ruleNode.getClazz());
             action = (RuleNodeAction) componentClazz.getDeclaredConstructor().newInstance();
-            action.init(ruleNode.getConfig());
+            action.init(ruleNodeCtx, ruleNode.getConfig());
         }
         rules.register(
                 new RuleBuilder()

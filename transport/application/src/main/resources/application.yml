@@ -15,6 +15,13 @@ queue:
       username: "${QUEUE_RABBITMQ_TELEMETRY_USERNAME:guest}"
       password: "${QUEUE_RABBITMQ_TELEMETRY_PASSWORD:guest}"
       connection-timeout: "${QUEUE_RABBITMQ_TELEMETRY_CONNECTION_TIMEOUT:60000}"
+    rule-engine:
+      exchange-name: "${QUEUE_RABBITMQ_TELEMETRY_EXCHANGE_NAME:ruleEngineExchange}"
+      host: "${QUEUE_RABBITMQ_TELEMETRY_HOST:localhost}"
+      port: "${QUEUE_RABBITMQ_TELEMETRY_PORT:5672}"
+      username: "${QUEUE_RABBITMQ_TELEMETRY_USERNAME:guest}"
+      password: "${QUEUE_RABBITMQ_TELEMETRY_PASSWORD:guest}"
+      connection-timeout: "${QUEUE_RABBITMQ_TELEMETRY_CONNECTION_TIMEOUT:60000}"
     socket:
       host: "${QUEUE_RABBITMQ_SOCKET_HOST:localhost}"
       port: "${QUEUE_RABBITMQ_SOCKET_PORT:61613}"

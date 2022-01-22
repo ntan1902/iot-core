@@ -3,6 +3,7 @@ package com.iot.server.application.action.msg_type_switch;
 import com.iot.server.application.action.EmptyConfiguration;
 import com.iot.server.application.action.RuleNode;
 import com.iot.server.application.action.RuleNodeAction;
+import com.iot.server.application.action.ctx.RuleNodeCtx;
 import com.iot.server.application.message.RuleNodeMsg;
 import com.iot.server.common.enums.MsgType;
 import com.iot.server.common.utils.GsonUtils;
@@ -22,9 +23,11 @@ import org.jeasy.rules.api.Facts;
 public class MsgTypeSwitchAction implements RuleNodeAction {
 
     private EmptyConfiguration config;
+    private RuleNodeCtx ctx;
 
     @Override
-    public void init(String config) {
+    public void init(RuleNodeCtx ctx, String config) {
+        this.ctx = ctx;
         this.config = GsonUtils.fromJson(config, EmptyConfiguration.class);
     }
 

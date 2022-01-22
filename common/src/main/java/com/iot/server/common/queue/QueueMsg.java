@@ -1,4 +1,4 @@
-package com.iot.server.queue.message;
+package com.iot.server.common.queue;
 
 import java.util.UUID;
 
