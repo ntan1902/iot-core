@@ -5,7 +5,6 @@ import com.iot.server.application.message.RuleNodeMsg;
 import com.iot.server.application.service.RuleEngineService;
 import com.iot.server.common.model.TelemetryMsg;
 import com.iot.server.common.utils.GsonUtils;
-import com.iot.server.queue.QueueProducerTemplate;
 import com.iot.server.queue.message.QueueMsg;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

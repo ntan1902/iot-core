@@ -15,6 +15,7 @@ import org.jeasy.rules.api.Condition;
 import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.Rules;
 import org.jeasy.rules.api.RulesEngine;
+import org.jeasy.rules.core.DefaultRulesEngine;
 import org.jeasy.rules.core.InferenceRulesEngine;
 import org.jeasy.rules.core.RuleBuilder;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,7 @@ public class RuleEngineServiceImpl implements RuleEngineService {
                 registerRule(relation.getToId(), relation.getName(), ruleNodeMap, rules, false);
             }
 
-            RulesEngine rulesEngine = new InferenceRulesEngine();
+            RulesEngine rulesEngine = new DefaultRulesEngine();
             rulesEngine.fire(rules, facts);
         }
     }
