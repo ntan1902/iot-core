@@ -7,6 +7,7 @@ import com.iot.server.domain.WebSocketService;
 import com.iot.server.queue.message.QueueMsg;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
@@ -24,8 +25,14 @@ public class RabbitMQConsumerTemplate {
                 }.getType());
         log.info("Consume message {}", queueMsg);
 
-        TelemetryMsg telemetryMsg = queueMsg.getData();
-        webSocketService.send(telemetryMsg);
+        try {
+            TelemetryMsg telemetryMsg = queueMsg.getData();
+            webSocketService.send(telemetryMsg);
+        } catch (RuntimeException exception) {
+            log.error("Error occurred", exception);
+            throw new AmqpRejectAndDontRequeueException(exception);
+        }
+
     }
 
 }

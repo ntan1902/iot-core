@@ -8,6 +8,7 @@ import com.iot.server.common.utils.GsonUtils;
 import com.iot.server.queue.message.QueueMsg;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,12 @@ public class RabbitMQConsumerTemplate {
         log.trace("Consume message {}", queueMsg);
 
         RuleNodeMsg ruleNodeMsg = getRuleNodeMsg(queueMsg);
-        ruleEngineService.process(ruleNodeMsg);
+        try {
+            ruleEngineService.process(ruleNodeMsg);
+        } catch (RuntimeException exception) {
+            log.error("Error occurred", exception);
+            throw new AmqpRejectAndDontRequeueException(exception);
+        }
     }
 
     private RuleNodeMsg getRuleNodeMsg(QueueMsg<TelemetryMsg> queueMsg) {
