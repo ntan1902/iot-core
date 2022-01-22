@@ -76,6 +76,7 @@ public class RelationServiceImpl implements RelationService {
                         .fromType(relationEntity.getFromType())
                         .toId(relationEntity.getToId())
                         .toType(relationEntity.getToType())
+                        .name(relationEntity.getName())
                         .build())
                 .collect(Collectors.toList());
         return relationCompositeKeys.stream()
