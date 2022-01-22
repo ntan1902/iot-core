@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UpdateRuleNodesRequest {
     private String ruleChainId;
+    private Integer firstRuleNodeIndex;
     private List<RuleNodeRelation> relations;
     private List<RuleNodeDto> ruleNodes;
 }

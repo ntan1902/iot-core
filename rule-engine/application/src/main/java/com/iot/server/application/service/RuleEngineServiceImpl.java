@@ -11,7 +11,10 @@ import com.iot.server.domain.relation.RelationService;
 import com.iot.server.domain.rule_chain.RuleChainService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jeasy.rules.api.*;
+import org.jeasy.rules.api.Condition;
+import org.jeasy.rules.api.Facts;
+import org.jeasy.rules.api.Rules;
+import org.jeasy.rules.api.RulesEngine;
 import org.jeasy.rules.core.InferenceRulesEngine;
 import org.jeasy.rules.core.RuleBuilder;
 import org.springframework.stereotype.Service;
@@ -59,7 +62,11 @@ public class RuleEngineServiceImpl implements RuleEngineService {
         }
     }
 
-    private void registerRule(UUID ruleNodeId, String conditionName, Map<UUID, RuleNodeDto> ruleNodeMap, Rules rules, boolean defaultCondition) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    private void registerRule(UUID ruleNodeId,
+                              String conditionName,
+                              Map<UUID, RuleNodeDto> ruleNodeMap,
+                              Rules rules,
+                              boolean defaultCondition) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         RuleNodeDto ruleNode = ruleNodeMap.get(ruleNodeId);
 
         Condition condition = defaultCondition ? new DefaultCondition() : new RelationCondition(conditionName);

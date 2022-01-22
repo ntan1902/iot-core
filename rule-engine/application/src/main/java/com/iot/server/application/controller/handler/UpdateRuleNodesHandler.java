@@ -28,12 +28,14 @@ public class UpdateRuleNodesHandler extends BaseHandler<UpdateRuleNodesRequest, 
         UpdateRuleNodesResponse response = new UpdateRuleNodesResponse();
 
         UUID ruleChainId = toUUID(request.getRuleChainId());
+        Integer firstRuleNodeIndex = request.getFirstRuleNodeIndex();
         List<RuleNodeDto> ruleNodeDtos = request.getRuleNodes();
         List<RuleNodeRelation> ruleNodeRelations = request.getRelations();
 
         List<RuleNodeEntity> ruleNodeEntities = getRuleNodeEntities(ruleNodeDtos, ruleChainId);
         List<RuleNodeDto> updatedRuleNodes = ruleChainService.updateRuleNodes(
                 ruleChainId,
+                firstRuleNodeIndex,
                 ruleNodeEntities
         );
         response.setRuleNodes(updatedRuleNodes);
@@ -49,7 +51,6 @@ public class UpdateRuleNodesHandler extends BaseHandler<UpdateRuleNodesRequest, 
 
         return response;
     }
-
 
     private List<RuleNodeEntity> getRuleNodeEntities(List<RuleNodeDto> ruleNodeDtos, UUID ruleChainId) {
         List<RuleNodeEntity> ruleNodeEntities = ruleNodeDtos.stream()

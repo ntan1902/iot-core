@@ -17,5 +17,5 @@ public interface RuleChainService {
 
     RuleChainDto createRuleChain(RuleChainDto ruleChainDto);
 
-    List<RuleNodeDto> updateRuleNodes(UUID ruleChainId, List<RuleNodeEntity> ruleNodeEntities);
+    List<RuleNodeDto> updateRuleNodes(UUID ruleChainId, Integer firstRuleNodeIndex, List<RuleNodeEntity> ruleNodeEntities);
 }

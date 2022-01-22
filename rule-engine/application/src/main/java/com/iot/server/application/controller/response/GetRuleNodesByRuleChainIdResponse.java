@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetRuleNodesByRuleChainIdResponse {
+    private Integer firstRuleNodeIndex;
     private List<RuleNodeRelation> relations;
     private List<RuleNodeDto> ruleNodes;
 }

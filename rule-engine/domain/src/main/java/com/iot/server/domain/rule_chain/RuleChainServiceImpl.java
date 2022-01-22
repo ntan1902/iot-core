@@ -64,10 +64,11 @@ public class RuleChainServiceImpl implements RuleChainService {
     }
 
     @Override
-    public List<RuleNodeDto> updateRuleNodes(UUID ruleChainId, List<RuleNodeEntity> ruleNodeEntities) {
+    public List<RuleNodeDto> updateRuleNodes(UUID ruleChainId, Integer firstRuleNodeIndex, List<RuleNodeEntity> ruleNodeEntities) {
         log.info("{}, {}", ruleChainId, ruleNodeEntities);
-        RuleChainEntity ruleChainEntity = ruleChainDao.findById(ruleChainId);
 
+
+        RuleChainEntity ruleChainEntity = ruleChainDao.findById(ruleChainId);
         if (ruleChainEntity == null) {
             log.error("Rule chain is not found {}", ruleChainId);
             throw new IoTException(ReasonEnum.INVALID_PARAMS, "Rule chain is not found");
@@ -76,27 +77,24 @@ public class RuleChainServiceImpl implements RuleChainService {
         List<RuleNodeEntity> foundRuleNodes = ruleNodeDao.findAllByRuleChainId(ruleChainId);
         List<RuleNodeEntity> toDelete = new ArrayList<>();
 
-        deleteOrUpdateFoundRuleNodes(ruleNodeEntities, foundRuleNodes, toDelete);
+        deleteOrUpdateFoundNodes(ruleNodeEntities, foundRuleNodes, toDelete);
 
-        for (RuleNodeEntity ruleNode : ruleNodeEntities) {
-            if (ruleNode.getId() == null) {
-                foundRuleNodes.add(ruleNode);
-            }
-        }
-
-        for (RuleNodeEntity ruleNode : toDelete) {
-            relationDao.deleteRelations(ruleNode.getId());
-            foundRuleNodes.remove(ruleNode);
-        }
+        addNodes(ruleNodeEntities, foundRuleNodes);
+        deleteNodes(foundRuleNodes, toDelete);
 
         List<RuleNodeEntity> savedRuleNodes = ruleNodeDao.saveAllAndFlush(foundRuleNodes);
+        ruleChainEntity.setFirstRuleNodeId(
+                savedRuleNodes.get(firstRuleNodeIndex).getId()
+        );
 
         return savedRuleNodes.stream()
                 .map(RuleNodeDto::new)
                 .collect(Collectors.toList());
     }
 
-    private void deleteOrUpdateFoundRuleNodes(List<RuleNodeEntity> ruleNodeEntities, List<RuleNodeEntity> foundRuleNodes, List<RuleNodeEntity> toDelete) {
+    private void deleteOrUpdateFoundNodes(List<RuleNodeEntity> ruleNodeEntities,
+                                          List<RuleNodeEntity> foundRuleNodes,
+                                          List<RuleNodeEntity> toDelete) {
         Map<UUID, Integer> ruleNodeIndexMap = getRuleNodeIndexMap(ruleNodeEntities);
         for (RuleNodeEntity foundRuleNode : foundRuleNodes) {
             Integer index = ruleNodeIndexMap.getOrDefault(foundRuleNode.getId(), null);
@@ -107,6 +105,21 @@ public class RuleChainServiceImpl implements RuleChainService {
                 int i = foundRuleNodes.indexOf(foundRuleNode);
                 foundRuleNodes.set(i, ruleNodeEntities.get(index));
             }
+        }
+    }
+
+    private void addNodes(List<RuleNodeEntity> ruleNodeEntities, List<RuleNodeEntity> foundRuleNodes) {
+        for (RuleNodeEntity ruleNode : ruleNodeEntities) {
+            if (ruleNode.getId() == null) {
+                foundRuleNodes.add(ruleNode);
+            }
+        }
+    }
+
+    private void deleteNodes(List<RuleNodeEntity> foundRuleNodes, List<RuleNodeEntity> toDelete) {
+        for (RuleNodeEntity ruleNode : toDelete) {
+            relationDao.deleteRelations(ruleNode.getId());
+            foundRuleNodes.remove(ruleNode);
         }
     }
 

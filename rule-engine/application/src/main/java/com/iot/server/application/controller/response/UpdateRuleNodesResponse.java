@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateRuleNodesResponse {
-    private String ruleChainId;
     private List<RuleNodeRelation> relations;
     private List<RuleNodeDto> ruleNodes;
 }
