@@ -71,7 +71,6 @@ public class RuleChainServiceImpl implements RuleChainService {
     public List<RuleNodeDto> updateRuleNodes(UUID ruleChainId, Integer firstRuleNodeIndex, List<RuleNodeEntity> ruleNodeEntities) {
         log.info("{}, {}", ruleChainId, ruleNodeEntities);
 
-
         RuleChainEntity ruleChainEntity = ruleChainDao.findById(ruleChainId);
         if (ruleChainEntity == null) {
             log.error("Rule chain is not found {}", ruleChainId);
@@ -86,20 +85,23 @@ public class RuleChainServiceImpl implements RuleChainService {
         addNodes(ruleNodeEntities, foundRuleNodes);
         deleteNodes(foundRuleNodes, toDelete);
 
-        List<RuleNodeEntity> savedRuleNodes = ruleNodeDao.saveAllAndFlush(foundRuleNodes);
+        if (!foundRuleNodes.isEmpty()) {
+            List<RuleNodeEntity> savedRuleNodes = ruleNodeDao.saveAllAndFlush(foundRuleNodes);
 
-        UUID firstRuleNodeId = null;
-        if (firstRuleNodeIndex != null && firstRuleNodeIndex >= 0) {
-            firstRuleNodeId = savedRuleNodes.get(firstRuleNodeIndex).getId();
+            UUID firstRuleNodeId = null;
+            if (firstRuleNodeIndex != null && firstRuleNodeIndex >= 0) {
+                firstRuleNodeId = savedRuleNodes.get(firstRuleNodeIndex).getId();
+            }
+
+            if (firstRuleNodeId != null) {
+                ruleChainEntity.setFirstRuleNodeId(firstRuleNodeId);
+            }
+
+            return savedRuleNodes.stream()
+                    .map(RuleNodeDto::new)
+                    .collect(Collectors.toList());
         }
-
-        if (firstRuleNodeId != null) {
-            ruleChainEntity.setFirstRuleNodeId(firstRuleNodeId);
-        }
-
-        return savedRuleNodes.stream()
-                .map(RuleNodeDto::new)
-                .collect(Collectors.toList());
+        return Collections.emptyList();
     }
 
     private void deleteOrUpdateFoundNodes(List<RuleNodeEntity> ruleNodeEntities,

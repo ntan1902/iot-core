@@ -51,6 +51,7 @@ public class RelationServiceImpl implements RelationService {
                     .fromType(foundRelation.getFromType())
                     .toId(foundRelation.getToId())
                     .toType(foundRelation.getToType())
+                    .name(foundRelation.getName())
                     .build();
 
             Integer index = relationIndexMap.get(key);
