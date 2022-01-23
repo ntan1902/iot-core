@@ -89,10 +89,17 @@
             <artifactId>easy-rules-mvel</artifactId>
             <version>4.1.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.jeasy</groupId>
             <artifactId>easy-rules-support</artifactId>
             <version>4.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.javadelight</groupId>
+            <artifactId>delight-graaljs-sandbox</artifactId>
+            <version>0.1.2</version>
         </dependency>
 
     </dependencies>

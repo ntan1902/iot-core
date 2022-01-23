@@ -87,9 +87,15 @@ public class RuleChainServiceImpl implements RuleChainService {
         deleteNodes(foundRuleNodes, toDelete);
 
         List<RuleNodeEntity> savedRuleNodes = ruleNodeDao.saveAllAndFlush(foundRuleNodes);
-        ruleChainEntity.setFirstRuleNodeId(
-                savedRuleNodes.get(firstRuleNodeIndex).getId()
-        );
+
+        UUID firstRuleNodeId = null;
+        if (firstRuleNodeIndex != null && firstRuleNodeIndex >= 0) {
+            firstRuleNodeId = savedRuleNodes.get(firstRuleNodeIndex).getId();
+        }
+
+        if (firstRuleNodeId != null) {
+            ruleChainEntity.setFirstRuleNodeId(firstRuleNodeId);
+        }
 
         return savedRuleNodes.stream()
                 .map(RuleNodeDto::new)
