@@ -1,7 +1,5 @@
 package com.iot.server.application;
 
-import delight.graaljssandbox.GraalSandbox;
-import delight.graaljssandbox.GraalSandboxes;
 import delight.nashornsandbox.NashornSandbox;
 import delight.nashornsandbox.NashornSandboxes;
 import org.springframework.boot.CommandLineRunner;
@@ -12,8 +10,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import java.util.concurrent.Executors;
 
 @SpringBootApplication(scanBasePackages = {"com.iot.server"})
 @SpringBootConfiguration
@@ -28,31 +26,25 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        GraalSandbox sandboxGraaljs = GraalSandboxes.create();
-        System.out.println(sandboxGraaljs);
-        long startTimeGraalJs = System.currentTimeMillis();
-        sandboxGraaljs.eval("let count = 0;for(let i=0;i<100000;i++){count += i}");
-        System.out.println("finish " + (System.currentTimeMillis() - startTimeGraalJs));
-
         NashornSandbox nashornSandbox = NashornSandboxes.create();
-        System.out.println(nashornSandbox);
-        long startTimeNashornSandbox = System.currentTimeMillis();
-        nashornSandbox.eval("var count = 0;for(var i=0;i<100000;i++){count += i}");
-        System.out.println("finish " + (System.currentTimeMillis() - startTimeNashornSandbox));
 
-        ScriptEngineManager factory = new ScriptEngineManager();
+        nashornSandbox.setMaxCPUTime(100);
+        nashornSandbox.allowNoBraces(false);
+        nashornSandbox.setMaxPreparedStatements(30); // because preparing scripts for execution is expensive
+        nashornSandbox.setExecutor(Executors.newSingleThreadExecutor());
 
-        ScriptEngine engine = factory.getEngineByName("nashorn");
-        System.out.println(engine.toString());
-        long startTimeNashorn = System.currentTimeMillis();
-        engine.eval("var count = 0;for(var i=0;i<100000;i++){count += i} java.lang.System.out.println(\"Hello from JS\");\n");
-        System.out.println("finish " + (System.currentTimeMillis() - startTimeNashorn));
-
-        ScriptEngine engineJs = factory.getEngineByName("js");
-        System.out.println(engineJs.toString());
-        long startTime = System.currentTimeMillis();
-        engineJs.eval("let count = 0;for(let i=0;i<100000;i++){count += i}");
-        System.out.println("finish " + (System.currentTimeMillis() - startTime));
-
+        try {
+            nashornSandbox.eval("" +
+                    "function invokeFunction_d270da90_00d9_4a1c_ba07_19ac2ba95f6a(msgStr, msgType) {" +
+                    "   var msg = JSON.parse(msgStr);" +
+                    "   return JSON.stringify(ruleNodeFunctionName(msg, msgType)) " +
+                    "   function ruleNodeFunctionName(msg, msgType) {" +
+                    "       return 'Incoming message:\\n' + JSON.stringify(msg);\n" +
+                    "   }\n" +
+                    "}");
+            System.out.println(nashornSandbox.getSandboxedInvocable().invokeFunction("invokeFunction_d270da90_00d9_4a1c_ba07_19ac2ba95f6a", "{\"s\": \"hello\"}", "{}"));
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        }
     }
 }

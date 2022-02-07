@@ -7,6 +7,14 @@ entity.service:
 
 queue:
   rabbitmq:
+    rule-engine:
+      exchange-name: "${QUEUE_RABBITMQ_RULE_ENGINE_EXCHANGE_NAME:ruleEngineExchange}"
+      host: "${QUEUE_RABBITMQ_RULE_ENGINE_HOST:localhost}"
+      port: "${QUEUE_RABBITMQ_RULE_ENGINE_PORT:5672}"
+      username: "${QUEUE_RABBITMQ_RULE_ENGINE_USERNAME:guest}"
+      password: "${QUEUE_RABBITMQ_RULE_ENGINE_PASSWORD:guest}"
+      connection-timeout: "${QUEUE_RABBITMQ_RULE_ENGINE_CONNECTION_TIMEOUT:60000}"
+
     telemetry:
       queue-name: "${QUEUE_RABBITMQ_TELEMETRY_QUEUE_NAME:transportQueue}"
       exchange-name: "${QUEUE_RABBITMQ_TELEMETRY_EXCHANGE_NAME:telemetryExchange}"
@@ -15,13 +23,16 @@ queue:
       username: "${QUEUE_RABBITMQ_TELEMETRY_USERNAME:guest}"
       password: "${QUEUE_RABBITMQ_TELEMETRY_PASSWORD:guest}"
       connection-timeout: "${QUEUE_RABBITMQ_TELEMETRY_CONNECTION_TIMEOUT:60000}"
-    rule-engine:
-      exchange-name: "${QUEUE_RABBITMQ_TELEMETRY_EXCHANGE_NAME:ruleEngineExchange}"
+
+    debug:
+      queue-name: "${QUEUE_RABBITMQ_TELEMETRY_QUEUE_NAME:debugQueue}"
+      exchange-name: "${QUEUE_RABBITMQ_TELEMETRY_EXCHANGE_NAME:debugExchange}"
       host: "${QUEUE_RABBITMQ_TELEMETRY_HOST:localhost}"
       port: "${QUEUE_RABBITMQ_TELEMETRY_PORT:5672}"
       username: "${QUEUE_RABBITMQ_TELEMETRY_USERNAME:guest}"
       password: "${QUEUE_RABBITMQ_TELEMETRY_PASSWORD:guest}"
       connection-timeout: "${QUEUE_RABBITMQ_TELEMETRY_CONNECTION_TIMEOUT:60000}"
+
     socket:
       host: "${QUEUE_RABBITMQ_SOCKET_HOST:localhost}"
       port: "${QUEUE_RABBITMQ_SOCKET_PORT:61613}"
@@ -30,6 +41,7 @@ queue:
       app-dest: "${QUEUE_RABBITMQ_SOCKET_APP_DEST:/app}"
       stomp-broker: "${QUEUE_RABBITMQ_SOCKET_STOMP_BROKER:/topic}"
       sockjs-endpoint: "${QUEUE_RABBITMQ_SOCKET_SOCKJS_ENDPOINT:/ws}"
+
     mqtt:
       queue-name: "${QUEUE_RABBITMQ_MQTT_QUEUE_NAME:telemetryRequestQueue}"
       exchange-name: "${QUEUE_RABBITMQ_MQTT_EXCHANGE_NAME:amq.topic}"

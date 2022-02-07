@@ -15,7 +15,9 @@ public enum ReasonEnum {
    AUTHENTICATION_FAILED(2, "Authentication failed"),
    AUTHORIZATION_FAILED(3, "Authorization failed"),
    PERMISSION_DENIED(4, "Permission denied"),
-   EXPIRED_TOKEN(5, "Expired token");
+   EXPIRED_TOKEN(5, "Expired token"),
+   JS_EXECUTE_FAILED(6, "JS executes failed"),
+   INVOKE_FUNCTION_FAILED(7, "Invoke function failed");
 
    private static final Map<Integer, ReasonEnum> MAP =
        Arrays.stream(ReasonEnum.values())

@@ -10,9 +10,7 @@ import com.iot.server.common.queue.QueueMsg;
 import com.iot.server.common.utils.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.api.Facts;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.amqp.AmqpException;
 
 import java.util.UUID;
 
@@ -36,7 +34,7 @@ public class SaveTsAction implements RuleNodeAction {
     @Override
     public void execute(Facts facts) throws Exception {
         log.trace("{}", facts);
-        RuleNodeMsg msg = facts.get("msg");
+        RuleNodeMsg msg = getMsg(facts);
 
         TelemetryMsg telemetryMsg = GsonUtils.fromJson(msg.getData(), TelemetryMsg.class);
 
@@ -47,9 +45,15 @@ public class SaveTsAction implements RuleNodeAction {
             type = MsgType.SAVE_LATEST_TELEMETRY.name();
         }
 
-        ctx.getTelemetryTemplate().convertAndSend(
-                GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), telemetryMsg, type))
-        );
+        try {
+            ctx.getTelemetryTemplate().convertAndSend(
+                    GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), telemetryMsg, type, msg.getUserId()))
+            );
+
+            setSuccess(facts);
+        } catch (AmqpException ex) {
+            setFailure(facts);
+        }
     }
 
 }

@@ -16,16 +16,24 @@ public class WebSocketServiceImpl implements WebSocketService {
     private final SimpMessageSendingOperations messagingTemplate;
 
     @Override
-    public void send(TelemetryMsg telemetryMsg) {
+    public void sendTelemetry(String userId, TelemetryMsg telemetryMsg) {
         TelemetrySocketMsg telemetrySocketMsg = new TelemetrySocketMsg();
 
         telemetrySocketMsg.setEntityId(telemetryMsg.getEntityId());
         telemetrySocketMsg.setKvs(telemetryMsg.getKvs());
 
-        String userId = telemetryMsg.getUserId().toString();
         String msg = GsonUtils.toJson(telemetrySocketMsg);
         try {
             messagingTemplate.convertAndSend("/topic/telemetry-" + userId, msg);
+        } catch (MessagingException ex) {
+            log.error("Failed to publish message {}", msg, ex);
+        }
+    }
+
+    @Override
+    public void sendDebugMsg(String userId, String msg) {
+        try {
+            messagingTemplate.convertAndSend("/topic/debug-" + userId, msg);
         } catch (MessagingException ex) {
             log.error("Failed to publish message {}", msg, ex);
         }

@@ -37,14 +37,13 @@ public class TransportServiceImpl implements TransportService {
             List<Kv> kvs = GsonUtils.parseJsonElement(JsonParser.parseString(json));
             TelemetryMsg telemetryMsg = TelemetryMsg.builder()
                     .entityId(deviceResponse.getId())
-                    .userId(deviceResponse.getUserId())
                     .ruleChainId(deviceResponse.getRuleChainId())
                     .tenantId(deviceResponse.getTenantId())
                     .kvs(kvs)
                     .build();
 
             ruleEngineRabbitTemplate.convertAndSend(
-                    GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), telemetryMsg, MsgType.POST_TELEMETRY_REQUEST.name()))
+                    GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), telemetryMsg, MsgType.POST_TELEMETRY_REQUEST.name(), deviceResponse.getUserId()))
             );
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);

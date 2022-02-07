@@ -26,29 +26,40 @@ spring:
 queue:
   rabbitmq:
     rule-engine:
-      queue-name: "${QUEUE_RABBIT_MQ_QUEUE_NAME:ruleEngineQueue}"
-      exchange-name: "${QUEUE_RABBIT_MQ_EXCHANGE_NAME:ruleEngineExchange}"
-      host: "${QUEUE_RABBIT_MQ_HOST:localhost}"
-      port: "${QUEUE_RABBIT_MQ_PORT:5672}"
-      username: "${QUEUE_RABBIT_MQ_USERNAME:guest}"
-      password: "${QUEUE_RABBIT_MQ_PASSWORD:guest}"
-      connection-timeout: "${QUEUE_RABBIT_MQ_CONNECTION_TIMEOUT:60000}"
+      queue-name: "${QUEUE_RABBITMQ_RULE_ENGINE_QUEUE_NAME:ruleEngineQueue}"
+      exchange-name: "${QUEUE_RABBITMQ_RULE_ENGINE_EXCHANGE_NAME:ruleEngineExchange}"
+      host: "${QUEUE_RABBITMQ_RULE_ENGINE_HOST:localhost}"
+      port: "${QUEUE_RABBITMQ_RULE_ENGINE_PORT:5672}"
+      username: "${QUEUE_RABBITMQ_RULE_ENGINE_USERNAME:guest}"
+      password: "${QUEUE_RABBITMQ_RULE_ENGINE_PASSWORD:guest}"
+      connection-timeout: "${QUEUE_RABBITMQ_RULE_ENGINE_CONNECTION_TIMEOUT:60000}"
+
     telemetry:
-      exchange-name: "${QUEUE_RABBIT_MQ_TELEMETRY_EXCHANGE_NAME:telemetryExchange}"
-      host: "${QUEUE_RABBIT_MQ_TELEMETRY_HOST:localhost}"
-      port: "${QUEUE_RABBIT_MQ_TELEMETRY_PORT:5672}"
-      username: "${QUEUE_RABBIT_MQ_TELEMETRY_USERNAME:guest}"
-      password: "${QUEUE_RABBIT_MQ_TELEMETRY_PASSWORD:guest}"
-      connection-timeout: "${QUEUE_RABBIT_MQ_TELEMETRY_CONNECTION_TIMEOUT:60000}"
+      exchange-name: "${QUEUE_RABBITMQ_TELEMETRY_EXCHANGE_NAME:telemetryExchange}"
+      host: "${QUEUE_RABBITMQ_TELEMETRY_HOST:localhost}"
+      port: "${QUEUE_RABBITMQ_TELEMETRY_PORT:5672}"
+      username: "${QUEUE_RABBITMQ_TELEMETRY_USERNAME:guest}"
+      password: "${QUEUE_RABBITMQ_TELEMETRY_PASSWORD:guest}"
+      connection-timeout: "${QUEUE_RABBITMQ_TELEMETRY_CONNECTION_TIMEOUT:60000}"
+
+    debug:
+      exchange-name: "${QUEUE_RABBITMQ_TELEMETRY_EXCHANGE_NAME:debugExchange}"
+      host: "${QUEUE_RABBITMQ_TELEMETRY_HOST:localhost}"
+      port: "${QUEUE_RABBITMQ_TELEMETRY_PORT:5672}"
+      username: "${QUEUE_RABBITMQ_TELEMETRY_USERNAME:guest}"
+      password: "${QUEUE_RABBITMQ_TELEMETRY_PASSWORD:guest}"
+      connection-timeout: "${QUEUE_RABBITMQ_TELEMETRY_CONNECTION_TIMEOUT:60000}"
+
     mqtt:
       queue-name: "${QUEUE_RABBITMQ_MQTT_QUEUE_NAME:telemetryResponseQueue}"
       exchange-name: "${QUEUE_RABBITMQ_MQTT_EXCHANGE_NAME:amq.topic}"
       routing-key: "${QUEUE_RABBITMQ_MQTT_ROUTING_KEY:.v1.device.telemetry.response}"
-      host: "${QUEUE_RABBIT_MQ_MQTT_HOST:127.0.0.1}"
-      port: "${QUEUE_RABBIT_MQ_MQTT_PORT:5672}"
-      username: "${QUEUE_RABBIT_MQ_MQTT_USERNAME:guest}"
-      password: "${QUEUE_RABBIT_MQ_MQTT_PASSWORD:guest}"
-      connection-timeout: "${QUEUE_RABBIT_MQ_MQTT_CONNECTION_TIMEOUT:60000}"
+      host: "${QUEUE_RABBITMQ_MQTT_HOST:127.0.0.1}"
+      port: "${QUEUE_RABBITMQ_MQTT_PORT:5672}"
+      username: "${QUEUE_RABBITMQ_MQTT_USERNAME:guest}"
+      password: "${QUEUE_RABBITMQ_MQTT_PASSWORD:guest}"
+      connection-timeout: "${QUEUE_RABBITMQ_MQTT_CONNECTION_TIMEOUT:60000}"
+
 security:
   jwt:
     access-token-exp: "${JWT_ACCESS_TOKEN_EXP:604800}" # Number of seconds (2.5 hours)
@@ -71,3 +82,12 @@ spring.mvc.cors:
       #      #Set whether credentials are supported. When not set, credentials are not supported.
       #      allow-credentials: "true"
       allowed-origin-pattern: "*"
+
+js:
+  nashorn:
+    monitor-thread-pool-size: "${JS_NASHORN_MONITOR_THREAD_POOL_SIZE:4}"
+    max-cpu-time: "${JS_NASHORN_MAX_CPU_TIME:8000}"
+    allow-no-braces:  "${JS_NASHORN_ALLOW_NO_BRACES:false}"
+    allow-load-functions: "${JS_NASHORN_ALLOW_LOAD_FUNCTIONS:true}"
+    max-prepared-statements: "${JS_NASHORN_MAX_PREPARED_STATEMENTS:30}"
+    max-errors: "${JS_NASHORN_MAX_ERRORS:3}"

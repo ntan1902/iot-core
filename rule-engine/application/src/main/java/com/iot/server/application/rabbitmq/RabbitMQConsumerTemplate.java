@@ -13,6 +13,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.UUID;
 
 @Component
 @Slf4j
@@ -41,9 +42,9 @@ public class RabbitMQConsumerTemplate {
         return RuleNodeMsg.builder()
                 .type(queueMsg.getType())
                 .ruleChainId(queueMsg.getData().getRuleChainId())
-                .userId(queueMsg.getData().getUserId())
                 .tenantId(queueMsg.getData().getTenantId())
                 .entityId(queueMsg.getData().getEntityId())
+                .userId(queueMsg.getUserId())
                 .data(GsonUtils.toJson(queueMsg.getData()))
                 .build();
     }

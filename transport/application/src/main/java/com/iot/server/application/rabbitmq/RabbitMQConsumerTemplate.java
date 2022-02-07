@@ -27,7 +27,7 @@ public class RabbitMQConsumerTemplate {
 
         try {
             TelemetryMsg telemetryMsg = queueMsg.getData();
-            webSocketService.send(telemetryMsg);
+            webSocketService.sendTelemetry(queueMsg.getUserId().toString(), telemetryMsg);
         } catch (RuntimeException exception) {
             log.error("Error occurred", exception);
             throw new AmqpRejectAndDontRequeueException(exception);
@@ -35,4 +35,19 @@ public class RabbitMQConsumerTemplate {
 
     }
 
+    @RabbitListener(queues = "${queue.rabbitmq.debug.queue-name}")
+    public void debugRuleEngine(String msg) {
+        QueueMsg<String> queueMsg =
+                GsonUtils.fromJson(msg, new TypeToken<QueueMsg<String>>() {
+                }.getType());
+        log.info("Consume message {}", queueMsg);
+
+        try {
+            webSocketService.sendDebugMsg(queueMsg.getUserId().toString(), queueMsg.getData());
+        } catch (RuntimeException exception) {
+            log.error("Error occurred", exception);
+            throw new AmqpRejectAndDontRequeueException(exception);
+        }
+
+    }
 }

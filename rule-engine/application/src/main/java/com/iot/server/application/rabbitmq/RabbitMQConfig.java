@@ -24,6 +24,7 @@ public class RabbitMQConfig {
 
     private Config ruleEngine;
     private Config telemetry;
+    private Config debug;
     private Config mqtt;
 
     public ConnectionFactory createConnectionFactory(Config config) {
@@ -83,6 +84,13 @@ public class RabbitMQConfig {
     public RabbitTemplate telemetryRabbitTemplate() {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(createConnectionFactory(telemetry));
         rabbitTemplate.setExchange(telemetry.exchangeName);
+        return rabbitTemplate;
+    }
+
+    @Bean
+    public RabbitTemplate debugRabbitTemplate() {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(createConnectionFactory(debug));
+        rabbitTemplate.setExchange(debug.exchangeName);
         return rabbitTemplate;
     }
 

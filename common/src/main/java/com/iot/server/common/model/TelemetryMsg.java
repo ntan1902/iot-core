@@ -10,7 +10,6 @@ import java.util.UUID;
 @Builder
 public class TelemetryMsg {
    private UUID entityId;
-   private UUID userId;
    private UUID ruleChainId;
    private UUID tenantId;
    private List<Kv> kvs;

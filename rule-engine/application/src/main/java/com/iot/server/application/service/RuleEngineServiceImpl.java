@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,12 +52,13 @@ public class RuleEngineServiceImpl implements RuleEngineService {
             Facts facts = new Facts();
             facts.put("msg", ruleNodeMsg);
 
+            AtomicInteger priority = new AtomicInteger(1);
             Rules rules = new Rules();
-            registerRule(ruleChain.getFirstRuleNodeId(), "", ruleNodeMap, rules, true);
+            registerRule(ruleChain.getFirstRuleNodeId(), "", ruleNodeMap, rules, true, priority);
 
             List<RelationDto> relations = getRelations(ruleNodes);
             for (RelationDto relation : relations) {
-                registerRule(relation.getToId(), relation.getName(), ruleNodeMap, rules, false);
+                registerRule(relation.getToId(), relation.getName(), ruleNodeMap, rules, false, priority);
             }
 
             RulesEngine rulesEngine = new DefaultRulesEngine();
@@ -68,7 +70,8 @@ public class RuleEngineServiceImpl implements RuleEngineService {
                               String conditionName,
                               Map<UUID, RuleNodeDto> ruleNodeMap,
                               Rules rules,
-                              boolean defaultCondition) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+                              boolean defaultCondition,
+                              AtomicInteger priority) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         RuleNodeDto ruleNode = ruleNodeMap.get(ruleNodeId);
 
         Condition condition = defaultCondition ? new DefaultCondition() : new RelationCondition(conditionName);
@@ -87,6 +90,7 @@ public class RuleEngineServiceImpl implements RuleEngineService {
                         .name(name)
                         .when(condition)
                         .then(action)
+                        .priority(priority.getAndIncrement())
                         .build()
         );
     }

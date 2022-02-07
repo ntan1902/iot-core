@@ -22,6 +22,7 @@ public class RabbitMQConfig {
 
     private Config telemetry;
     private Config ruleEngine;
+    private Config debug;
     private Config mqtt;
 
     public ConnectionFactory createConnectionFactory(Config config) {
@@ -47,6 +48,21 @@ public class RabbitMQConfig {
     @Bean
     public Binding telemetryBinding(Queue telemetryQueue, FanoutExchange telemetryExchange) {
         return BindingBuilder.bind(telemetryQueue).to(telemetryExchange);
+    }
+
+    @Bean
+    public Queue debugQueue() {
+        return new Queue(debug.queueName, false);
+    }
+
+    @Bean
+    public FanoutExchange debugExchange() {
+        return new FanoutExchange(debug.exchangeName);
+    }
+
+    @Bean
+    public Binding debugBinding(Queue debugQueue, FanoutExchange debugExchange) {
+        return BindingBuilder.bind(debugQueue).to(debugExchange);
     }
 
     @Bean

@@ -14,4 +14,5 @@ public class QueueMsg<T> {
    private UUID key;
    private T data;
    private String type;
+   private UUID userId;
 }
