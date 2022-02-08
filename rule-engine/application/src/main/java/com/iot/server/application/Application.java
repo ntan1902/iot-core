@@ -39,7 +39,7 @@ public class Application implements CommandLineRunner {
                     "   var msg = JSON.parse(msgStr);" +
                     "   return JSON.stringify(ruleNodeFunctionName(msg, msgType)) " +
                     "   function ruleNodeFunctionName(msg, msgType) {" +
-                    "       return 'Incoming message:\\n' + JSON.stringify(msg);\n" +
+                    "       return JSON.stringify(msg);\n" +
                     "   }\n" +
                     "}");
             System.out.println(nashornSandbox.getSandboxedInvocable().invokeFunction("invokeFunction_d270da90_00d9_4a1c_ba07_19ac2ba95f6a", "{\"s\": \"hello\"}", "{}"));

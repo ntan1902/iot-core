@@ -39,6 +39,8 @@ public class MsgTypeSwitchAction implements RuleNodeAction {
 
         if (msg.getType().equals(MsgType.POST_TELEMETRY_REQUEST.name())) {
             relationName = "Post telemetry";
+        } else {
+            relationName = "Failure";
         }
 
         setMsg(facts, "relationName", relationName);
