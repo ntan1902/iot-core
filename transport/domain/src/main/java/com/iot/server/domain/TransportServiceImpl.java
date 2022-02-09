@@ -6,11 +6,11 @@ import com.iot.server.common.enums.MsgType;
 import com.iot.server.common.enums.TransportType;
 import com.iot.server.common.model.Kv;
 import com.iot.server.common.model.TelemetryMsg;
+import com.iot.server.common.queue.QueueMsg;
 import com.iot.server.common.request.ValidateDeviceRequest;
 import com.iot.server.common.response.DeviceResponse;
 import com.iot.server.common.utils.GsonUtils;
 import com.iot.server.domain.model.ValidateDeviceToken;
-import com.iot.server.common.queue.QueueMsg;
 import com.iot.server.rest.client.EntityServiceClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,12 +38,11 @@ public class TransportServiceImpl implements TransportService {
             TelemetryMsg telemetryMsg = TelemetryMsg.builder()
                     .entityId(deviceResponse.getId())
                     .ruleChainId(deviceResponse.getRuleChainId())
-                    .tenantId(deviceResponse.getTenantId())
                     .kvs(kvs)
                     .build();
 
             ruleEngineRabbitTemplate.convertAndSend(
-                    GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), telemetryMsg, MsgType.POST_TELEMETRY_REQUEST.name(), deviceResponse.getUserId()))
+                    GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), telemetryMsg, MsgType.POST_TELEMETRY_REQUEST.name(), deviceResponse.getUserIds()))
             );
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);

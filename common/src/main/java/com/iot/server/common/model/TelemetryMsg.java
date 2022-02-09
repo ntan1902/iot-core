@@ -11,6 +11,5 @@ import java.util.UUID;
 public class TelemetryMsg {
    private UUID entityId;
    private UUID ruleChainId;
-   private UUID tenantId;
    private List<Kv> kvs;
 }

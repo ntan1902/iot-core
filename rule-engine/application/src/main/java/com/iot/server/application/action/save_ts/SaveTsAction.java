@@ -47,7 +47,7 @@ public class SaveTsAction implements RuleNodeAction {
 
         try {
             ctx.getTelemetryTemplate().convertAndSend(
-                    GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), telemetryMsg, type, msg.getUserId()))
+                    GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), telemetryMsg, type, msg.getUserIds()))
             );
 
             setSuccess(facts);

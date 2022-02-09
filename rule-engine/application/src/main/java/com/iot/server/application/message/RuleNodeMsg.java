@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -14,8 +15,7 @@ import java.util.UUID;
 public class RuleNodeMsg {
     private UUID ruleChainId;
     private UUID entityId;
-    private UUID tenantId;
-    private UUID userId;
+    private Set<UUID> userIds;
     private String data;
     private String type;
 }

@@ -41,7 +41,7 @@ public class DebugAction implements RuleNodeAction {
                 .exceptionally(t -> {
                     log.error("Error occurred when execute js: ", t);
                     ctx.getDebugTemplate().convertAndSend(
-                            GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), t.getMessage(), msg.getType(), msg.getUserId()))
+                            GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), t.getMessage(), msg.getType(), msg.getUserIds()))
                     );
 
                     setFailure(facts);
@@ -50,7 +50,7 @@ public class DebugAction implements RuleNodeAction {
                 .thenAccept(result -> {
                     log.info("{}", result);
                     ctx.getDebugTemplate().convertAndSend(
-                            GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), msg.getData(), msg.getType(), msg.getUserId()))
+                            GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), msg.getData(), msg.getType(), msg.getUserIds()))
                     );
 
                     setSuccess(facts);

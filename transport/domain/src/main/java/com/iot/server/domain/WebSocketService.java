@@ -2,8 +2,11 @@ package com.iot.server.domain;
 
 import com.iot.server.common.model.TelemetryMsg;
 
-public interface WebSocketService {
-    void sendTelemetry(String userId, TelemetryMsg telemetryMsg);
+import java.util.Set;
+import java.util.UUID;
 
-    void sendDebugMsg(String userId, String msg);
+public interface WebSocketService {
+    void sendTelemetry(Set<UUID> userIds, TelemetryMsg telemetryMsg);
+
+    void sendDebugMsg(Set<UUID> userIds, String msg);
 }

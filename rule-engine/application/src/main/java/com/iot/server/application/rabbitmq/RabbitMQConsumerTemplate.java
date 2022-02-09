@@ -42,9 +42,8 @@ public class RabbitMQConsumerTemplate {
         return RuleNodeMsg.builder()
                 .type(queueMsg.getType())
                 .ruleChainId(queueMsg.getData().getRuleChainId())
-                .tenantId(queueMsg.getData().getTenantId())
                 .entityId(queueMsg.getData().getEntityId())
-                .userId(queueMsg.getUserId())
+                .userIds(queueMsg.getUserIds())
                 .data(GsonUtils.toJson(queueMsg.getData()))
                 .build();
     }
