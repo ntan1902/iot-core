@@ -47,7 +47,7 @@ public class SendEmailAction implements RuleNodeAction {
 
         try {
             EmailModel emailModel = getEmailModel(msg);
-
+            ctx.getEmailService().send(emailModel, mailSender);
             setSuccess(facts);
         } catch (Exception ex) {
             setFailure(facts);
