@@ -34,13 +34,14 @@ public class MqttController {
                 transportService.process(
                         TransportType.MQTT,
                         ValidateDeviceToken.builder().basicMqttCredentials(basicMqttCredentials).build(),
-                        request.getJson().toString()
+                        GsonUtils.toJson(request.getJson())
                 );
             } else {
                 transportService.process(
                         TransportType.DEFAULT,
                         ValidateDeviceToken.builder().token((String) request.getToken()).build(),
-                        request.getJson().toString()
+                        GsonUtils.toJson(request.getJson())
+
                 );
             }
         } catch (RuntimeException ex) {

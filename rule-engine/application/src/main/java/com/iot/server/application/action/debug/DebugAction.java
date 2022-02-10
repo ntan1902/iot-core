@@ -38,22 +38,22 @@ public class DebugAction implements RuleNodeAction {
         RuleNodeMsg msg = getMsg(facts);
 
         jsEngine.executeToStringAsync(msg)
+                .thenAccept(result -> {
+                    log.info("{}", result);
+                    ctx.getDebugTemplate().convertAndSend(
+                            GsonUtils.toJson(new QueueMsg(UUID.randomUUID(), msg.getEntityId(), msg.getRuleChainId(), msg.getData(), msg.getMetaData(), msg.getType(), msg.getUserIds()))
+                    );
+
+                    setSuccess(facts);
+                })
                 .exceptionally(t -> {
                     log.error("Error occurred when execute js: ", t);
                     ctx.getDebugTemplate().convertAndSend(
-                            GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), t.getMessage(), msg.getType(), msg.getUserIds()))
+                            GsonUtils.toJson(new QueueMsg(UUID.randomUUID(), msg.getEntityId(), msg.getRuleChainId(), t.getMessage(), msg.getMetaData(), msg.getType(), msg.getUserIds()))
                     );
 
                     setFailure(facts);
                     throw new CompletionException(t);
-                })
-                .thenAccept(result -> {
-                    log.info("{}", result);
-                    ctx.getDebugTemplate().convertAndSend(
-                            GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), msg.getData(), msg.getType(), msg.getUserIds()))
-                    );
-
-                    setSuccess(facts);
                 });
     }
 }

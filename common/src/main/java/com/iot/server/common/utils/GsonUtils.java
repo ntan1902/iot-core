@@ -142,4 +142,28 @@ public final class GsonUtils {
     private static boolean isSimpleDouble(String valueAsString) {
         return valueAsString.contains(".") && !valueAsString.contains("E") && !valueAsString.contains("e");
     }
+
+    public static JsonObject getJsonObject(List<Kv> kvs) {
+        JsonObject json = new JsonObject();
+        for (Kv kv : kvs) {
+            switch (kv.getType()) {
+                case BOOLEAN:
+                    json.addProperty(kv.getKey(), (Boolean) kv.getValue());
+                    break;
+                case LONG:
+                    json.addProperty(kv.getKey(), (Long) kv.getValue());
+                    break;
+                case DOUBLE:
+                    json.addProperty(kv.getKey(), (Double) kv.getValue());
+                    break;
+                case STRING:
+                    json.addProperty(kv.getKey(), (String) kv.getValue());
+                    break;
+                case JSON:
+                    json.add(kv.getKey(), JsonParser.parseString((String) kv.getValue()));
+                    break;
+            }
+        }
+        return json;
+    }
 }

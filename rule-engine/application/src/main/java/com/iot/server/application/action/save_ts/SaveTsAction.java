@@ -5,7 +5,6 @@ import com.iot.server.application.action.RuleNodeAction;
 import com.iot.server.application.action.ctx.RuleNodeCtx;
 import com.iot.server.application.message.RuleNodeMsg;
 import com.iot.server.common.enums.MsgType;
-import com.iot.server.common.model.TelemetryMsg;
 import com.iot.server.common.queue.QueueMsg;
 import com.iot.server.common.utils.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +35,6 @@ public class SaveTsAction implements RuleNodeAction {
         log.trace("{}", facts);
         RuleNodeMsg msg = getMsg(facts);
 
-        TelemetryMsg telemetryMsg = GsonUtils.fromJson(msg.getData(), TelemetryMsg.class);
-
         String type = "";
         if (config.isSkipLatestPersistence()) {
             type = MsgType.SAVE_TELEMETRY.name();
@@ -47,7 +44,7 @@ public class SaveTsAction implements RuleNodeAction {
 
         try {
             ctx.getTelemetryTemplate().convertAndSend(
-                    GsonUtils.toJson(new QueueMsg<>(UUID.randomUUID(), telemetryMsg, type, msg.getUserIds()))
+                    GsonUtils.toJson(new QueueMsg(UUID.randomUUID(), msg.getEntityId(), msg.getRuleChainId(), msg.getData(), msg.getMetaData(), type, msg.getUserIds()))
             );
 
             setSuccess(facts);

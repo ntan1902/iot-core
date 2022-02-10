@@ -1,5 +1,6 @@
 package com.iot.server.application.message;
 
+import com.iot.server.common.model.MetaData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +18,6 @@ public class RuleNodeMsg {
     private UUID entityId;
     private Set<UUID> userIds;
     private String data;
+    private MetaData metaData;
     private String type;
 }

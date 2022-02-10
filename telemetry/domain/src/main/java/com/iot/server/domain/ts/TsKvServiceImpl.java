@@ -1,10 +1,11 @@
 package com.iot.server.domain.ts;
 
+import com.google.gson.JsonParser;
 import com.iot.server.common.enums.MsgType;
 import com.iot.server.common.model.BaseReadQuery;
 import com.iot.server.common.model.Kv;
-import com.iot.server.common.model.TelemetryMsg;
 import com.iot.server.common.queue.QueueMsg;
+import com.iot.server.common.utils.GsonUtils;
 import com.iot.server.dao.dto.TsKvDto;
 import com.iot.server.dao.entity.latest.TsKvLatestEntity;
 import com.iot.server.dao.entity.ts.TsKvEntity;
@@ -30,18 +31,18 @@ public class TsKvServiceImpl implements TsKvService {
     private final TsKvLatestDao tsKvLatestDao;
 
     @Override
-    public void saveOrUpdate(QueueMsg<TelemetryMsg> queueMsg) {
+    public void saveOrUpdate(QueueMsg queueMsg) {
         List<TsKvEntity> tsKvEntities = new ArrayList<>();
         List<TsKvLatestEntity> tsKvLatestEntities = new ArrayList<>();
 
-        TelemetryMsg telemetryMsg = queueMsg.getData();
-        for (Kv kv : telemetryMsg.getKvs()) {
+        List<Kv> kvs = GsonUtils.parseJsonElement(JsonParser.parseString(queueMsg.getData()));
+        for (Kv kv : kvs) {
             TsKvEntity tsKvEntity = new TsKvEntity(kv);
-            tsKvEntity.setEntityId(telemetryMsg.getEntityId());
+            tsKvEntity.setEntityId(queueMsg.getEntityId());
             tsKvEntities.add(tsKvEntity);
 
             TsKvLatestEntity tsKvLatestEntity = new TsKvLatestEntity(kv);
-            tsKvLatestEntity.setEntityId(telemetryMsg.getEntityId());
+            tsKvLatestEntity.setEntityId(queueMsg.getEntityId());
             tsKvLatestEntities.add(tsKvLatestEntity);
         }
 

@@ -1,11 +1,9 @@
 package com.iot.server.application.rabbitmq;
 
-import com.google.gson.reflect.TypeToken;
 import com.iot.server.application.message.RuleNodeMsg;
 import com.iot.server.application.service.RuleEngineService;
-import com.iot.server.common.model.TelemetryMsg;
-import com.iot.server.common.utils.GsonUtils;
 import com.iot.server.common.queue.QueueMsg;
+import com.iot.server.common.utils.GsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
@@ -13,7 +11,6 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.UUID;
 
 @Component
 @Slf4j
@@ -24,9 +21,7 @@ public class RabbitMQConsumerTemplate {
 
     @RabbitListener(queues = "${queue.rabbitmq.rule-engine.queue-name}")
     public void postTelemetry(String msg) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        QueueMsg<TelemetryMsg> queueMsg =
-                GsonUtils.fromJson(msg, new TypeToken<QueueMsg<TelemetryMsg>>() {
-                }.getType());
+        QueueMsg queueMsg = GsonUtils.fromJson(msg, QueueMsg.class);
         log.trace("Consume message {}", queueMsg);
 
         RuleNodeMsg ruleNodeMsg = getRuleNodeMsg(queueMsg);
@@ -38,13 +33,14 @@ public class RabbitMQConsumerTemplate {
         }
     }
 
-    private RuleNodeMsg getRuleNodeMsg(QueueMsg<TelemetryMsg> queueMsg) {
+    private RuleNodeMsg getRuleNodeMsg(QueueMsg queueMsg) {
         return RuleNodeMsg.builder()
                 .type(queueMsg.getType())
-                .ruleChainId(queueMsg.getData().getRuleChainId())
-                .entityId(queueMsg.getData().getEntityId())
+                .ruleChainId(queueMsg.getRuleChainId())
+                .entityId(queueMsg.getEntityId())
                 .userIds(queueMsg.getUserIds())
-                .data(GsonUtils.toJson(queueMsg.getData()))
+                .data(queueMsg.getData())
+                .metaData(queueMsg.getMetaData())
                 .build();
     }
 }

@@ -17,6 +17,13 @@ public class RuleNodeJsEngineImpl implements RuleNodeJsEngine {
         this.scriptId = this.nashornService.eval(script, args);
     }
 
+    @Override
+    public CompletableFuture<String> executeToStringAsync(RuleNodeMsg msg) {
+        String[] stringArgs = getArgs(msg);
+
+        return CompletableFuture.supplyAsync(() -> this.nashornService.invokeFunction(this.scriptId, stringArgs).toString());
+    }
+
     private String[] getArgs(RuleNodeMsg msg) {
         try {
             String[] args = new String[3];
@@ -32,11 +39,4 @@ public class RuleNodeJsEngineImpl implements RuleNodeJsEngine {
         }
     }
 
-
-    @Override
-    public CompletableFuture<String> executeToStringAsync(RuleNodeMsg msg) {
-        String[] stringArgs = getArgs(msg);
-
-        return CompletableFuture.supplyAsync(() -> this.nashornService.invokeFunction(this.scriptId, stringArgs).toString());
-    }
 }

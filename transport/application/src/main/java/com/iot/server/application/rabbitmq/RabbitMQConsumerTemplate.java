@@ -1,15 +1,18 @@
 package com.iot.server.application.rabbitmq;
 
-import com.google.gson.reflect.TypeToken;
-import com.iot.server.common.model.TelemetryMsg;
+import com.google.gson.JsonParser;
+import com.iot.server.common.model.Kv;
 import com.iot.server.common.queue.QueueMsg;
 import com.iot.server.common.utils.GsonUtils;
 import com.iot.server.domain.WebSocketService;
+import com.iot.server.domain.model.TelemetrySocketMsg;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @Slf4j
@@ -20,14 +23,16 @@ public class RabbitMQConsumerTemplate {
 
     @RabbitListener(queues = "${queue.rabbitmq.telemetry.queue-name}")
     public void postTelemetry(String msg) {
-        QueueMsg<TelemetryMsg> queueMsg =
-                GsonUtils.fromJson(msg, new TypeToken<QueueMsg<TelemetryMsg>>() {
-                }.getType());
+        QueueMsg queueMsg = GsonUtils.fromJson(msg, QueueMsg.class);
         log.info("Consume message {}", queueMsg);
 
         try {
-            TelemetryMsg telemetryMsg = queueMsg.getData();
-            webSocketService.sendTelemetry(queueMsg.getUserIds(), telemetryMsg);
+            TelemetrySocketMsg telemetrySocketMsg = new TelemetrySocketMsg();
+            telemetrySocketMsg.setEntityId(queueMsg.getEntityId());
+            List<Kv> kvs = GsonUtils.parseJsonElement(JsonParser.parseString(queueMsg.getData()));
+            telemetrySocketMsg.setKvs(kvs);
+
+            webSocketService.sendTelemetry(queueMsg.getUserIds(), GsonUtils.toJson(telemetrySocketMsg));
         } catch (RuntimeException exception) {
             log.error("Error occurred", exception);
             throw new AmqpRejectAndDontRequeueException(exception);
@@ -37,9 +42,7 @@ public class RabbitMQConsumerTemplate {
 
     @RabbitListener(queues = "${queue.rabbitmq.debug.queue-name}")
     public void debugRuleEngine(String msg) {
-        QueueMsg<String> queueMsg =
-                GsonUtils.fromJson(msg, new TypeToken<QueueMsg<String>>() {
-                }.getType());
+        QueueMsg queueMsg = GsonUtils.fromJson(msg, QueueMsg.class);
         log.info("Consume message {}", queueMsg);
 
         try {

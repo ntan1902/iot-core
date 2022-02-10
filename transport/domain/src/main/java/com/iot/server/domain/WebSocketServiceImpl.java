@@ -1,8 +1,5 @@
 package com.iot.server.domain;
 
-import com.iot.server.common.model.TelemetryMsg;
-import com.iot.server.common.utils.GsonUtils;
-import com.iot.server.domain.model.TelemetrySocketMsg;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.MessagingException;
@@ -19,18 +16,12 @@ public class WebSocketServiceImpl implements WebSocketService {
     private final SimpMessageSendingOperations messagingTemplate;
 
     @Override
-    public void sendTelemetry(Set<UUID> userIds, TelemetryMsg telemetryMsg) {
-        TelemetrySocketMsg telemetrySocketMsg = new TelemetrySocketMsg();
-
-        telemetrySocketMsg.setEntityId(telemetryMsg.getEntityId());
-        telemetrySocketMsg.setKvs(telemetryMsg.getKvs());
-
-        String msg = GsonUtils.toJson(telemetrySocketMsg);
+    public void sendTelemetry(Set<UUID> userIds, String telemetryMsg) {
         for (UUID userId : userIds) {
             try {
-                messagingTemplate.convertAndSend("/topic/telemetry-" + userId, msg);
+                messagingTemplate.convertAndSend("/topic/telemetry-" + userId, telemetryMsg);
             } catch (MessagingException ex) {
-                log.error("Failed to publish message {}", msg, ex);
+                log.error("Failed to publish message {}", telemetryMsg, ex);
             }
         }
     }
