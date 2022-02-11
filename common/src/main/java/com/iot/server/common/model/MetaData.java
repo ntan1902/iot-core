@@ -1,10 +1,12 @@
 package com.iot.server.common.model;
 
-import java.util.Collections;
+import lombok.Data;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Data
 public class MetaData {
 
     private final Map<String, String> data;

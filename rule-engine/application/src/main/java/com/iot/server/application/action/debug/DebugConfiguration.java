@@ -17,7 +17,7 @@ public class DebugConfiguration implements ActionConfiguration<DebugConfiguratio
     public DebugConfiguration getDefaultConfiguration() {
         return DebugConfiguration.builder()
                 .script(
-                        "return JSON.stringify(msg);"
+                        "return 'Incoming message:\\n' + JSON.stringify(msg) + '\\nIncoming metaData:\\n' + JSON.stringify(metaData);"
                 )
                 .build();
     }

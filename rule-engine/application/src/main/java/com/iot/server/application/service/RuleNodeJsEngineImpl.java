@@ -1,6 +1,7 @@
 package com.iot.server.application.service;
 
 import com.iot.server.application.message.RuleNodeMsg;
+import com.iot.server.common.utils.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.UUID;
@@ -27,12 +28,15 @@ public class RuleNodeJsEngineImpl implements RuleNodeJsEngine {
     private String[] getArgs(RuleNodeMsg msg) {
         try {
             String[] args = new String[3];
+
             if (msg.getData() != null) {
                 args[0] = msg.getData();
             } else {
                 args[0] = "";
             }
-            args[1] = msg.getType();
+
+            args[1] = GsonUtils.toJson(msg.getMetaData().getData());
+            args[2] = msg.getType();
             return args;
         } catch (Throwable th) {
             throw new IllegalArgumentException("Cannot bind js args", th);

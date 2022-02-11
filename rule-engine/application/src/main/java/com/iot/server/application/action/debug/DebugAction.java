@@ -41,7 +41,7 @@ public class DebugAction implements RuleNodeAction {
                 .thenAccept(result -> {
                     log.info("{}", result);
                     ctx.getDebugTemplate().convertAndSend(
-                            GsonUtils.toJson(new QueueMsg(UUID.randomUUID(), msg.getEntityId(), msg.getRuleChainId(), msg.getData(), msg.getMetaData(), msg.getType(), msg.getUserIds()))
+                            GsonUtils.toJson(new QueueMsg(UUID.randomUUID(), msg.getEntityId(), msg.getRuleChainId(), result, msg.getMetaData(), msg.getType(), msg.getUserIds()))
                     );
 
                     setSuccess(facts);
