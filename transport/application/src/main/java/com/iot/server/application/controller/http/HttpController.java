@@ -2,6 +2,7 @@ package com.iot.server.application.controller.http;
 
 import com.iot.server.application.controller.request.PostTelemetryRequest;
 import com.iot.server.common.enums.TransportType;
+import com.iot.server.common.utils.GsonUtils;
 import com.iot.server.domain.TransportService;
 import com.iot.server.domain.model.ValidateDeviceToken;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class HttpController {
                 .runAsync(() -> transportService.process(
                         TransportType.DEFAULT,
                         ValidateDeviceToken.builder().token(request.getToken().toString()).build(),
-                        request.getJson().toString())
+                        GsonUtils.toJson(request.getJson()))
                 )
                 .exceptionally(t -> {
                     throw new CompletionException(t);
