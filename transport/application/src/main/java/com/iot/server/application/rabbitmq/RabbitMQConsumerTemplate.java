@@ -53,4 +53,18 @@ public class RabbitMQConsumerTemplate {
         }
 
     }
+
+    @RabbitListener(queues = "${queue.rabbitmq.alarm.queue-name}")
+    public void alarmRuleEngine(String msg) {
+        QueueMsg queueMsg = GsonUtils.fromJson(msg, QueueMsg.class);
+        log.info("Consume message {}", queueMsg);
+
+        try {
+            webSocketService.sendAlarmMsg(queueMsg.getUserIds(), queueMsg.getData());
+        } catch (RuntimeException exception) {
+            log.error("Error occurred", exception);
+            throw new AmqpRejectAndDontRequeueException(exception);
+        }
+
+    }
 }

@@ -27,12 +27,23 @@ public class WebSocketServiceImpl implements WebSocketService {
     }
 
     @Override
-    public void sendDebugMsg(Set<UUID> userIds, String msg) {
+    public void sendDebugMsg(Set<UUID> userIds, String debugMsg) {
         for (UUID userId : userIds) {
             try {
-                messagingTemplate.convertAndSend("/topic/debug-" + userId, msg);
+                messagingTemplate.convertAndSend("/topic/debug-" + userId, debugMsg);
             } catch (MessagingException ex) {
-                log.error("Failed to publish message {}", msg, ex);
+                log.error("Failed to publish message {}", debugMsg, ex);
+            }
+        }
+    }
+
+    @Override
+    public void sendAlarmMsg(Set<UUID> userIds, String alarmMsg) {
+        for (UUID userId : userIds) {
+            try {
+                messagingTemplate.convertAndSend("/topic/alarm-" + userId, alarmMsg);
+            } catch (MessagingException ex) {
+                log.error("Failed to publish message {}", alarmMsg, ex);
             }
         }
     }

@@ -33,6 +33,15 @@ queue:
       password: "${QUEUE_RABBITMQ_TELEMETRY_PASSWORD:guest}"
       connection-timeout: "${QUEUE_RABBITMQ_TELEMETRY_CONNECTION_TIMEOUT:60000}"
 
+    alarm:
+      queue-name: "${QUEUE_RABBITMQ_ALARM_QUEUE_NAME:alarmQueue}"
+      exchange-name: "${QUEUE_RABBITMQ_ALARM_EXCHANGE_NAME:alarmExchange}"
+      host: "${QUEUE_RABBITMQ_ALARM_HOST:localhost}"
+      port: "${QUEUE_RABBITMQ_ALARM_PORT:5672}"
+      username: "${QUEUE_RABBITMQ_ALARM_USERNAME:guest}"
+      password: "${QUEUE_RABBITMQ_ALARM_PASSWORD:guest}"
+      connection-timeout: "${QUEUE_RABBITMQ_ALARM_CONNECTION_TIMEOUT:60000}"
+
     socket:
       host: "${QUEUE_RABBITMQ_SOCKET_HOST:localhost}"
       port: "${QUEUE_RABBITMQ_SOCKET_PORT:61613}"

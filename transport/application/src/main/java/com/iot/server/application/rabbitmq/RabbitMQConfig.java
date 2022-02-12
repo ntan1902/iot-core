@@ -23,6 +23,7 @@ public class RabbitMQConfig {
     private Config telemetry;
     private Config ruleEngine;
     private Config debug;
+    private Config alarm;
     private Config mqtt;
 
     public ConnectionFactory createConnectionFactory(Config config) {
@@ -63,6 +64,21 @@ public class RabbitMQConfig {
     @Bean
     public Binding debugBinding(Queue debugQueue, FanoutExchange debugExchange) {
         return BindingBuilder.bind(debugQueue).to(debugExchange);
+    }
+
+    @Bean
+    public Queue alarmQueue() {
+        return new Queue(alarm.queueName, false);
+    }
+
+    @Bean
+    public FanoutExchange alarmExchange() {
+        return new FanoutExchange(alarm.exchangeName);
+    }
+
+    @Bean
+    public Binding alarmBinding(Queue alarmQueue, FanoutExchange alarmExchange) {
+        return BindingBuilder.bind(alarmQueue).to(alarmExchange);
     }
 
     @Bean
