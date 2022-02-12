@@ -14,6 +14,7 @@ public class RuleNodeCtxImpl implements RuleNodeCtx {
 
     private final RabbitTemplate telemetryRabbitTemplate;
     private final RabbitTemplate debugRabbitTemplate;
+    private final RabbitTemplate alarmRabbitTemplate;
     private final NashornService nashornService;
     private final EmailService emailService;
 
@@ -25,6 +26,11 @@ public class RuleNodeCtxImpl implements RuleNodeCtx {
     @Override
     public RabbitTemplate getDebugTemplate() {
         return debugRabbitTemplate;
+    }
+
+    @Override
+    public RabbitTemplate getAlarmTemplate() {
+        return alarmRabbitTemplate;
     }
 
     @Override

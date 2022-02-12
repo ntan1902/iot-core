@@ -2,21 +2,15 @@ package com.iot.server.application.action.mail;
 
 import com.iot.server.application.action.AbstractRuleNodeAction;
 import com.iot.server.application.action.RuleNode;
-import com.iot.server.application.action.RuleNodeAction;
-import com.iot.server.application.action.ctx.RuleNodeCtx;
 import com.iot.server.application.message.RuleNodeMsg;
 import com.iot.server.application.model.EmailModel;
-import com.iot.server.application.utils.RuleNodeUtils;
 import com.iot.server.common.utils.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.jeasy.rules.api.Facts;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.util.StringUtils;
 
-import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
-import java.util.UUID;
 
 @Slf4j
 @RuleNode(
@@ -82,13 +76,6 @@ public class SendEmailAction extends AbstractRuleNodeAction {
         builder.body(processTemplate(this.config.getBodyTemplate(), msg));
 
         return builder.build();
-    }
-
-    private String processTemplate(String template, RuleNodeMsg msg) {
-        if (StringUtils.hasText(template)) {
-            return RuleNodeUtils.processPattern(template, msg);
-        }
-        return "";
     }
 
 }

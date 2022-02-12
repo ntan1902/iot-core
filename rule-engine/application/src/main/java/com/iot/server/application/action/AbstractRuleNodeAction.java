@@ -2,8 +2,10 @@ package com.iot.server.application.action;
 
 import com.iot.server.application.action.ctx.RuleNodeCtx;
 import com.iot.server.application.message.RuleNodeMsg;
+import com.iot.server.application.utils.RuleNodeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.api.Facts;
+import org.springframework.util.StringUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -52,6 +54,14 @@ public abstract class AbstractRuleNodeAction implements RuleNodeAction {
         relationNames.remove("True");
         relationNames.add("False");
     }
+
+    protected String processTemplate(String template, RuleNodeMsg msg) {
+        if (StringUtils.hasText(template)) {
+            return RuleNodeUtils.processPattern(template, msg);
+        }
+        return "";
+    }
+
 
     protected abstract void initConfig(String config);
 

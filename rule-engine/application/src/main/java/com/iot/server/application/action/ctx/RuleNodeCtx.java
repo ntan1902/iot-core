@@ -9,6 +9,8 @@ public interface RuleNodeCtx {
 
     RabbitTemplate getDebugTemplate();
 
+    RabbitTemplate getAlarmTemplate();
+
     RuleNodeJsEngine createJsEngine(String script, String... args);
 
     EmailService getEmailService();

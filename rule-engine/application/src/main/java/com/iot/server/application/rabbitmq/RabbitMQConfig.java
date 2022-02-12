@@ -25,6 +25,7 @@ public class RabbitMQConfig {
     private Config ruleEngine;
     private Config telemetry;
     private Config debug;
+    private Config alarm;
     private Config mqtt;
 
     public ConnectionFactory createConnectionFactory(Config config) {
@@ -50,11 +51,6 @@ public class RabbitMQConfig {
     @Bean
     public Binding ruleEngineBinding(Queue ruleEngineQueue, FanoutExchange ruleEngineExchange) {
         return BindingBuilder.bind(ruleEngineQueue).to(ruleEngineExchange);
-    }
-
-    @Bean
-    public FanoutExchange telemetryExchange() {
-        return new FanoutExchange(telemetry.exchangeName);
     }
 
     @Bean
@@ -91,6 +87,13 @@ public class RabbitMQConfig {
     public RabbitTemplate debugRabbitTemplate() {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(createConnectionFactory(debug));
         rabbitTemplate.setExchange(debug.exchangeName);
+        return rabbitTemplate;
+    }
+
+    @Bean
+    public RabbitTemplate alarmRabbitTemplate() {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(createConnectionFactory(alarm));
+        rabbitTemplate.setExchange(alarm.exchangeName);
         return rabbitTemplate;
     }
 

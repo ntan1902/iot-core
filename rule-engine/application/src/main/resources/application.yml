@@ -50,6 +50,14 @@ queue:
       password: "${QUEUE_RABBITMQ_TELEMETRY_PASSWORD:guest}"
       connection-timeout: "${QUEUE_RABBITMQ_TELEMETRY_CONNECTION_TIMEOUT:60000}"
 
+    alarm:
+      exchange-name: "${QUEUE_RABBITMQ_TELEMETRY_EXCHANGE_NAME:alarmExchange}"
+      host: "${QUEUE_RABBITMQ_TELEMETRY_HOST:localhost}"
+      port: "${QUEUE_RABBITMQ_TELEMETRY_PORT:5672}"
+      username: "${QUEUE_RABBITMQ_TELEMETRY_USERNAME:guest}"
+      password: "${QUEUE_RABBITMQ_TELEMETRY_PASSWORD:guest}"
+      connection-timeout: "${QUEUE_RABBITMQ_TELEMETRY_CONNECTION_TIMEOUT:60000}"
+
     mqtt:
       queue-name: "${QUEUE_RABBITMQ_MQTT_QUEUE_NAME:telemetryResponseQueue}"
       exchange-name: "${QUEUE_RABBITMQ_MQTT_EXCHANGE_NAME:amq.topic}"
