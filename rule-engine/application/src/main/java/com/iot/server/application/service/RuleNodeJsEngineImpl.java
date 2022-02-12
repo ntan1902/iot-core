@@ -29,17 +29,25 @@ public class RuleNodeJsEngineImpl implements RuleNodeJsEngine {
 
     @Override
     public CompletableFuture<String> executeToStringAsync(RuleNodeMsg msg) {
-        String[] args = getArgs(msg);
+        Object[] args = getArgs(msg);
 
         return executeScriptAsync(args)
                 .thenApply(JsonElement::getAsString);
     }
 
     @Override
-    public void executeUpdate(RuleNodeMsg msg) {
-        String[] args = getArgs(msg);
-        JsonElement jsonElement = executeScript(args);
-        convertToRuleNodeMsg(jsonElement, msg);
+    public CompletableFuture<Void> executeUpdateAsync(RuleNodeMsg msg) {
+        Object[] args = getArgs(msg);
+        return executeScriptAsync(args)
+                .thenAccept(jsonElement -> convertToRuleNodeMsg(jsonElement, msg));
+    }
+
+    @Override
+    public CompletableFuture<Boolean> executeFilterAsync(RuleNodeMsg msg) {
+        Object[] args = getArgs(msg);
+
+        return executeScriptAsync(args)
+                .thenApply(JsonElement::getAsBoolean);
     }
 
     private void convertToRuleNodeMsg(JsonElement jsonElement, RuleNodeMsg msg) {
@@ -92,9 +100,9 @@ public class RuleNodeJsEngineImpl implements RuleNodeJsEngine {
         return JsonParser.parseString(this.nashornService.invokeFunction(this.scriptId, args).toString());
     }
 
-    private String[] getArgs(RuleNodeMsg msg) {
+    private Object[] getArgs(RuleNodeMsg msg) {
         try {
-            String[] args = new String[3];
+            Object[] args = new Object[3];
 
             if (msg.getData() != null) {
                 args[0] = msg.getData();

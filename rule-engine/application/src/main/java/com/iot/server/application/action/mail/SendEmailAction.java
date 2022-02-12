@@ -1,6 +1,6 @@
 package com.iot.server.application.action.mail;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.iot.server.application.action.AbstractRuleNodeAction;
 import com.iot.server.application.action.RuleNode;
 import com.iot.server.application.action.RuleNodeAction;
 import com.iot.server.application.action.ctx.RuleNodeCtx;
@@ -13,9 +13,10 @@ import org.jeasy.rules.api.Facts;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
+import java.util.UUID;
 
 @Slf4j
 @RuleNode(
@@ -23,34 +24,28 @@ import java.util.Properties;
         name = "send email",
         configClazz = SendEmailConfiguration.class
 )
-public class SendEmailAction implements RuleNodeAction {
+public class SendEmailAction extends AbstractRuleNodeAction {
 
     private static final String MAIL_PROP = "mail";
     private static final String PROTOCOL_PROP = "smtp";
 
     private SendEmailConfiguration config;
-    private RuleNodeCtx ctx;
     private JavaMailSenderImpl mailSender;
 
     @Override
-    public void init(RuleNodeCtx ctx, String config) {
-        this.ctx = ctx;
+    protected void initConfig(String config) {
         this.config = GsonUtils.fromJson(config, SendEmailConfiguration.class);
         this.mailSender = createMailSender();
     }
 
-
     @Override
-    public void execute(Facts facts) throws Exception {
-        log.trace("{}", facts);
-        RuleNodeMsg msg = getMsg(facts, "msg");
-
+    protected void executeMsg(RuleNodeMsg msg, Set<String> relationNames) {
         try {
             EmailModel emailModel = getEmailModel(msg);
             ctx.getEmailService().send(emailModel, mailSender);
-            setSuccess(facts);
+            setSuccess(relationNames);
         } catch (Exception ex) {
-            setFailure(facts);
+            setFailure(relationNames);
         }
     }
 

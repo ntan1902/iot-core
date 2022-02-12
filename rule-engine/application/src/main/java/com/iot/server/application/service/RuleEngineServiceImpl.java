@@ -2,7 +2,6 @@ package com.iot.server.application.service;
 
 import com.iot.server.application.action.RuleNodeAction;
 import com.iot.server.application.action.ctx.RuleNodeCtx;
-import com.iot.server.application.action.save_ts.SaveTsAction;
 import com.iot.server.application.condition.DefaultCondition;
 import com.iot.server.application.condition.RelationCondition;
 import com.iot.server.application.message.RuleNodeMsg;
@@ -22,10 +21,7 @@ import org.jeasy.rules.core.RuleBuilder;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -52,14 +48,25 @@ public class RuleEngineServiceImpl implements RuleEngineService {
 
             Facts facts = new Facts();
             facts.put("msg", ruleNodeMsg);
+            facts.put("relationNames", new HashSet<String>());
 
             AtomicInteger priority = new AtomicInteger(1);
             Rules rules = new Rules();
-            registerRule(ruleChain.getFirstRuleNodeId(), "", ruleNodeMap, rules, true, priority);
+            registerRule(null, ruleNodeMap.get(ruleChain.getFirstRuleNodeId()), "", rules, true, priority.getAndIncrement());
 
             List<RelationDto> relations = getRelations(ruleNodes);
+
+            UUID ruleNodeFromId = relations.get(0).getFromId();
             for (RelationDto relation : relations) {
-                registerRule(relation.getToId(), relation.getName(), ruleNodeMap, rules, false, priority);
+                int priorityInt;
+                if (ruleNodeFromId.equals(relation.getFromId())) {
+                    priorityInt = priority.get();
+                } else {
+                    priorityInt = priority.incrementAndGet();
+                    ruleNodeFromId = relation.getFromId();
+                }
+
+                registerRule(ruleNodeMap.get(relation.getFromId()), ruleNodeMap.get(relation.getToId()), relation.getName(), rules, false, priorityInt);
             }
 
             RulesEngine rulesEngine = new DefaultRulesEngine();
@@ -67,15 +74,18 @@ public class RuleEngineServiceImpl implements RuleEngineService {
         }
     }
 
-    private void registerRule(UUID ruleNodeId,
+    private void registerRule(RuleNodeDto prevRuleNode,
+                              RuleNodeDto ruleNode,
                               String conditionName,
-                              Map<UUID, RuleNodeDto> ruleNodeMap,
                               Rules rules,
                               boolean defaultCondition,
-                              AtomicInteger priority) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        RuleNodeDto ruleNode = ruleNodeMap.get(ruleNodeId);
-
-        Condition condition = defaultCondition ? new DefaultCondition() : new RelationCondition(conditionName);
+                              int priority) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Condition condition;
+        if (defaultCondition) {
+            condition = new DefaultCondition();
+        } else {
+            condition = new RelationCondition(prevRuleNode.getId(), conditionName);
+        }
 
         RuleNodeAction action = null;
         String name = "";
@@ -84,14 +94,14 @@ public class RuleEngineServiceImpl implements RuleEngineService {
 
             Class<?> componentClazz = Class.forName(ruleNode.getClazz());
             action = (RuleNodeAction) componentClazz.getDeclaredConstructor().newInstance();
-            action.init(ruleNodeCtx, ruleNode.getConfig());
+            action.init(ruleNodeCtx, ruleNode.getId(), ruleNode.getConfig());
         }
         rules.register(
                 new RuleBuilder()
                         .name(name)
                         .when(condition)
                         .then(action)
-                        .priority(priority.getAndIncrement())
+                        .priority(priority)
                         .build()
         );
     }

@@ -1,5 +1,6 @@
 package com.iot.server.application.action.debug;
 
+import com.iot.server.application.action.AbstractRuleNodeAction;
 import com.iot.server.application.action.RuleNode;
 import com.iot.server.application.action.RuleNodeAction;
 import com.iot.server.application.action.ctx.RuleNodeCtx;
@@ -10,6 +11,8 @@ import com.iot.server.common.utils.GsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.api.Facts;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletionException;
 
@@ -19,24 +22,19 @@ import java.util.concurrent.CompletionException;
         name = "debug",
         configClazz = DebugConfiguration.class
 )
-public class DebugAction implements RuleNodeAction {
+public class DebugAction extends AbstractRuleNodeAction {
 
     private DebugConfiguration config;
-    private RuleNodeCtx ctx;
     private RuleNodeJsEngine jsEngine;
 
     @Override
-    public void init(RuleNodeCtx ctx, String config) {
-        this.ctx = ctx;
+    protected void initConfig(String config) {
         this.config = GsonUtils.fromJson(config, DebugConfiguration.class);
         this.jsEngine = this.ctx.createJsEngine(this.config.getScript());
-
     }
 
     @Override
-    public void execute(Facts facts) throws Exception {
-        RuleNodeMsg msg = getMsg(facts, "msg");
-
+    protected void executeMsg(RuleNodeMsg msg, Set<String> relationNames) {
         jsEngine.executeToStringAsync(msg)
                 .thenAccept(result -> {
                     log.info("{}", result);
@@ -44,7 +42,7 @@ public class DebugAction implements RuleNodeAction {
                             GsonUtils.toJson(new QueueMsg(UUID.randomUUID(), msg.getEntityId(), msg.getRuleChainId(), result, msg.getMetaData(), msg.getType(), msg.getUserIds()))
                     );
 
-                    setSuccess(facts);
+                    setSuccess(relationNames);
                 })
                 .exceptionally(t -> {
                     log.error("Error occurred when execute js: ", t);
@@ -52,7 +50,7 @@ public class DebugAction implements RuleNodeAction {
                             GsonUtils.toJson(new QueueMsg(UUID.randomUUID(), msg.getEntityId(), msg.getRuleChainId(), t.getMessage(), msg.getMetaData(), msg.getType(), msg.getUserIds()))
                     );
 
-                    setFailure(facts);
+                    setFailure(relationNames);
                     throw new CompletionException(t);
                 });
     }

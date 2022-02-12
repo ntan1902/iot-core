@@ -49,8 +49,8 @@ public class SendEmailConfiguration implements ActionConfiguration<SendEmailConf
         configuration.setToTemplate("${userEmail}");
         configuration.setCcTemplate("");
         configuration.setBccTemplate("");
-        configuration.setSubjectTemplate("Device ${deviceType} temperature high");
-        configuration.setBodyTemplate("Device ${deviceName} has high temperature ${temp}");
+        configuration.setSubjectTemplate("Device ${deviceLabel} temperature high");
+        configuration.setBodyTemplate("Device ${deviceName} has high temperature ${temperature}");
         configuration.setIsHtmlTemplate(false);
 
         return configuration;
