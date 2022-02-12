@@ -35,7 +35,7 @@ public class DebugAction implements RuleNodeAction {
 
     @Override
     public void execute(Facts facts) throws Exception {
-        RuleNodeMsg msg = getMsg(facts);
+        RuleNodeMsg msg = getMsg(facts, "msg");
 
         jsEngine.executeToStringAsync(msg)
                 .thenAccept(result -> {

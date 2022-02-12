@@ -17,7 +17,7 @@ public class FunctionConfiguration implements ActionConfiguration<FunctionConfig
     public FunctionConfiguration getDefaultConfiguration() {
         return FunctionConfiguration.builder()
                 .script(
-                        "return msg;"
+                        "return {msg: msg, metaData: metaData, msgType: msgType};"
                 )
                 .build();
     }

@@ -13,8 +13,8 @@ public interface RuleNodeAction extends Action {
         facts.put(key, value);
     }
 
-    default RuleNodeMsg getMsg(Facts facts) {
-        return facts.get("msg");
+    default RuleNodeMsg getMsg(Facts facts, String key) {
+        return facts.get(key);
     }
 
     default void setSuccess(Facts facts) {

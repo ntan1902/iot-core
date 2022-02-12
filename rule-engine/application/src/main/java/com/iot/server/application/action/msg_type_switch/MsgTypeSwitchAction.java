@@ -34,7 +34,7 @@ public class MsgTypeSwitchAction implements RuleNodeAction {
     @Override
     public void execute(Facts facts) {
         log.info("{}", facts);
-        RuleNodeMsg msg = getMsg(facts);
+        RuleNodeMsg msg = getMsg(facts, "msg");
         String relationName = "";
 
         if (msg.getType().equals(MsgType.POST_TELEMETRY_REQUEST.name())) {

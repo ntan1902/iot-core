@@ -33,7 +33,7 @@ public class SaveTsAction implements RuleNodeAction {
     @Override
     public void execute(Facts facts) throws Exception {
         log.trace("{}", facts);
-        RuleNodeMsg msg = getMsg(facts);
+        RuleNodeMsg msg = getMsg(facts, "msg");
 
         String type = "";
         if (config.isSkipLatestPersistence()) {

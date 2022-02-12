@@ -43,7 +43,7 @@ public class SendEmailAction implements RuleNodeAction {
     @Override
     public void execute(Facts facts) throws Exception {
         log.trace("{}", facts);
-        RuleNodeMsg msg = getMsg(facts);
+        RuleNodeMsg msg = getMsg(facts, "msg");
 
         try {
             EmailModel emailModel = getEmailModel(msg);
