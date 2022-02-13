@@ -21,3 +21,6 @@ public class RelationCondition implements Condition {
         return relationNames != null && relationNames.contains(name);
     }
 }
+
+// ruleNodeId -> [relation 1, relation 2]
+// save timeseries -> [success, failure]

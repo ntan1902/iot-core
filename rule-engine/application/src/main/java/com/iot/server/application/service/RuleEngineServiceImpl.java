@@ -48,7 +48,6 @@ public class RuleEngineServiceImpl implements RuleEngineService {
 
             Facts facts = new Facts();
             facts.put("msg", ruleNodeMsg);
-            facts.put("relationNames", new HashSet<String>());
 
             AtomicInteger priority = new AtomicInteger(1);
             Rules rules = new Rules();
@@ -56,17 +55,8 @@ public class RuleEngineServiceImpl implements RuleEngineService {
 
             List<RelationDto> relations = getRelations(ruleNodes);
 
-            UUID ruleNodeFromId = relations.get(0).getFromId();
             for (RelationDto relation : relations) {
-                int priorityInt;
-                if (ruleNodeFromId.equals(relation.getFromId())) {
-                    priorityInt = priority.get();
-                } else {
-                    priorityInt = priority.incrementAndGet();
-                    ruleNodeFromId = relation.getFromId();
-                }
-
-                registerRule(ruleNodeMap.get(relation.getFromId()), ruleNodeMap.get(relation.getToId()), relation.getName(), rules, false, priorityInt);
+                registerRule(relation.getFromId(), ruleNodeMap.get(relation.getToId()), relation.getName(), rules, false, priority.getAndIncrement());
             }
 
             RulesEngine rulesEngine = new DefaultRulesEngine();
@@ -74,7 +64,7 @@ public class RuleEngineServiceImpl implements RuleEngineService {
         }
     }
 
-    private void registerRule(RuleNodeDto prevRuleNode,
+    private void registerRule(UUID prevRuleNodeId,
                               RuleNodeDto ruleNode,
                               String conditionName,
                               Rules rules,
@@ -84,7 +74,7 @@ public class RuleEngineServiceImpl implements RuleEngineService {
         if (defaultCondition) {
             condition = new DefaultCondition();
         } else {
-            condition = new RelationCondition(prevRuleNode.getId(), conditionName);
+            condition = new RelationCondition(prevRuleNodeId, conditionName);
         }
 
         RuleNodeAction action = null;

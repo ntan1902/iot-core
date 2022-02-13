@@ -43,7 +43,7 @@ public class GetRuleNodesByRuleChainIdHandler extends BaseHandler<GetRuleNodesBy
             List<RelationDto> relationDtos = relationService.findRelationsByFromIds(ruleNodeIds);
 
             if (relationDtos != null && !relationDtos.isEmpty()) {
-                List<RuleNodeRelation> relations = getRuleNodeRelations(ruleNodeIndexMap, ruleNodeIds, relationDtos);
+                List<RuleNodeRelation> relations = getRuleNodeRelations(ruleNodeIndexMap, relationDtos);
 
                 if (relations != null && !relations.isEmpty()) {
                     response.setRelations(relations);
@@ -60,7 +60,7 @@ public class GetRuleNodesByRuleChainIdHandler extends BaseHandler<GetRuleNodesBy
                 .collect(Collectors.toList());
     }
 
-    private List<RuleNodeRelation> getRuleNodeRelations(Map<UUID, Integer> ruleNodeIndexMap, List<UUID> ruleNodeIds, List<RelationDto> relationDtos) {
+    private List<RuleNodeRelation> getRuleNodeRelations(Map<UUID, Integer> ruleNodeIndexMap, List<RelationDto> relationDtos) {
         return relationDtos.stream()
                 .map(relationDto -> RuleNodeRelation.builder()
                         .fromIndex(ruleNodeIndexMap.get(relationDto.getFromId()))
