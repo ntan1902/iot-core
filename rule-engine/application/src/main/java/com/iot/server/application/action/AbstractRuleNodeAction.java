@@ -30,7 +30,7 @@ public abstract class AbstractRuleNodeAction implements RuleNodeAction {
         RuleNodeMsg msg = facts.get("msg");
 
         Set<String> relationNames = new HashSet<>();
-        facts.put(ruleNodeId.toString(), relationNames);
+        facts.put(ruleNodeId.toString(), relationNames); // {filterId -> ['True']}
 
         executeMsg(msg, relationNames);
     }

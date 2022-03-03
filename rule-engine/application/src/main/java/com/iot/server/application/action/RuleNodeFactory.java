@@ -1,6 +1,5 @@
 package com.iot.server.application.action;
 
-import com.iot.server.application.action.ctx.RuleNodeCtx;
 import com.iot.server.common.utils.GsonUtils;
 import com.iot.server.dao.dto.RuleNodeDescriptorDto;
 import com.iot.server.domain.rule_node_descriptor.RuleNodeDescriptorService;

@@ -45,7 +45,7 @@ public class MqttController {
                 );
             }
         } catch (RuntimeException ex) {
-            throw new IllegalArgumentException("Bad credentials mqtt");
+            log.error("Bad credentials mqtt ",ex);
         }
 
     }
