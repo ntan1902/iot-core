@@ -1,8 +1,10 @@
 package com.iot.server.rest.client;
 
+import com.iot.server.common.request.GetOrCreateDeviceRequest;
 import com.iot.server.common.request.TenantRequest;
 import com.iot.server.common.request.ValidateDeviceRequest;
 import com.iot.server.common.response.DeviceResponse;
+import com.iot.server.common.response.GetOrCreateDeviceResponse;
 import com.iot.server.common.response.TenantResponse;
 import com.iot.server.common.response.ValidateDeviceResponse;
 import com.iot.server.common.utils.GsonUtils;
@@ -13,6 +15,8 @@ import io.netty.handler.timeout.WriteTimeoutException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 @Component
 @RequiredArgsConstructor
@@ -39,6 +43,24 @@ public class EntityServiceClientImpl implements EntityServiceClient {
         log.info("Request: {} - Body: {} - Response: {}", path, validateDeviceRequest, responseStr);
 
         ValidateDeviceResponse response = GsonUtils.fromJson(responseStr, ValidateDeviceResponse.class);
+
+        return response.getDevice();
+    }
+
+    @Override
+    public DeviceResponse getOrCreateDevice(GetOrCreateDeviceRequest getOrCreateDeviceRequest) {
+        String path = entityServiceConfig.getHost() + "/device/get-or-create";
+
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("name", getOrCreateDeviceRequest.getName());
+        queryParams.add("label", getOrCreateDeviceRequest.getLabel());
+        queryParams.add("tenantId", getOrCreateDeviceRequest.getTenantId().toString());
+        queryParams.add("firstTenantId", getOrCreateDeviceRequest.getFirstTenantId().toString());
+
+        String responseStr = getOrCreateDevice(path, queryParams, 1);
+        log.info("Request: {} - Body: {} - Response: {}", path, getOrCreateDeviceRequest, responseStr);
+
+        GetOrCreateDeviceResponse response = GsonUtils.fromJson(responseStr, GetOrCreateDeviceResponse.class);
 
         return response.getDevice();
     }
@@ -78,6 +100,26 @@ public class EntityServiceClientImpl implements EntityServiceClient {
                     || ex.getCause() instanceof ConnectTimeoutException) {
 
                 return validateDeviceToken(path, validateDeviceRequest, attempt + 1);
+            }
+
+            throw new IllegalArgumentException(ex.getMessage());
+        }
+    }
+
+    private String getOrCreateDevice(String path, MultiValueMap<String, String> queryParams, int attempt) {
+        try {
+            return entityServiceTimed.get(path, queryParams);
+        } catch (RuntimeException ex) {
+            log.warn("Attempt: {} - Reason:", attempt, ex);
+            if (attempt >= entityServiceConfig.getMaxAttempt()) {
+                throw new IllegalArgumentException("Failed to call client after " + attempt + " attempts");
+            }
+
+            if (ex instanceof ReadTimeoutException
+                    || ex instanceof WriteTimeoutException
+                    || ex.getCause() instanceof ConnectTimeoutException) {
+
+                return getOrCreateDevice(path, queryParams, attempt + 1);
             }
 
             throw new IllegalArgumentException(ex.getMessage());

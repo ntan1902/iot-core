@@ -5,9 +5,11 @@ import com.iot.server.common.enums.MsgType;
 import com.iot.server.common.enums.TransportType;
 import com.iot.server.common.model.MetaData;
 import com.iot.server.common.queue.QueueMsg;
+import com.iot.server.common.request.GetOrCreateDeviceRequest;
 import com.iot.server.common.request.ValidateDeviceRequest;
 import com.iot.server.common.response.DeviceResponse;
 import com.iot.server.common.utils.GsonUtils;
+import com.iot.server.domain.model.GatewayPostTelemetry;
 import com.iot.server.domain.model.ValidateDeviceToken;
 import com.iot.server.rest.client.EntityServiceClient;
 import lombok.RequiredArgsConstructor;
@@ -29,16 +31,38 @@ public class TransportServiceImpl implements TransportService {
     public void process(TransportType transportType, ValidateDeviceToken validateDeviceToken, String json) {
         log.trace("{}, {}, {}", transportType, validateDeviceToken, json);
 
-        DeviceResponse deviceResponse = validateAndGetDevice(transportType, validateDeviceToken);
         try {
-            MetaData metaData = new MetaData();
-            metaData.putValue("deviceName", deviceResponse.getName());
-            metaData.putValue("deviceLabel", deviceResponse.getLabel());
-            metaData.putValue("deviceType", deviceResponse.getType());
+            DeviceResponse deviceResponse = validateAndGetDevice(transportType, validateDeviceToken);
+            sendToRuleEngine(json, deviceResponse);
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+        }
+    }
 
-            ruleEngineRabbitTemplate.convertAndSend(
-                    GsonUtils.toJson(new QueueMsg(UUID.randomUUID(), deviceResponse.getId(), deviceResponse.getRuleChainId(), json, metaData, MsgType.POST_TELEMETRY_REQUEST.name(), deviceResponse.getUserIds()))
-            );
+    private void sendToRuleEngine(String json, DeviceResponse deviceResponse) {
+        MetaData metaData = new MetaData();
+        metaData.putValue("deviceName", deviceResponse.getName());
+        metaData.putValue("deviceLabel", deviceResponse.getLabel());
+        metaData.putValue("deviceType", deviceResponse.getType());
+
+        ruleEngineRabbitTemplate.convertAndSend(
+                GsonUtils.toJson(new QueueMsg(UUID.randomUUID(), deviceResponse.getId(), deviceResponse.getRuleChainId(), json, metaData, MsgType.POST_TELEMETRY_REQUEST.name(), deviceResponse.getUserIds()))
+        );
+    }
+
+    @Override
+    public void gwProcess(TransportType transportType, ValidateDeviceToken validateDeviceToken, String json) {
+        log.trace("{}, {}, {}", transportType, validateDeviceToken, json);
+
+        try {
+            DeviceResponse gwDeviceResponse = validateAndGetDevice(transportType, validateDeviceToken);
+
+            GatewayPostTelemetry gwPostTelemetry = GsonUtils.fromJson(json, GatewayPostTelemetry.class);
+
+            DeviceResponse deviceResponse = getOrCreateDevice(gwDeviceResponse, gwPostTelemetry);
+
+            sendToRuleEngine(GsonUtils.toJson(gwPostTelemetry.getTelemetry()), deviceResponse);
+
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
         }
@@ -57,9 +81,27 @@ public class TransportServiceImpl implements TransportService {
 
         DeviceResponse deviceResponse = entityServiceClient.validateDevice(validateDeviceRequest);
         if (deviceResponse == null) {
-            log.warn("Device token is not valid {}", validateDeviceToken.getToken());
+            log.error("Device token is not valid {}", validateDeviceToken.getToken());
             throw new IllegalArgumentException("Device token is not valid");
         }
         return deviceResponse;
     }
+
+    private DeviceResponse getOrCreateDevice(DeviceResponse gwDeviceResponse, GatewayPostTelemetry gwPostTelemetry) {
+        GetOrCreateDeviceRequest getOrCreateDeviceRequest = new GetOrCreateDeviceRequest();
+
+        getOrCreateDeviceRequest.setName(gwPostTelemetry.getDeviceName());
+        getOrCreateDeviceRequest.setLabel(gwPostTelemetry.getDeviceLabel());
+
+        getOrCreateDeviceRequest.setTenantId(gwDeviceResponse.getTenantId());
+        getOrCreateDeviceRequest.setFirstTenantId(gwDeviceResponse.getFirstTenantId());
+
+        DeviceResponse deviceResponse = entityServiceClient.getOrCreateDevice(getOrCreateDeviceRequest);
+        if (deviceResponse == null) {
+            log.error("Failed to get or create new device: {}, {}", gwDeviceResponse, gwPostTelemetry);
+            throw new IllegalArgumentException("Failed to get or create new device");
+        }
+        return deviceResponse;
+    }
+
 }

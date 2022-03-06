@@ -31,6 +31,10 @@ public class RuleChainServiceImpl implements RuleChainService {
     @Override
     public RuleChainDto findRuleChainById(UUID ruleChainId) {
         log.trace("{}", ruleChainId);
+        if (ruleChainId == null) {
+            return null;
+        }
+
         RuleChainEntity ruleChainEntity = ruleChainDao.findById(ruleChainId);
         if (ruleChainEntity == null) {
             return null;
@@ -41,6 +45,10 @@ public class RuleChainServiceImpl implements RuleChainService {
     @Override
     public List<RuleNodeDto> findRuleNodesById(UUID ruleChainId) {
         log.trace("{}", ruleChainId);
+        if (ruleChainId == null) {
+            return Collections.emptyList();
+        }
+
         return ruleNodeDao
                 .findAllByRuleChainId(ruleChainId)
                 .stream()

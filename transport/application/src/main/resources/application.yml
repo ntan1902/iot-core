@@ -51,10 +51,15 @@ queue:
       stomp-broker: "${QUEUE_RABBITMQ_SOCKET_STOMP_BROKER:/topic}"
       sockjs-endpoint: "${QUEUE_RABBITMQ_SOCKET_SOCKJS_ENDPOINT:/ws}"
 
-    mqtt:
-      queue-name: "${QUEUE_RABBITMQ_MQTT_QUEUE_NAME:telemetryRequestQueue}"
-      exchange-name: "${QUEUE_RABBITMQ_MQTT_EXCHANGE_NAME:amq.topic}"
-      routing-key: "${QUEUE_RABBITMQ_MQTT_ROUTING_KEY:.v1.device.telemetry.request}"
+    devices-telemetry-mqtt:
+      queue-name: "${QUEUE_RABBITMQ_DEVICES_TELEMETRY_MQTT_QUEUE_NAME:devicesTelemetryRequestQueue}"
+      exchange-name: "${QUEUE_RABBITMQ_DEVICES_TELEMETRY_MQTT_EXCHANGE_NAME:amq.topic}"
+      routing-key: "${QUEUE_RABBITMQ_DEVICES_TELEMETRY_MQTT_ROUTING_KEY:.v1.devices.telemetry.request}"
+
+    gateway-telemetry-mqtt:
+      queue-name: "${QUEUE_RABBITMQ_GATEWAY_TELEMETRY_MQTT_QUEUE_NAME:gatewayTelemetryRequestQueue}"
+      exchange-name: "${QUEUE_RABBITMQ_GATEWAY_TELEMETRY_MQTT_EXCHANGE_NAME:amq.topic}"
+      routing-key: "${QUEUE_RABBITMQ_GATEWAY_TELEMETRY_MQTT_ROUTING_KEY:.v1.gateway.telemetry.request}"
 
 security:
   jwt:

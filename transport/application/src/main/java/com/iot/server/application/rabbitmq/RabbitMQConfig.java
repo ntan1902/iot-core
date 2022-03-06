@@ -24,7 +24,8 @@ public class RabbitMQConfig {
     private Config ruleEngine;
     private Config debug;
     private Config alarm;
-    private Config mqtt;
+    private Config devicesTelemetryMqtt;
+    private Config gatewayTelemetryMqtt;
 
     public ConnectionFactory createConnectionFactory(Config config) {
         CachingConnectionFactory rabbitConnectionFactory = new CachingConnectionFactory();
@@ -89,18 +90,33 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue mqttQueue() {
-        return new Queue(mqtt.queueName);
+    public Queue deviceTelemetryMqttQueue() {
+        return new Queue(devicesTelemetryMqtt.queueName);
     }
 
     @Bean
-    public TopicExchange mqttExchange() {
-        return new TopicExchange(mqtt.exchangeName);
+    public TopicExchange deviceTelemetryMqttExchange() {
+        return new TopicExchange(devicesTelemetryMqtt.exchangeName);
     }
 
     @Bean
-    public Binding mqttBinding(Queue mqttQueue, TopicExchange mqttExchange) {
-        return BindingBuilder.bind(mqttQueue).to(mqttExchange).with(mqtt.routingKey);
+    public Binding  deviceTelemetryMqttBinding(Queue  deviceTelemetryMqttQueue, TopicExchange  deviceTelemetryMqttExchange) {
+        return BindingBuilder.bind( deviceTelemetryMqttQueue).to( deviceTelemetryMqttExchange).with( devicesTelemetryMqtt.routingKey);
+    }
+
+    @Bean
+    public Queue gatewayTelemetryMqttQueue() {
+        return new Queue(gatewayTelemetryMqtt.queueName);
+    }
+
+    @Bean
+    public TopicExchange gatewayTelemetryMqttExchange() {
+        return new TopicExchange(gatewayTelemetryMqtt.exchangeName);
+    }
+
+    @Bean
+    public Binding gatewayTelemetryMqttBinding(Queue gatewayTelemetryMqttQueue, TopicExchange gatewayTelemetryMqttExchange) {
+        return BindingBuilder.bind(gatewayTelemetryMqttQueue).to(gatewayTelemetryMqttExchange).with(gatewayTelemetryMqtt.routingKey);
     }
 
     @Bean
