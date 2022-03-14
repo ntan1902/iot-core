@@ -40,7 +40,7 @@ public class TransportServiceImpl implements TransportService {
     }
 
     private void sendToRuleEngine(String json, DeviceResponse deviceResponse) {
-        MetaData metaData = new MetaData();
+        final MetaData metaData = new MetaData();
         metaData.putValue("deviceName", deviceResponse.getName());
         metaData.putValue("deviceLabel", deviceResponse.getLabel());
         metaData.putValue("deviceType", deviceResponse.getType());
@@ -69,7 +69,7 @@ public class TransportServiceImpl implements TransportService {
     }
 
     private DeviceResponse validateAndGetDevice(TransportType transportType, ValidateDeviceToken validateDeviceToken) {
-        ValidateDeviceRequest validateDeviceRequest = new ValidateDeviceRequest();
+        final ValidateDeviceRequest validateDeviceRequest = new ValidateDeviceRequest();
 
         if (transportType.equals(TransportType.DEFAULT)) {
             validateDeviceRequest.setType(DeviceCredentialsType.ACCESS_TOKEN);

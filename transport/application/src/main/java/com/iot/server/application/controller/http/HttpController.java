@@ -21,7 +21,7 @@ public class HttpController {
     private final TransportService transportService;
 
     @PostMapping("/telemetry")
-    public CompletableFuture<ResponseEntity<?>> postTelemetry(@RequestBody PostTelemetryRequest request) {
+    public CompletableFuture<ResponseEntity<Void>> postTelemetry(@RequestBody PostTelemetryRequest request) {
         return CompletableFuture
                 .runAsync(() -> transportService.process(
                         TransportType.DEFAULT,

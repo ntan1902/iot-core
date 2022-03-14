@@ -13,7 +13,6 @@ import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.resources.ConnectionProvider;
 import reactor.netty.resources.LoopResources;
-import reactor.netty.tcp.TcpClient;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -42,20 +41,17 @@ public class EntityServiceTimed {
         ConnectionProvider connectionProvider = ConnectionProvider.create("tcp", 500);
         LoopResources loopResources = LoopResources.create("reactor-tcp");
 
-        TcpClient tcpClient =
-                TcpClient.create(connectionProvider)
-                        .runOn(loopResources)
-                        .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 30_000)
-                        .doOnConnected(
-                                connection ->
-                                        connection
-                                                .addHandlerLast(new ReadTimeoutHandler(700,
-                                                        TimeUnit.MILLISECONDS))
-                                                .addHandlerLast(new WriteTimeoutHandler(700,
-                                                        TimeUnit.MILLISECONDS)));
-
-        HttpClient httpClient = HttpClient.from(tcpClient);
-
+        HttpClient httpClient = HttpClient.create(connectionProvider)
+                .runOn(loopResources)
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 30_000)
+                .doOnConnected(
+                        connection ->
+                                connection
+                                        .addHandlerLast(new ReadTimeoutHandler(700,
+                                                TimeUnit.MILLISECONDS))
+                                        .addHandlerLast(new WriteTimeoutHandler(700,
+                                                TimeUnit.MILLISECONDS))
+                );
         return new ReactorClientHttpConnector(httpClient);
 
     }
